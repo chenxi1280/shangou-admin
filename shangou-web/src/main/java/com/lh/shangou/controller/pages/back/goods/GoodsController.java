@@ -15,4 +15,6 @@ public class GoodsController {
         return "pages/back/goods/goods-list";
     }
 
+
+
 }

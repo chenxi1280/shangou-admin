@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 public class SpringTaskTest {
     Logger logger = LoggerFactory.getLogger(SpringTaskTest.class);
 
+
     @Scheduled(cron = "3/4 * * * * ?")
     public void addUser() {// 单线程
         try {
