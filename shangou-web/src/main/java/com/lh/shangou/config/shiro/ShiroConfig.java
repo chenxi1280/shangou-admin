@@ -18,6 +18,8 @@ import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +35,6 @@ import java.util.Map;
  */
 @Configuration
 public class ShiroConfig {
-
     @Bean
     public UserRealm userRealm() {// 自定义认证和授权的（领域类）
         return new UserRealm();
@@ -118,7 +119,7 @@ public class ShiroConfig {
     public ExecutorServiceSessionValidationScheduler executorServiceSessionValidationScheduler(DefaultWebSessionManager defaultWebSessionManager) {
         ExecutorServiceSessionValidationScheduler sessionValidationScheduler = new ExecutorServiceSessionValidationScheduler();
 //        sessionValidationScheduler.setInterval(30 * 60 * 1000);// 设置循环检测的时间
-        sessionValidationScheduler.setInterval(30*60 * 1000);// 设置循环检测的时间
+        sessionValidationScheduler.setInterval(30 * 60 * 1000);// 设置循环检测的时间
         sessionValidationScheduler.setSessionManager(defaultWebSessionManager);
         sessionValidationScheduler.enableSessionValidation();// 开启session检测
         return sessionValidationScheduler;
