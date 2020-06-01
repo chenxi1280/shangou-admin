@@ -29,4 +29,7 @@ public interface UserService {
     List<PermissionVO> selectHisPermissionByRoles(List<RoleVO> roles);
 
     UserVO selectDbUserByPhone(UserQuery query);
+
+    // 检测用户是否存在
+    boolean checkPhoneExist(String phone);
 }
