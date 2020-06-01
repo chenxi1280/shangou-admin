@@ -142,7 +142,7 @@
                 and note like CONCAT('%',#{note},'%')
             </if>
             <if test="system != null">
-                and system=#{system}
+                and `system`=#{system}
             </if>
         </where>
         limit #{start},#{limit}
@@ -162,7 +162,7 @@
                 and note like CONCAT('%',#{note},'%')
             </if>
             <if test="system != null">
-                and system=#{system}
+                and `system`=#{system}
             </if>
         </where>
     </select>

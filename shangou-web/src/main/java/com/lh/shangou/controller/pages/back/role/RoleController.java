@@ -1,6 +1,8 @@
 package com.lh.shangou.controller.pages.back.role;
 
 import com.lh.shangou.pojo.dto.PageDTO;
+import com.lh.shangou.pojo.dto.ResponseDTO;
+import com.lh.shangou.pojo.entity.Role;
 import com.lh.shangou.pojo.query.RoleQuery;
 import com.lh.shangou.service.RoleService;
 import org.springframework.stereotype.Controller;
@@ -31,5 +33,11 @@ public class RoleController {
         return roleService.ajaxList(query);
     }
 
+
+    @RequestMapping("editRole")
+    @ResponseBody
+    ResponseDTO editRole(Role role) {
+        return roleService.editRole(role);
+    }
 
 }

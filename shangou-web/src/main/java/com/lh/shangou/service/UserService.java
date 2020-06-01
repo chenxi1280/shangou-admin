@@ -12,7 +12,7 @@ import java.util.List;
  * creator：杜夫人
  * date: 2020/5/21
  */
-public interface UserService {
+public interface UserService extends BaseService{
 
     boolean addUser();
 
@@ -26,7 +26,9 @@ public interface UserService {
 
     List<RoleVO> selectHisRolesByPhone(String phone);
 
+    // 根据角色直接就能查询这些角色的权限
     List<PermissionVO> selectHisPermissionByRoles(List<RoleVO> roles);
+
 
     UserVO selectDbUserByPhone(UserQuery query);
 

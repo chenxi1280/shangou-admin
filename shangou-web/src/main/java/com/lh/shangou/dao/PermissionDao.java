@@ -2,6 +2,7 @@ package com.lh.shangou.dao;
 
 import com.lh.shangou.pojo.entity.Permission;
 import com.lh.shangou.pojo.vo.PermissionVO;
+import com.lh.shangou.pojo.vo.RoleVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -23,4 +24,5 @@ public interface PermissionDao {
     List<PermissionVO> selectPermissionsByIds(String permissions);
 
     List<PermissionVO> selectPermissionsBySet(@Param("ids") Set<String> paramSet);
+
 }
