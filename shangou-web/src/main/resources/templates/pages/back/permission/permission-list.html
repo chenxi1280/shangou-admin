@@ -382,8 +382,21 @@
                             layer.msg('请选中一个角色，先');
                             return;
                         }
-
                         $.post('/pages/back/permission/addPermissionToRole', {str: JSON.stringify(r)}, function (res) {// 如果要传递数组还是要用application/json
+                            layer.msg(res.msg);
+                        });
+                    });
+                    $("#removePermissionFromRole").click(function () {
+                        // 第一步：拿到所有勾选的权限
+                        if (checkPermissions.length === 0) {
+                            layer.msg('请选中一些权限，先');
+                            return;
+                        }
+                        if (r == undefined) {
+                            layer.msg('请选中一个角色，先');
+                            return;
+                        }
+                        $.post('/pages/back/permission/removePermissionFromRole', {str: JSON.stringify(r)}, function (res) {// 如果要传递数组还是要用application/json
                             layer.msg(res.msg);
                         });
                     });

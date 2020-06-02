@@ -20,4 +20,6 @@ public interface PermissionService {
     ResponseDTO deletePermissions(List<Permission> permissions);
 
     ResponseDTO addPermissionToRole(RoleVO r);
+
+    ResponseDTO removePermissionFromRole(RoleVO roleVO);
 }

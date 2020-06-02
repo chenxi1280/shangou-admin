@@ -56,6 +56,13 @@ public class PermissionController {
         RoleVO roleVO = JSON.parseObject(str, RoleVO.class);
         return permissionService.addPermissionToRole(roleVO);
     }
+    @RequestMapping("removePermissionFromRole")
+    @ResponseBody
+    ResponseDTO removePermissionFromRole(String str) {// 把权限从角色里边移除
+        // 把String变成对象
+        RoleVO roleVO = JSON.parseObject(str, RoleVO.class);
+        return permissionService.removePermissionFromRole(roleVO);
+    }
 
 
 }
