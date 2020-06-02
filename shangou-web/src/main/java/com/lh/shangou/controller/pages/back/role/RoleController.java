@@ -6,10 +6,12 @@ import com.lh.shangou.pojo.entity.Role;
 import com.lh.shangou.pojo.query.RoleQuery;
 import com.lh.shangou.service.RoleService;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * creator：杜夫人
@@ -40,4 +42,16 @@ public class RoleController {
         return roleService.editRole(role);
     }
 
+    @RequestMapping("deleteRoles")
+    @ResponseBody
+    ResponseDTO deleteRoles(@RequestBody List<Role> roles) {
+        return roleService.deleteRoles(roles);
+    }
+
+
+    @RequestMapping("getSystemRoles")
+    @ResponseBody
+    PageDTO  getSystemRoles(){
+        return roleService.getSystemRoles();
+    }
 }

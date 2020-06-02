@@ -166,6 +166,17 @@
             </if>
         </where>
     </select>
+    <select id="getSystemRoles" resultType="com.lh.shangou.pojo.vo.RoleVO">
+        select
+        <include refid="Base_Column_List"/>
+        from role where `system`=1;
+    </select>
+    <delete id="deleteByPrimaryKeys">
+        delete from role where role_id in
+        <foreach collection="ids" open="(" close=")" item="r" separator=",">
+            #{r.roleId}
+        </foreach>
+    </delete>
 
 
 </mapper>

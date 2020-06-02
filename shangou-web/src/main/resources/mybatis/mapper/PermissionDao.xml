@@ -134,6 +134,40 @@
         from permission where permission_id in
         <foreach collection="ids" open="(" close=")" item="id" separator=",">#{id}</foreach>
     </select>
+    <select id="ajaxList" resultType="com.lh.shangou.pojo.vo.PermissionVO">
 
+        select
+        <include refid="Base_Column_List"/>
+        from permission
+        <where>
+            <if test="note != null and note!=''">
+                and note like CONCAT('%',#{note},'%')
+            </if>
+            <if test="name != null and name!=''">
+                and name like CONCAT('%',#{name},'%')
+            </if>
+        </where>
+        limit #{start},#{limit}
+    </select>
+    <select id="ajaxListCount" resultType="Integer">
+        select
+        COUNT(*)
+        from permission
+        <where>
+            <if test="note != null and note!=''">
+                and note like CONCAT('%',#{note},'%')
+            </if>
+            <if test="name != null and name!=''">
+                and name like CONCAT('%',#{name},'%')
+            </if>
+        </where>
+    </select>
+
+    <delete id="deletePermissions">
+        delete from permission where permission_id in
+        <foreach collection="ids" separator="," item="p" close=")" open="(">
+            #{p.permissionId}
+        </foreach>
+    </delete>
 
 </mapper>

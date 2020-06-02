@@ -12,6 +12,7 @@ import com.lh.shangou.service.RoleService;
 import com.lh.shangou.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
 import javax.annotation.Resource;
 import java.util.List;
 
@@ -39,8 +40,22 @@ public class RoleServiceImpl implements RoleService {
         }
         return PageDTO.setPageData(count, roleVOS);
     }
+
     @Override
     public ResponseDTO editRole(Role role) {
         return ResponseDTO.get(roleDao.updateByPrimaryKeySelective(role) == 1);
+    }
+
+    @Override
+    public ResponseDTO deleteRoles(List<Role> roles) {
+        int x = roleDao.deleteByPrimaryKeys(roles);
+        return ResponseDTO.get(x == roles.size());
+    }
+
+    @Override
+    public PageDTO getSystemRoles() {
+        List<RoleVO> roleVOS = roleDao.getSystemRoles();
+
+        return PageDTO.setPageData(roleVOS.size(), roleVOS);
     }
 }

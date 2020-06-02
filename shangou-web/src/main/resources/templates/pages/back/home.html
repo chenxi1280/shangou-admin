@@ -94,7 +94,7 @@
                 <ul class="layui-nav layui-nav-tree " id="sideMenu">
                     <li class="layui-nav-item " th:each="r:${session.hisRoles}">
                         <a href="javascript:;" name="superMarketMenu">
-                            <i th:class="${r.icon}+' layui-icon'" ></i>
+                            <i th:class="${r.icon}+' layui-icon'"></i>
                             <cite th:text="${r.name}">角色名称</cite>
                         </a>
                         <dl class="layui-nav-child" th:each="p:${r.permissionVOS}" th:if="${p.show}">
@@ -144,6 +144,9 @@
 <script th:inline="javascript" type="text/javascript">
 
     layui.use('element', function () {
+
+        // top=> 指的顶层窗口
+
         var element = layui.element;
 
         let $ = layui.$;

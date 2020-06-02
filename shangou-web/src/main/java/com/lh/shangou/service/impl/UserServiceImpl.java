@@ -78,7 +78,10 @@ public class UserServiceImpl implements UserService {
                     Collections.addAll(paramSet, psIds.split(","));
                 }
             }
-            list = permissionDao.selectPermissionsBySet(paramSet);
+            if (!CollectionUtils.isEmpty(paramSet)) {
+                list = permissionDao.selectPermissionsBySet(paramSet);
+            }
+
         }
         // 第三种
         return list;
