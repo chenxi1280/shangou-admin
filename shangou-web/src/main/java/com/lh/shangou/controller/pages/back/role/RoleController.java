@@ -54,4 +54,11 @@ public class RoleController {
     PageDTO  getSystemRoles(){
         return roleService.getSystemRoles();
     }
+    @RequestMapping("add")
+    @ResponseBody
+    ResponseDTO add( Role  role ) {
+        return roleService.add(role);
+    }
+
+
 }

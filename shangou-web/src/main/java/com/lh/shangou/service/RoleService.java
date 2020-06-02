@@ -21,4 +21,6 @@ public interface RoleService extends BaseService {
     // 获取系统级别的所有角色
     PageDTO getSystemRoles();
 
+    ResponseDTO add(Role role);
+
 }

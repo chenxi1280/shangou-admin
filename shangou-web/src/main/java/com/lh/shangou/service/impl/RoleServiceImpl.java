@@ -58,4 +58,9 @@ public class RoleServiceImpl implements RoleService {
 
         return PageDTO.setPageData(roleVOS.size(), roleVOS);
     }
+
+    @Override
+    public ResponseDTO add(Role role) {
+        return ResponseDTO.get(roleDao.insertSelective(role) == 1);
+    }
 }

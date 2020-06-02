@@ -149,6 +149,11 @@
 
 <script th:inline="javascript" type="text/javascript">
 
+    // top:指的是当前页面最外层的窗口
+    // self:指的是当前页面的窗口
+    if (top !== self) {// 顶层窗口不是当前窗口，顶层窗口地址设置为当前窗口地址
+        top.location.href = self.location.href;// 解决iframe登陆页面 窗口内嵌到后台中的问题
+    }
     let loginType = 'password';// 登录的方式
     $(function () {
         layui.use(['layer', 'form'], function () {
@@ -212,11 +217,7 @@
                     }
                 });
             })
-
-
         });
-
-
     })
 
 </script>

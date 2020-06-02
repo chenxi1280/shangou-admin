@@ -126,6 +126,7 @@
         select
         <include refid="Base_Column_List"/>
         from role where role_id in (${roles})
+        order by sort
     </select>
     <select id="ajaxList" resultType="com.lh.shangou.pojo.vo.RoleVO">
         select
@@ -145,6 +146,7 @@
                 and `system`=#{system}
             </if>
         </where>
+        order by sort
         limit #{start},#{limit}
     </select>
     <select id="ajaxListCount" resultType="java.lang.Integer">
@@ -169,7 +171,8 @@
     <select id="getSystemRoles" resultType="com.lh.shangou.pojo.vo.RoleVO">
         select
         <include refid="Base_Column_List"/>
-        from role where `system`=1;
+        from role where `system`=1
+        order by sort
     </select>
     <delete id="deleteByPrimaryKeys">
         delete from role where role_id in
@@ -177,6 +180,4 @@
             #{r.roleId}
         </foreach>
     </delete>
-
-
 </mapper>

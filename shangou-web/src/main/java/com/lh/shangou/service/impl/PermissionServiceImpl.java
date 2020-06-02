@@ -107,4 +107,9 @@ public class PermissionServiceImpl implements PermissionService {
         updateRole.setPermissions(pStr);
         return ResponseDTO.get(roleDao.updateByPrimaryKeySelective(updateRole) == 1);
     }
+
+    @Override
+    public ResponseDTO add(Permission permission) {
+        return ResponseDTO.get(permissionDao.insertSelective(permission) == 1);
+    }
 }

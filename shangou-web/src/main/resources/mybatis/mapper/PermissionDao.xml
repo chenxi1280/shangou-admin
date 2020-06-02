@@ -127,12 +127,14 @@
         select
         <include refid="Base_Column_List"/>
         from permission where permission_id in (${permissions})
+        order by sort
     </select>
     <select id="selectPermissionsBySet" resultType="com.lh.shangou.pojo.vo.PermissionVO">
         select
         <include refid="Base_Column_List"/>
         from permission where permission_id in
         <foreach collection="ids" open="(" close=")" item="id" separator=",">#{id}</foreach>
+        order by sort
     </select>
     <select id="ajaxList" resultType="com.lh.shangou.pojo.vo.PermissionVO">
 
@@ -147,6 +149,7 @@
                 and name like CONCAT('%',#{name},'%')
             </if>
         </where>
+        order by sort
         limit #{start},#{limit}
     </select>
     <select id="ajaxListCount" resultType="Integer">
