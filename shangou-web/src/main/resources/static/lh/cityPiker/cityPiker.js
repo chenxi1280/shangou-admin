@@ -5281,7 +5281,7 @@ $(function () {
         "            }\n" +
         "\n" +
         "            [pcdDiv] > div > div:hover {\n" +
-        "                background: #1E9FFF;\n" +
+        "                background: orange;\n" +
         "                color: white;\n" +
         "            }\n" +
         "        </style>\n" +
@@ -5384,7 +5384,7 @@ $(function () {
             'color': '',
         });
         jobj.css({
-            'background': '#1E9FFF',
+            'background': 'orange',
             'color': 'white',
         });
     }
