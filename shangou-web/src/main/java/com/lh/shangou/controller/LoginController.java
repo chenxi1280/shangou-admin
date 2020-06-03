@@ -6,11 +6,15 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.util.SavedRequest;
+import org.apache.shiro.web.util.WebUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 
 /**
@@ -23,8 +27,13 @@ public class LoginController extends BaseController {
 
     @RequestMapping("/login")
     @ResponseBody
-    ResponseDTO login(UserVO u) {// 这个方法是执行登录操作的
+    ResponseDTO login(UserVO u, boolean isBack) {// 这个方法是执行登录操作的
         // 获取subject
+        if (!isBack) {// 就应该设置一个标记
+            if (!StringUtils.isEmpty(u.getCode())) {// 就代表是验证码登录或者注册
+                getSession().setAttribute("isBack", false);// 不是后台登录
+            }
+        }
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(u.getPhone(), u.getPassword());
         getSession().setAttribute("code", u.getCode());
         Subject subject = SecurityUtils.getSubject();
@@ -39,14 +48,20 @@ public class LoginController extends BaseController {
 
     // 这个方法是跳转到登录页面用的
     @RequestMapping("/loginPage")
-    String loginPage() {
-
-
-
-
-        return "loginPage";
-
-
+    String loginPage(HttpServletRequest request, boolean isBack) {// 是否是后台登录
+        // 就应该判断以下 是来自于哪个访问路径的
+        if (isBack) {
+            return "loginPage";
+        }
+        // 不是后台登录，就是前端登录
+        SavedRequest savedRequest = WebUtils.getSavedRequest(request);// shiro保存拦截之前的请求对象
+        if (savedRequest != null) {
+            String queryString = savedRequest.getQueryString();// 获取参数字符串
+            if ("/pages/back/merchant/addPre".equals(savedRequest.getRequestURI())) {// 证明此时shiro拦截的是客户端
+                return "client-loginPage";
+            }
+        }
+        return "client-loginPage";
     }
 
     // 这个方法是跳转到登录页面用的,退出App
@@ -58,8 +73,22 @@ public class LoginController extends BaseController {
 
     // 这个方法是跳转到登录页面用的
     @RequestMapping("/pages/back/loginSuccess")
-    String loginSuccess() {
-        return "pages/back/home";
+    String loginSuccess(boolean isBack, HttpServletRequest request) {
+
+        // 不是后台登录，就是前端登录
+        SavedRequest savedRequest = WebUtils.getSavedRequest(request);// shiro保存拦截之前的请求对象
+        if (savedRequest != null) {
+            String queryString = savedRequest.getQueryString();// 获取参数字符串,有被拦截的路径，就跳转回拦截之前的那个路径
+            // "/pages/back/merchant/addPre"
+            return "redirect:" + savedRequest.getRequestURI() + "?" + queryString;
+        }
+
+        if (isBack) {
+            return "pages/back/home";// 跳转到后台管理界面
+        } else {
+            return "pages/back/client/my-info";// 应该跳转到客户端我的界面
+        }
+
     }
 
 

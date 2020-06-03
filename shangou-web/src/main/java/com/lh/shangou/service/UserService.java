@@ -1,6 +1,7 @@
 package com.lh.shangou.service;
 
 
+import com.lh.shangou.pojo.entity.User;
 import com.lh.shangou.pojo.query.UserQuery;
 import com.lh.shangou.pojo.vo.PermissionVO;
 import com.lh.shangou.pojo.vo.RoleVO;
@@ -12,9 +13,9 @@ import java.util.List;
  * creator：杜夫人
  * date: 2020/5/21
  */
-public interface UserService extends BaseService{
+public interface UserService extends BaseService {
 
-    boolean addUser();
+    UserVO addUser(User u);
 
     /**
      * 用户进行登录的方法

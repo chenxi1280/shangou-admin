@@ -63,6 +63,7 @@
                                 <label class="layui-form-label">验证码</label>
                                 <div class="layui-input-block" style="display: flex">
                                     <input type="tel" name="code" placeholder="请输入6位数验证码"
+                                           id="code"
                                            class="layui-input" style="border-radius: 0;border-right: none">
                                     <button id="sendCode" type="button" class="layui-btn-primary layui-btn"
                                             style="border-radius: 0 3px 3px 0">
@@ -76,10 +77,12 @@
                                 </button>
                             </div>
                             <div class="layui-form-item">
-                                <button type="button" class="layui-btn layui-btn-primary " style="width: 100%;"
-                                        onmouseenter="this.style.border='solid orange 1px'"
-                                        onmouseleave="this.style.border='solid lightgray 1px'">申请入住
-                                </button>
+                                <a th:href="@{/pages/back/merchant/addPre(name=张三)}">
+                                    <button type="button" class="layui-btn layui-btn-primary " style="width: 100%;"
+                                            onmouseenter="this.style.border='solid orange 1px'"
+                                            onmouseleave="this.style.border='solid lightgray 1px'">申请入住
+                                    </button>
+                                </a>
                             </div>
 
                         </form>
@@ -165,7 +168,8 @@
                 $("#passDiv").css({display: ''})
                 $("#codeLogin").css({color: ''});
                 $(this).css({color: 'orange'});
-                $("#codeDiv").css({display: 'none'})
+                $("#codeDiv").css({display: 'none'});
+                $("#code").val("");
             });
             $("#codeLogin").click(function () {
                 loginType = 'code';
@@ -191,7 +195,7 @@
                 $.post('/login', data.field, function (res) {
                     layer.msg(res.msg);
                     if (res.res) {
-                        window.location = '/pages/back/loginSuccess';
+                        window.location = '/pages/back/loginSuccess?isBack=1';
                     }
                 });
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。

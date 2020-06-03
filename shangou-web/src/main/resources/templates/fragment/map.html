@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="js" style="color: red">
+    <script type="text/javascript"
+            src="https://webapi.amap.com/maps?v=1.4.15&key=4ef33553bc26e63d127b878325234f2f"></script>
+
+
+    <div id="mapContainer" style="width: 300px;height: 200px"></div>
+
+    <script th:inline="javascript" type="text/javascript">
+
+        $(function () {
+            let map = new AMap.Map('mapContainer');
+
+
+        })
+
+    </script>
+
+
+</div>
+</html>

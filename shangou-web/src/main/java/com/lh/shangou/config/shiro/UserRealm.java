@@ -1,5 +1,6 @@
 package com.lh.shangou.config.shiro;
 
+import com.lh.shangou.pojo.entity.User;
 import com.lh.shangou.pojo.query.UserQuery;
 import com.lh.shangou.pojo.vo.RoleVO;
 import com.lh.shangou.pojo.vo.UserVO;
@@ -18,6 +19,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -69,9 +71,24 @@ public class UserRealm extends AuthorizingRealm {
             session.setAttribute("hisRoles", roleVOS);
         } else {// 验证码登录的方式
             Object loginCode = session.getAttribute("loginCode");// 咱们自己发的
-            if (code.equals(loginCode)) {// 登录成功
+            if (code.equals(loginCode)) {// 登录成功验证码相等
                 query.setPhone((String) principal);
                 UserVO dbUser = userService.selectDbUserByPhone(query);// 拿到了数据库的用户
+                Object isBack = session.getAttribute("isBack");
+                if (dbUser == null) {
+                    if (isBack != null) {
+                        boolean isBackFlag = (boolean) isBack;
+                        if (!isBackFlag) {// 就应该给这个用户注册一个新用户
+
+                            User u = new User();
+                            u.setNickName("请改昵称");
+                            u.setPhone(query.getPhone());
+                            u.setLastLoginTime(new Date());
+//                            u.setLastLoginIp();
+                            dbUser = userService.addUser(u);
+                        }
+                    }
+                }
                 session.setAttribute("userId", dbUser.getUserId());
                 session.setAttribute("nickName", dbUser.getNickName());
                 session.setAttribute("phone", dbUser.getPhone());

@@ -12,7 +12,7 @@ import java.util.List;
  * creator：杜夫人
  * date: 2020/6/2
  */
-public interface PermissionService {
+public interface PermissionService extends BaseService {
     PageDTO ajaxList(PermissionQuery query);
 
     ResponseDTO editPermission(Permission permission);

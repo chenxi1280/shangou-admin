@@ -3,6 +3,7 @@ package com.lh.shangou.service.impl;
 import com.lh.shangou.dao.PermissionDao;
 import com.lh.shangou.dao.RoleDao;
 import com.lh.shangou.dao.UserDao;
+import com.lh.shangou.pojo.entity.User;
 import com.lh.shangou.pojo.query.UserQuery;
 import com.lh.shangou.pojo.vo.PermissionVO;
 import com.lh.shangou.pojo.vo.RoleVO;
@@ -32,9 +33,18 @@ public class UserServiceImpl implements UserService {
     @Resource
     PermissionDao permissionDao;
 
+
     @Override
-    public boolean addUser() {
-        return false;
+    public UserVO addUser(User u) {
+        int x = userDao.insertSelective(u);
+        if (x == 1) {
+            UserVO uVO = new UserVO();
+            uVO.setUserId(u.getUserId());
+            uVO.setNickName(u.getNickName());
+            uVO.setPhone(u.getPhone());
+            return uVO;
+        }
+        return null;
     }
 
     @Override

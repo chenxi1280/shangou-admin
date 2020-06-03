@@ -13,6 +13,7 @@ import com.lh.shangou.pojo.vo.RoleVO;
 import com.lh.shangou.service.PermissionService;
 import com.lh.shangou.service.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -54,24 +55,20 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public ResponseDTO addPermissionToRole(RoleVO r) {
         Role role = roleDao.selectByPrimaryKey(r.getRoleId());
-        r.setPermissions(role.getPermissions());
+        //r.setPermissions(role.getPermissions());
         // 第一步：先把原来的权限取出来,Collections.singletonList将单个元素变成 单个元素的集合
-        List<PermissionVO> permissionVOS = userService.selectHisPermissionByRoles(Collections.singletonList(r));
-        permissionVOS.addAll(r.getPermissionVOS());// 把传过来的新的权限集合和原来的权限集合合并成一体
-        TreeSet<Integer> treeSet = new TreeSet<>();
-        for (PermissionVO p : permissionVOS) {
-            treeSet.add(p.getPermissionId());
-        }
-        // 走到这一步，那么treeSet集合里边就拥有了本身的权限了和传过来的权限都有了
-        StringBuffer buffer = new StringBuffer();
-        // 把set集合变成字符串，用逗号分隔
-        for (Integer pid : treeSet) {
-            buffer.append(pid).append(",");
-        }
-        if (buffer.length() > 0) {
-            buffer.delete(buffer.length() - 1, buffer.length());
-        }
-        String pStr = buffer.toString();
+        //List<PermissionVO> permissionVOS = userService.selectHisPermissionByRoles(Collections.singletonList(r));
+        TreeSet<Integer> set1 = stringToTreeSet(role.getPermissions());
+        TreeSet<Integer> set2 = r.getPermissionVOS().stream().map(Permission::getPermissionId).collect(Collectors.toCollection(TreeSet::new));
+        set1.addAll(set2);
+        //permissionVOS.addAll(r.getPermissionVOS());// 把传过来的新的权限集合和原来的权限集合合并成一体
+//        TreeSet<Integer> treeSet = new TreeSet<>();
+//        for (PermissionVO p : permissionVOS) {
+//            treeSet.add(p.getPermissionId());
+//        }
+//        // 走到这一步，那么treeSet集合里边就拥有了本身的权限了和传过来的权限都有了
+
+        String pStr = collectionToStr(set1);
         Role updateRole = new Role();
         updateRole.setRoleId(r.getRoleId());
         updateRole.setPermissions(pStr);
@@ -82,31 +79,25 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public ResponseDTO removePermissionFromRole(RoleVO r) {
         Role role = roleDao.selectByPrimaryKey(r.getRoleId());
-        r.setPermissions(role.getPermissions());
+//        r.setPermissions(role.getPermissions());
+
         // 第一步：先把原来的权限取出来,Collections.singletonList将单个元素变成 单个元素的集合
-        List<PermissionVO> permissionVOS = userService.selectHisPermissionByRoles(Collections.singletonList(r));
+        //List<PermissionVO> permissionVOS = userService.selectHisPermissionByRoles(Collections.singletonList(r));
         // 这里的移除，不能简单的使用 permissionVOS.removeAll(r.getPermissionVOS())，这样是移除不了的。这个时候我们可以用stream处理
         // 这波操作能看懂就行，把集合中的id 通过 map收集起来，并且收集成为一个TreeSet集合
-        TreeSet<Integer> collect = permissionVOS.stream().map(Permission::getPermissionId).collect(Collectors.toCollection(TreeSet::new));
+//        TreeSet<Integer> collect = permissionVOS.stream().map(Permission::getPermissionId).collect(Collectors.toCollection(TreeSet::new));
+        TreeSet<Integer> collect = stringToTreeSet(role.getPermissions());
         // 得到现在要移除的权限集合
         TreeSet<Integer> collect1 = r.getPermissionVOS().stream().map(Permission::getPermissionId).collect(Collectors.toCollection(TreeSet::new));
+//        TreeSet<Integer> collect1 = stringToTreeSet(r.getPermissions());
         collect.removeAll(collect1);// 把传过来的新的权限集合从老的权限里边移除
-
-        // 走到这一步，那么treeSet集合里边就拥有了本身的权限了和传过来的权限都有了
-        StringBuffer buffer = new StringBuffer();
-        // 把set集合变成字符串，用逗号分隔
-        for (Integer pid : collect) {
-            buffer.append(pid).append(",");
-        }
-        if (buffer.length() > 0) {
-            buffer.delete(buffer.length() - 1, buffer.length());
-        }
-        String pStr = buffer.toString();
+        String pStr = collectionToStr(collect);
         Role updateRole = new Role();
         updateRole.setRoleId(r.getRoleId());
         updateRole.setPermissions(pStr);
         return ResponseDTO.get(roleDao.updateByPrimaryKeySelective(updateRole) == 1);
     }
+
 
     @Override
     public ResponseDTO add(Permission permission) {
