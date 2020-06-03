@@ -10,6 +10,8 @@
     }
 </style>
 <div th:replace="fragment/js::js"></div>
+<div th:replace="fragment/map::map"></div>
+
 <script type="text/javascript" th:src="@{/lh/cityPiker/cityPiker.js}"></script>
 <body style="margin: 0;background: rgb(245,245,245)">
 <div >
@@ -83,7 +85,7 @@
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">店铺坐标</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="address"
+                                        <input mapPicker type="text" name="address"
                                                style="width: 200px" class="layui-input">
                                     </div>
                                 </div>
@@ -175,7 +177,6 @@
             let layer = layui.layer;
             let form = layui.form;
             form.on('submit(addForm)', function (data) {
-
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });
         });

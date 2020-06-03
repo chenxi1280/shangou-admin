@@ -24,7 +24,6 @@ $(function () {
             lhLayer($(this))
         }
     });
-
 })
 /**
  * 弹出层方法
