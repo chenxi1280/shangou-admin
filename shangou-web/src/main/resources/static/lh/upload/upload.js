@@ -32,6 +32,7 @@ function appendImg(url, divImg) {
     });
     divImg.before(img);
     setImgInput(divImg);
+    divImg.siblings("input[type=file]")[0].value='';
 }
 function uploadFile(options) {
     let url = "/pages/back/upload/uploadFiles";
