@@ -5376,6 +5376,7 @@ $(function () {
             })
         }, 300)
     }
+
     // 其他不选中，当前div选中
     function active(jobj) {
         jobj.siblings().css({

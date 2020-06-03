@@ -1,5 +1,6 @@
 package com.lh.shangou.pojo.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -9,6 +10,7 @@ import java.io.Serializable;
  * date:2019/10/11
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseDTO implements Serializable {
     /**
      * 返回的消息

@@ -13,6 +13,7 @@
 <div th:replace="fragment/map::map"></div>
 
 <script type="text/javascript" th:src="@{/lh/cityPiker/cityPiker.js}"></script>
+<script type="text/javascript" th:src="@{/lh/upload/upload.js}"></script>
 <body style="margin: 0;background: rgb(245,245,245)">
 <div>
     <div style="background: orange;height: 60px;display: flex;justify-content: center;padding-bottom: 10px">
@@ -103,22 +104,18 @@
                                                style="width: 200px" class="layui-input">
                                     </div>
                                 </div>
-
                             </div>
                             <div style="margin-left: 20px">
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">门脸照片</label>
                                     <div class="layui-input-block">
-                                        <img src=""
-                                             style="width: 80px;height: 80px;border: solid red 1px;border-radius: 5px"/>
+                                        <div lh-upload id="doorImg"></div>
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">室内照片</label>
                                     <div class="layui-input-block">
-                                        <img src=""
-                                             style="width: 80px;height: 80px;border: solid red 1px;border-radius: 5px"/>
-
+                                        <div lh-upload id="interiorImg"></div>
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
@@ -185,6 +182,7 @@
             form.on('submit(addForm)', function (data) {
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });
+            uploadFile();// 一定要
         });
     })
 
