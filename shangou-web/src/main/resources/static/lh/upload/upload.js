@@ -78,14 +78,15 @@ function uploadFile(options) {
                 success: function (res) {// 请求成功，回调函数,data，指的就是服务器返回的数据
                     if (res.res) {
                         let urls = res.data;
-                        console.log(urls);
-                        if (urls.indexOf(",") > -1) {// 有逗号，表示多个图片
-                            let arr = urls.split(',');
-                            arr.forEach((url) => {
-                                appendImg(url, divImg);
-                            })
-                        } else {
-                            appendImg(urls, divImg);
+                        if(urls!=''&&urls!=null){
+                            if (urls.indexOf(",") > -1) {// 有逗号，表示多个图片
+                                let arr = urls.split(',');
+                                arr.forEach((url) => {
+                                    appendImg(url, divImg);
+                                })
+                            } else {
+                                appendImg(urls, divImg);
+                            }
                         }
                     }else {
                         alert(res.msg)

@@ -74,18 +74,16 @@ public class LoginController extends BaseController {
     // 这个方法是跳转到登录页面用的
     @RequestMapping("/pages/back/loginSuccess")
     String loginSuccess(boolean isBack, HttpServletRequest request) {
-
-        // 不是后台登录，就是前端登录
-        SavedRequest savedRequest = WebUtils.getSavedRequest(request);// shiro保存拦截之前的请求对象
-        if (savedRequest != null) {
-            String queryString = savedRequest.getQueryString();// 获取参数字符串,有被拦截的路径，就跳转回拦截之前的那个路径
-            // "/pages/back/merchant/addPre"
-            return "redirect:" + savedRequest.getRequestURI() + "?" + queryString;
-        }
-
         if (isBack) {
             return "pages/back/home";// 跳转到后台管理界面
         } else {
+            // 不是后台登录，就是前端登录
+            SavedRequest savedRequest = WebUtils.getSavedRequest(request);// shiro保存拦截之前的请求对象
+            if (savedRequest != null) {
+                String queryString = savedRequest.getQueryString();// 获取参数字符串,有被拦截的路径，就跳转回拦截之前的那个路径
+                // "/pages/back/merchant/addPre"
+                return "redirect:" + savedRequest.getRequestURI() + "?" + queryString;
+            }
             return "pages/back/client/my-info";// 应该跳转到客户端我的界面
         }
 
