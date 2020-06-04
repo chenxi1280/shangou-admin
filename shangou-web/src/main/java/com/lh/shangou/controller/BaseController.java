@@ -53,5 +53,12 @@ public class BaseController {
         return SecurityUtils.getSubject().getSession();
     }
 
+    protected Long getUserId() {// 获取当前用户id
+        return (Long) getSession().getAttribute("userId");
+    }
+
+    protected String getPhone() {// 获取当前用户手机
+        return (String) getSession().getAttribute("phone");
+    }
 
 }

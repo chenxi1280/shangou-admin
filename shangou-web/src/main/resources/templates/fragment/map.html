@@ -20,6 +20,7 @@
             </div>
         </div>
     </div>
+
     <script th:inline="javascript" type="text/javascript">
         let placeSearch;
         let autoComplete;
@@ -27,13 +28,13 @@
         let lnglat;
         let currentInput;
         $(function () {
-            let map = new AMap.Map('mapContainer', {
+            let map = new AMap.Map('mapContainer', {// 创建一个map对象
                 zoom: 18,
             });
-            AMap.plugin(['AMap.AutoComplete', 'AMap.PlaceSearch'], function () {
+            AMap.plugin(['AMap.AutoComplete', 'AMap.PlaceSearch'], function () {// 增加地图插件
                 // 实例化Autocomplete
                 placeSearch = new AMap.PlaceSearch({ //构造地点查询类
-                    pageSize: 10,
+                    pageSize: 10,// 分页行数
                     pageIndex: 1,
                     // city: this.currentCity[1], //城市
                     // map: map,
@@ -48,28 +49,29 @@
                 });
                 // 无需再手动执行search方法，autoComplete会根据传入input对应的DOM动态触发search
                 autoComplete.on('select', function (a) {
-                    let l = a.poi.location;
+                    console.log(a);// 凡是无非就两种：要么就是js对象，要么就是函数，要么数组
+                    let l = a.poi.location;// 经纬度对象  Lnglat
                     if (l != undefined) {
                         lnglat = l;
-                        map.clearMap();
-                        map.setCenter(l);
-                        let marker = new AMap.Marker({
+                        map.clearMap();// 清空地图上的覆盖物
+                        map.setCenter(l);// 把地图是视角移动到你定义的那个经纬度去
+                        let marker = new AMap.Marker({// 创建一个点标记
                             position: l
                         });
                         map.add(marker);
                     }
                 });
             });
-            map.on('moveend', function () {
+            map.on('moveend', function () {// 地图在移动的时候
                 let LngLat = map.getCenter();
-                //附近查询查询
+                //附近查询
                 placeSearch.searchNearBy('', lnglat, 500, (a, b) => {
                     if (a == 'no_data') {
                         nearby = [];
                     }
                     if (a == 'complete') {
-                        let data = b.poiList.pois;
-                        nearby = data;
+                        let data = b.poiList.pois;// 附近的对象赋值给提前定义好的数组对象
+                        nearby = data;// [{},{},{},{}]
                         renderAddressList(nearby)
                     }
                 })

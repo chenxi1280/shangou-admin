@@ -4,9 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.lh.shangou.controller.BaseController;
 import com.lh.shangou.pojo.dto.PageDTO;
 import com.lh.shangou.pojo.dto.ResponseDTO;
+import com.lh.shangou.pojo.entity.ImgCache;
 import com.lh.shangou.pojo.entity.Permission;
 import com.lh.shangou.pojo.query.PermissionQuery;
 import com.lh.shangou.pojo.vo.RoleVO;
+import com.lh.shangou.service.ImgCacheService;
 import com.lh.shangou.service.PermissionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
@@ -30,10 +32,14 @@ import java.util.Map;
 @RestController
 @RequestMapping("/pages/back/upload")
 public class UploadController extends BaseController {
-//    img1,img2
+
+    @Resource
+    ImgCacheService imgCacheService;
+
+    //    img1,img2
 //    img1
     @RequestMapping("uploadFiles")
-    ResponseDTO add(MultipartHttpServletRequest request) {
+    ResponseDTO uploadFiles(MultipartHttpServletRequest request) {
         Collection<MultipartFile> values = request.getFileMap().values();
         StringBuffer buffer = new StringBuffer();
         String uploadPath = "/upload/";
@@ -47,9 +53,11 @@ public class UploadController extends BaseController {
             }
         }
         for (MultipartFile f : values) {
-            String s = saveFile(f, uploadPath);
-            if (!StringUtils.isEmpty(s)) {
-                buffer.append(s).append(",");
+            String s = saveFile(f, uploadPath);// 保存图片
+            if (!StringUtils.isEmpty(s)) {// 保存成功，应该把这个地址放进缓存之中，然后写个定时任务，定时去删除缓存中的图片
+                if(imgCacheService.addCache(s)){
+                    buffer.append(s).append(",");
+                }
             }
         }
         if (buffer.length() > 0) {

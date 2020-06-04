@@ -10,6 +10,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.Resource;
+import java.io.File;
 
 /**
  * creator：Administrator
@@ -97,4 +98,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
         return realPath;
     }
 
+
+    public static boolean deleteFile(String url) {
+        File f = new File(getUploadPath() + url);
+        return f.delete();
+    }
 }

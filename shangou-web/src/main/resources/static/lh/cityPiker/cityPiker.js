@@ -5258,6 +5258,8 @@ var province = getProvince(regions),
     city = getCity(regions, sheng),
     area = getArea(regions, sheng, shi);
 var cityPickerCallBackFnc;
+
+
 $(function () {
     let cityPicker = $("<div cityDiv style=\"visibility: hidden;position: fixed;width: 100%;height: 100%;bottom: 0;background: rgba(0,0,0,0.2);z-index: 11;left: 0;right: 0\">\n" +
         "        <style>\n" +
@@ -5303,7 +5305,8 @@ $(function () {
         "    </div>");
     $("body").append(cityPicker);
     var thisInputDom;
-    $("input[cityPicker]").click(function () {
+
+    $("input[cityPicker]").focus(function () {
         thisInputDom = this;
         $("div[shengDiv]").empty();
         for (let x = 0; x < province.length; x++) {
@@ -5344,6 +5347,8 @@ $(function () {
         }
         showCityDiv();
     });
+
+
     $("div[closeCityDiv]").click(function () {
         hideCityDiv()
     });

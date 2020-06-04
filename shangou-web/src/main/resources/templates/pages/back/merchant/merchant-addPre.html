@@ -40,23 +40,15 @@
                                     <div style="display: flex">
                                         <span class="layui-form-label">主营品类</span>
                                         <div class="layui-input-block" style="width: 100px;margin-left: 0">
-                                            <select id="patentType" lay-verify="required">
-                                                <option value=""></option>
-                                                <option value="0">北京</option>
-                                                <option value="1">上海</option>
-                                                <option value="2">广州</option>
-                                                <option value="3">深圳</option>
-                                                <option value="4">杭州</option>
+                                            <select id="patentType" lay-filter="patentType" lay-verify="required">
+                                                <option th:value="${pStat.index}" th:text="${p.name}"
+                                                        th:each="p:${types}"></option>
                                             </select>
                                         </div>
                                         <div class="layui-input-block" style="width: 100px;margin-left: 0">
-                                            <select name="businessType" lay-verify="required">
-                                                <option value=""></option>
-                                                <option value="0">北京</option>
-                                                <option value="1">上海</option>
-                                                <option value="2">广州</option>
-                                                <option value="3">深圳</option>
-                                                <option value="4">杭州</option>
+                                            <select name="businessType" id="childrenSelect" lay-verify="required">
+                                                <option th:value="${p.typeId}" th:text="${p.name}"
+                                                        th:each="p:${types[0].children}"></option>
                                             </select>
                                         </div>
                                     </div>
@@ -168,40 +160,84 @@
                             </div>
                         </div>
                         <div style="text-align: center">
-                            <button class="layui-btn" style="background: orange" lay-submit lay-filter="commit">立即申请
+                            <button class="layui-btn" style="background: orange" lay-submit lay-filter="addForm">立即申请
                             </button>
                         </div>
                     </form>
                 </div>
             </div>
-
         </div>
     </div>
-
 </div>
 
 <script th:inline="javascript" type="text/javascript">
     $(function () {
+        // 这些图片都是必须要上传的
+        let validateArr = ['doorImg', 'interiorImg', 'cardUserImg', 'cardGuohuiImg', 'cardHandImg', 'businessLicenseImg', 'securityPermitImg'];
         layui.use(['layer', 'form'], function () {
             let layer = layui.layer;
             let form = layui.form;
             form.verify({// 自定义邮箱验证，可以为空值
                 emailEnableNull: function (value, item) { //value：表单的值、item：表单的DOM对象
                     if (value != '') {
-                        console.log('ssss')
-                        if (!new RegExp(/^([a-zA-Z0-9_\\.\\-])+\\@(([a-zA-Z0-9\\-])+\\.)+([a-zA-Z0-9]{2,4})+$/).test(value)) {
+                        console.log(value)
+                        if (!new RegExp(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/).test(value)) {
                             return '邮箱格式不正确';
                         }
                     }
                 }
             });
+
+            form.on('select(patentType)', function (data) {// 监听顶级的选择事件
+
+                // data.value 就是获取父集合中的点击的那个下标
+
+                let types = [[${types}]];// 在js中取thymeleaf传递过来的值
+                let children = types[data.value].children;// 取出孩子们
+
+                let childrenSelect = $("#childrenSelect");
+                childrenSelect.empty();// 清空孩子们
+
+                children.forEach(c => {
+                    let op = $("<option value='" + c.typeId + "'>" + c.name + "</option>");// 一定要变成jquery对象
+                    childrenSelect.append(op);
+                });
+
+                form.render();// 不要忘记渲染
+            });
+
             form.on('submit(addForm)', function (data) {
+                console.log(data);
+                let flag = true;// 默认是通过
+
+                for (let x = 0; x < validateArr.length; x++) {
+                    let i = validateArr[x];
+                    if (data.field[i] == undefined || data.field[i] == '') {
+                        layer.msg($("#" + i).parent().prev().text() + "需要上传");
+                        flag = false;// 有一个没上传就不能通过
+                        break;
+                    }
+                }
+
+                if (!flag) {// 如果上传文件没用通过，那么久直接返回false,就不要继续后面的操作了
+                    return false;
+                }
+                // 验证通过，开始执行入驻申请，因为图片全部都已经转换成了地址的字符串，所以实际上这里已经不涉及图片上传了，那么可以使用简单的post请求即可
+                console.log(data.field);
+
+                $.post('/pages/back/merchant/add', data.field, function (res) {
+                    layer.msg(res);
+                    if (res.res) {// 这里如果申请成功了，那么应该跳转到提示商户审核中的页面去，静态界面
+                        window.location='/pages/back/merchant/approvalStatus'
+                    }
+                });
+
+
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });
             uploadFile();// 一定要
         });
     })
-
 </script>
 
 
