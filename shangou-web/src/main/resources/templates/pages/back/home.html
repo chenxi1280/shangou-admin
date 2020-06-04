@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <title>闪购管理后台</title>
-    <meta charset="utf-8">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport"
@@ -144,14 +143,9 @@
 <script th:inline="javascript" type="text/javascript">
 
     layui.use('element', function () {
-
         // top=> 指的顶层窗口
-
         var element = layui.element;
-
-        let $ = layui.$;
         let iframe = $("#layadmin-iframe");
-
         $("[name=superMarketMenu]").click(function () {
             $(".layui-nav-child").css({
                 padding: 0

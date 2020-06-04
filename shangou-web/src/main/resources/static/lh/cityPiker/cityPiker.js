@@ -5301,7 +5301,6 @@ $(function () {
         "        </div>\n" +
         "\n" +
         "    </div>");
-
     $("body").append(cityPicker);
     var thisInputDom;
     $("input[cityPicker]").click(function () {

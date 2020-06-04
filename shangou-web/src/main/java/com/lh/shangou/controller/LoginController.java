@@ -89,5 +89,13 @@ public class LoginController extends BaseController {
 
     }
 
+    // 这个方法是跳转到登录页面用的
+    @RequestMapping("/pages/back/dashBoard")
+    String dashBoard() {
+
+        return "pages/back/dashboard/dashboard";// 应该跳转到客户端我的界面
+
+    }
+
 
 }

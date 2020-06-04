@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
+<title>闪购登录/注册</title>
 <div th:replace="fragment/js::js"></div>
 <body style="overflow-x: hidden">
 <style>
@@ -9,7 +9,6 @@
         font-size: 10px;
     }
 </style>
-<!--#fd0c2c到#fd2a47-->
 <div class="layui-row" style="position: absolute;height: 100%;width: 100%">
     <div class="layui-col-xs12 layui-col-md6 layui-col-md-offset3 "
          style="height: 100%;position: relative">
@@ -26,7 +25,7 @@
 
             <div>
                 <div>
-                    <form class="layui-form layui-form-pane" style="padding: 20px">
+                    <form class="layui-form layui-form-pane" style="padding: 20px 10px">
                         <div style="display: flex;border-bottom: solid 1px  lightgray;justify-content: center;padding: 10px">
                             <div class="loginType"
                                  style="font-size: 20px;padding: 5px 10px;cursor: pointer;color: orange"
@@ -78,7 +77,6 @@
         </div>
     </div>
 </div>
-
 <script th:inline="javascript" type="text/javascript">
     // top:指的是当前页面最外层的窗口
     // self:指的是当前页面的窗口
