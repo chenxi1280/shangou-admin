@@ -186,13 +186,13 @@
                         , page: true //开启分页
                         , cols: [[ //表头，这里是两个[[开头，两个]]结尾
                             {field: 'note', title: '备注', width: 130,}
-                            , {field: 'createTime', title: '时间', width: 100}
-                            , {field: 'res', title: '审核结果', width: 80}
+                            , {field: 'createTime', title: '时间', width: 200}
+                            , {field: 'res', title: '审核结果', width: 200}
                             , {field: 'approvalUserId', title: '审核人Id', width: 80,}
                             , {field: 'approvalUserName', title: '审核人名字', width: 100,}
                         ]]
+                        , toolbar: 'default'
                     });
-
                     break;
                 case 'deleteData':
                     // 有没有数组？

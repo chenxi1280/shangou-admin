@@ -1,7 +1,7 @@
 server:
   port: 80 #
 #  servlet:
-#    context-path: /apis  #  项目的上下文路径，如果有nginx代理的话，这个是需要配置为nginx代理服务器的路径
+#    context-path: /apis  #  项目的上下文路径，如果有nginx代理的话，这个是需要配置为nginx代理服务器的路径m
 spring:
   datasource:
     username: root
@@ -15,7 +15,7 @@ spring:
     active: dev
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss  #统一进行日期格式的数据返回
-    time-zone: Asia/Shanghai # 默认时区
+    time-zone: Asia/Shanghai   # 默认时区
 mybatis:
   configuration:
     map-underscore-to-camel-case: true  #  下划线转换程驼峰
