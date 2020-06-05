@@ -6,7 +6,7 @@
         <result column="note" jdbcType="VARCHAR" property="note"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="res" jdbcType="VARCHAR" property="res"/>
-        <result column="approval_user_id" jdbcType="INTEGER" property="approvalUserId"/>
+        <result column="approval_user_id" jdbcType="BIGINT" property="approvalUserId"/>
         <result column="approval_user_name" jdbcType="VARCHAR" property="approvalUserName"/>
         <result column="merchant_id" jdbcType="BIGINT" property="merchantId"/>
     </resultMap>
@@ -29,7 +29,7 @@
       approval_user_id, approval_user_name, merchant_id
       )
     values (#{note,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{res,jdbcType=VARCHAR},
-      #{approvalUserId,jdbcType=INTEGER}, #{approvalUserName,jdbcType=VARCHAR}, #{merchantId,jdbcType=BIGINT}
+      #{approvalUserId,jdbcType=BIGINT}, #{approvalUserName,jdbcType=VARCHAR}, #{merchantId,jdbcType=BIGINT}
       )
   </insert>
     <insert id="insertSelective" keyColumn="approval_log_id" keyProperty="approvalLogId"
@@ -66,7 +66,7 @@
                 #{res,jdbcType=VARCHAR},
             </if>
             <if test="approvalUserId != null">
-                #{approvalUserId,jdbcType=INTEGER},
+                #{approvalUserId,jdbcType=BIGINT},
             </if>
             <if test="approvalUserName != null">
                 #{approvalUserName,jdbcType=VARCHAR},
@@ -89,7 +89,7 @@
                 res = #{res,jdbcType=VARCHAR},
             </if>
             <if test="approvalUserId != null">
-                approval_user_id = #{approvalUserId,jdbcType=INTEGER},
+                approval_user_id = #{approvalUserId,jdbcType=BIGINT},
             </if>
             <if test="approvalUserName != null">
                 approval_user_name = #{approvalUserName,jdbcType=VARCHAR},
@@ -105,28 +105,25 @@
     set note = #{note,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       res = #{res,jdbcType=VARCHAR},
-      approval_user_id = #{approvalUserId,jdbcType=INTEGER},
+      approval_user_id = #{approvalUserId,jdbcType=BIGINT},
       approval_user_name = #{approvalUserName,jdbcType=VARCHAR},
       merchant_id = #{merchantId,jdbcType=BIGINT}
     where approval_log_id = #{approvalLogId,jdbcType=INTEGER}
   </update>
 
     <select id="getMerchantLogsById" resultType="com.lh.shangou.pojo.vo.ApprovalLogVO">
-
         select
         <include refid="Base_Column_List"/>
         from approval_log where merchant_id=#{merchantId}
-
     </select>
     <select id="getMerchantLogsByQuery" resultType="com.lh.shangou.pojo.vo.ApprovalLogVO">
         select
         <include refid="Base_Column_List"/>
-        from approval_log where merchant_id=#{merchantId} limit #{start},#{limit}
+        from approval_log where merchant_id=#{merchantId} order by create_time DESC limit #{start},#{limit}
     </select>
     <select id="getMerchantLogsByQueryCount" resultType="Integer">
     select
     count(*)
     from approval_log where merchant_id=#{merchantId}
   </select>
-
 </mapper>

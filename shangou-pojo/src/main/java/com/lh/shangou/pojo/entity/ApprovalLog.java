@@ -34,7 +34,7 @@ public class ApprovalLog implements Serializable {
     /**
      * 审核人id
      */
-    private Integer approvalUserId;
+    private Long approvalUserId;
 
     /**
      * 审核人真实名字

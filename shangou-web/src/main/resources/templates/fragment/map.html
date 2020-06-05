@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<div th:fragment="map">
+<div th:fragment="map" >
     <script type="text/javascript"
             src="https://webapi.amap.com/maps?v=2.0&key=4ef33553bc26e63d127b878325234f2f"></script>
 
     <div class="layui-row" id="mapDiv"
-         style="position: absolute;height: 100%;width: 100%;background: rgba(0,0,0,0.3);display: none;z-index: 1">
+         style="position: absolute;height: 100%;width: 100%;background: rgba(0,0,0,0.3);display: none;z-index: 1;">
         <div id="mapShadow" style="position: absolute;left: 0;right: 0;top: 0;bottom: 0">
         </div>
         <div class="layui-col-xs12 layui-col-sm6 layui-col-md-offset3 layui-col-sm-offset3" style="height: 100%;">
@@ -20,15 +20,15 @@
             </div>
         </div>
     </div>
-
     <script th:inline="javascript" type="text/javascript">
         let placeSearch;
         let autoComplete;
         let nearby = [];
         let lnglat;
         let currentInput;
+        let map;
         $(function () {
-            let map = new AMap.Map('mapContainer', {// 创建一个map对象
+            map = new AMap.Map('mapContainer', {// 创建一个map对象
                 zoom: 18,
             });
             AMap.plugin(['AMap.AutoComplete', 'AMap.PlaceSearch'], function () {// 增加地图插件
@@ -82,10 +82,20 @@
             });
             $("#mapShadow").click(function () {
                 toggleMap();
-            })
+            });
+
         });
 
-        function toggleMap() {
+        function toggleMap(lng, lat) {
+            if (lng,lat != undefined) {
+                lnglat = new AMap.LngLat(lng, lat);
+                map.clearMap();// 清空地图上的覆盖物
+                map.setCenter(lnglat);// 把地图是视角移动到你定义的那个经纬度去
+                let marker = new AMap.Marker({// 创建一个点标记
+                    position: lnglat
+                });
+                map.add(marker);
+            }
             let s = $("#mapDiv").css("display");
             if ('block' == s) {
                 $("#mapDiv").css({display: 'none'});

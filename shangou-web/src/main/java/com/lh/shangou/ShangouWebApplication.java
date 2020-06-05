@@ -29,7 +29,6 @@ public class ShangouWebApplication {
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
     }
 
-
     public static void main(String[] args) {
         SpringApplication.run(ShangouWebApplication.class, args);
     }

@@ -5,6 +5,7 @@
     <title>Title</title>
 </head>
 <div th:replace="fragment/js::js"></div>
+<div th:replace="fragment/map::map"></div>
 <style>
     /*修改layui表格的高度*/
     .layui-table-cell {
@@ -18,46 +19,118 @@
         border-top: none;
         border-left: none;
     }
+
+    #queryForm > div {
+        margin: 10px 5px;
+    }
 </style>
 <body class="layui-card-body layui-card">
-<form class="layui-form" style="padding:5px 0;display: flex;align-items: center;"
+<form class="layui-form" style="display: flex;align-items: center;flex-wrap: wrap"
       id="queryForm">
-    <div class="layui-form-item" style="margin: 0">
+    <div style="display: flex;align-items: center;flex-wrap: nowrap">
+        <label class="layui-form-label" style="width: fit-content">商户号</label>
+        <input type="text" name="merchantId" id="merchantId"
+               style="width: 120px" class="layui-input">
+    </div>
+    <div style="display: flex;align-items: center;flex-wrap: nowrap">
+        <label class="layui-form-label" style="width: fit-content">联系人</label>
+        <input type="text" name="contactName" id="contactName"
+               style="width: 120px" class="layui-input">
+    </div>
+    <div style="display: flex;align-items: center;flex-wrap: nowrap">
+        <label class="layui-form-label" style="width: fit-content">地址</label>
+        <input type="text" name="address" id="address"
+               style="width: 120px" class="layui-input">
+    </div>
+    <div style="display: flex;align-items: center;flex-wrap: nowrap">
         <label class="layui-form-label" style="width: fit-content;">名称</label>
         <input type="text" name="shopName" id="merchantName"
                style="width: 120px" class="layui-input">
     </div>
-    <div class="layui-form-item" style="margin: 0">
+    <div style="display: flex;align-items: center;flex-wrap: nowrap">
         <label class="layui-form-label" style="width: fit-content">电话</label>
         <input type="text" name="phone" id="merchantNote"
                style="width: 120px" class="layui-input">
     </div>
-    <div class="layui-form-item" style="margin: 0">
+
+    <div class="layui-form-item" style="margin: 0;border: solid lightgray 0.1px;margin-left: 10px">
         <label class="layui-form-label" style="width: fit-content">营业状态</label>
         <input type="radio" name="isOpen" lay-filter="isOpenFilter" value="" title="所有" checked>
         <input type="radio" name="isOpen" lay-filter="isOpenFilter" value="1" title="营业中">
         <input type="radio" name="isOpen" lay-filter="isOpenFilter" value="0" title="休息中">
     </div>
+    <div class="layui-form-item" style="margin: 0;border: solid lightgray 0.1px;margin-left: 10px">
+        <label class="layui-form-label" style="width: fit-content">审核状态</label>
+        <input type="radio" name="approvalStatus" lay-filter="approvalStatus" value="" title="所有" checked>
+        <input type="radio" name="approvalStatus" lay-filter="approvalStatus" value="审核中" title="审核中">
+        <input type="radio" name="approvalStatus" lay-filter="approvalStatus" value="审核通过" title="审核通过">
+        <input type="radio" name="approvalStatus" lay-filter="approvalStatus" value="需重新提交" title="需重新提交">
+        <input type="radio" name="approvalStatus" lay-filter="approvalStatus" value="暂不合作" title="暂不合作">
+    </div>
     <div class="layui-form-item" style="margin: 0">
         <button class="layui-btn" style="margin-left: 10px" id="queryBtn" lay-submit lay-filter="queryForm">查询</button>
     </div>
 </form>
-
+<script type="text/html" id="addLogDiv">
+    <form class="layui-form" style="display: flex">
+        <div style="display: flex;align-items: center">
+            <label>审核意见</label>
+            <input type="text" name="note" placeholder="请输入审核意见"
+                   style="width: 300px" class="layui-input">
+        </div>
+        <div style="display: flex;margin-left: 10px;align-items: center">
+            <label>审核结果</label>
+            <div class="layui-input-block" style="width: 140px;margin-left: 0">
+                <select style="width: 100px" name="res" lay-verify="required">
+                    <option value="">请选择审核结果</option>
+                    <option>审核通过</option>
+                    <option>需重新提交</option>
+                    <option>暂不合作</option>
+                    <option>审核中</option>
+                </select>
+            </div>
+        </div>
+        <button style="margin-left: 10px;" class="layui-btn layui-btn-danger" lay-submit lay-filter="addApprovalLog">
+            添加审核意见
+        </button>
+    </form>
+</script>
 <script type="text/html" id="logDiv">
-    <table id="approvalLogsTable" lay-filter="approvalLogsTable"></table>
+    <div id="voucherDiv" style="padding: 10px">
+        <table class="layui-table" id="voucherTable" lay-filter="voucherTable">
+            <thead>
+            <tr>
+                <th>店铺Logo</th>
+                <th>门脸照</th>
+                <th>室内照</th>
+                <th>营业执照</th>
+                <th>法人身份证头像面</th>
+                <th>法人身份证国徽面</th>
+                <th>法人手持身份证</th>
+                <th>食品安全许可证</th>
+                <th>其他证件</th>
+            </tr>
+            </thead>
+            <tbody id="tbody">
+            </tbody>
+
+        </table>
+        <table id="approvalLogsTable" lay-filter="approvalLogsTable"></table>
+
+    </div>
 </script>
 
 <!--分页组件-->
 <table id="merchantTable" lay-filter="merchantTable"></table>
 
 <script th:inline="javascript" type="text/javascript">
+    let currentMerchantId;// 当前点击的商户id,给个变量
     layui.use(['layer', 'table', 'form'], function () {
         // 我再js代码里边如何获取控制器传递过来的参数呢？
         let layer = layui.layer;// 弹出层
         let table = layui.table;// 分页组件
         let form = layui.form;// 分页组件
         // layer.msg('弹出一个消息', {icon: 1});
-
         //第一个实例
         let tb = table.render({// 渲染表格
             elem: '#merchantTable'
@@ -123,22 +196,33 @@
         });
         let addOpen;
         let logOpen;
-
+        let logsTb;
         form.on('submit(queryForm)', function (data) {
             tb.reload({
                 where: data.field
             });
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });
+        form.on('submit(addApprovalLog)', function (data) {
+            let p = data.field;
+            p.merchantId = currentMerchantId;
+            $.post('/pages/back/approval/addApprovalLog', p, function (res) {
+                layer.msg(res.msg);
+                if (res.res) {
+                    logsTb.reload();
+                    tb.reload();
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
         form.on('submit(commit)', function (data) {
             // $.post('/pages/back/shopCar/editCount', data.field, function (res) {
             //
             // });
             // 现在要讲的是如果表单中有 文件上传呢？而且还有基本数据
             // formData就是传递表单js对象,处理最复杂的表单
-
             // 如何自定义增加表单数据
-
             let formData = new FormData(data.form);
             // 添加一个文件呢？
             // 添加文件的步骤：首先，第一步：获取file的jsDom对象
@@ -172,37 +256,54 @@
             var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
             switch (layEvent) {
                 case 'approvalBtn':
+                    currentMerchantId = d.merchantId;
                     logOpen = layer.open({// 弹框之后，如遇到select标签，radio,checkbox之类，需要使用表单渲染
                         type: 1,
                         offset: '10px',
-                        area: '80%',
+                        area: '88%',
                         title: "审核日志记录",
                         shadeClose: true,
                         content: $("#logDiv").html()
                     });
-                    let logsTb = table.render({// 渲染日志表格
+                    let tbody = $("#tbody");
+                    tbody.empty();
+                    tbody.append($("<tr >\n" +
+                        "                <td><img src='" + d.shopLogo + "' showBig style=\"height: 100px\"></td>\n" +
+                        "                <td><img src='" + d.doorImg + "' showBig style=\"height: 100px\"></td>\n" +
+                        "                <td><img src='" + d.interiorImg + "' showBig style=\"height: 100px\"></td>\n" +
+                        "                <td><img src='" + d.cardUserImg + "' showBig style=\"height: 100px\"></td>\n" +
+                        "                <td><img src='" + d.cardGuohuiImg + "' showBig style=\"height: 100px\"></td>\n" +
+                        "                <td><img src='" + d.cardHandImg + "' showBig style=\"height: 100px\"></td>\n" +
+                        "                <td><img src='" + d.businessLicenseImg + "' showBig style=\"height: 100px\"></td>\n" +
+                        "                <td><img src='" + d.securityPermitImg + "' showBig style=\"height: 100px\"></td>\n" +
+                        "                <td><img src='" + d.otherVoucherImg + "' showBig style=\"height: 100px\"></td>\n" +
+                        "            </tr>"));
+
+                    showBigImg();
+                    logsTb = table.render({// 渲染日志表格
                         elem: '#approvalLogsTable'
                         , url: '/pages/back/approval/getMerchantLogsById/' + d.merchantId //服务后台的数据接口
                         , page: true //开启分页
+                        , limit: 5 //开启分页
                         , cols: [[ //表头，这里是两个[[开头，两个]]结尾
-                            {field: 'note', title: '备注', width: 130,}
-                            , {field: 'createTime', title: '时间', width: 200}
-                            , {field: 'res', title: '审核结果', width: 200}
+                            {field: 'createTime', title: '时间', width: 200}
+                            , {field: 'note', title: '备注', width: 300,}
+                            , {
+                                field: 'res', title: '审核结果', width: 200, templet: function (d) {
+                                    let color = d.res == '审核中' ? 'red' : d.res == '审核通过' ? 'green' : d.res == '暂不合作' ? 'gray' : d.res == '需重新提交' ? 'orange' : '';
+                                    let div = "<div><span style='color:" + color + "' >" + d.res + "</span></div>"
+                                    return div;
+                                }
+                            }
                             , {field: 'approvalUserId', title: '审核人Id', width: 80,}
                             , {field: 'approvalUserName', title: '审核人名字', width: 100,}
                         ]]
-                        , toolbar: 'default'
+                        , toolbar: '#addLogDiv'
                     });
                     break;
-                case 'deleteData':
+                case 'showMerchantMap':
                     // 有没有数组？
-                    let merchants = [];
-                    merchants.push(d);
-                    layer.confirm('您确定操作吗?', function (index) {
-                        // 第一步，拿到所有选中的行的角色id
-                        deleteMerchants(merchants, layer, tb);// 批量删除角色
-                        layer.close(index);
-                    });
+                    toggleMap(d.lng,d.lat);
                     break;
             }
         });
@@ -218,8 +319,10 @@
         form.on('radio(isOpenFilter)', function (data) {
             $("#queryBtn").click();
         });
-        onInput($("#merchantName"));
-        onInput($("#merchantNote"));
+        form.on('radio(approvalStatus)', function (data) {
+            $("#queryBtn").click();
+        });
+        onInput($("#queryForm input"));
     });
 
     function onInput(jObj) {

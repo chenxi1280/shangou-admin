@@ -19,11 +19,11 @@
     <script th:inline="javascript" type="text/javascript">
 
         function showBigImg() {// 渲染大图查看
-            $("img[showBig]").click(function () {// 绑定图片点击事件
+            $("img[showBig]").unbind("click").click(function () {// 先解除绑定，再绑定，绑定图片点击事件，否则会出现绑定两次点击事件
                 let bigImg = layer.open({// 弹框之后，如遇到select标签，radio,checkbox之类，需要使用表单渲染
                     type: 1,
                     offset: '10px',
-                    area: '50%',
+                    area: '60%',
                     title: "大图展示",
                     shadeClose: true,
                     content: $("#showBigImgDiv").html()
