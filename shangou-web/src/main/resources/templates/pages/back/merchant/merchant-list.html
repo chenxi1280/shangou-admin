@@ -256,7 +256,7 @@
             var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
             switch (layEvent) {
                 case 'approvalBtn':
-                    currentMerchantId = d.merchantId;
+                    currentMerchantId = d.merchantId;// 把当前商户id
                     logOpen = layer.open({// 弹框之后，如遇到select标签，radio,checkbox之类，需要使用表单渲染
                         type: 1,
                         offset: '10px',
@@ -302,7 +302,7 @@
                     });
                     break;
                 case 'showMerchantMap':
-                    // 有没有数组？
+                    //  直接传递经纬度
                     toggleMap(d.lng,d.lat);
                     break;
             }

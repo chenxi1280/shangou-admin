@@ -39,8 +39,8 @@ public class ApprovalController extends BaseController {
     @RequestMapping("addApprovalLog")
     @ResponseBody
     ResponseDTO addApprovalLog(ApprovalLog log) {
-        log.setApprovalUserId(getUserId());
-        log.setApprovalUserName(getSession().getAttribute("realName").toString());
+        log.setApprovalUserId(getUserId());// 设置审核人
+        log.setApprovalUserName(getSession().getAttribute("realName").toString());// 设置审核人的名字
         return approvalService.addApprovalLog(log);
     }
 

@@ -41,11 +41,11 @@ public class ApprovalServiceImpl implements ApprovalService {
 
     @Override
     public ResponseDTO addApprovalLog(ApprovalLog log) {
-        log.setCreateTime(new Date());
+        log.setCreateTime(new Date());// 设置日志的创建时间
         if (approvalLogDao.insertSelective(log) == 1) {// 如果插入日志成功，那么应该根据merchantId将审核的结果修改
-            Merchant m = new Merchant();
-            m.setMerchantId(log.getMerchantId());
-            m.setApprovalStatus(log.getRes());
+            Merchant m = new Merchant();// 修改商户的审核状态
+            m.setMerchantId(log.getMerchantId());// 设置商户id
+            m.setApprovalStatus(log.getRes());// 设置商户的状态
             return ResponseDTO.get(merchantDao.updateByPrimaryKeySelective(m) == 1);
         }
         return ResponseDTO.fail("审核失败，请联系管理员");

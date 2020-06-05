@@ -86,8 +86,8 @@
 
         });
 
-        function toggleMap(lng, lat) {
-            if (lng,lat != undefined) {
+        function toggleMap(lng, lat) {// 这个函数就是触发map展示或者隐藏
+            if (lng,lat != undefined) {// 传递了经纬度
                 lnglat = new AMap.LngLat(lng, lat);
                 map.clearMap();// 清空地图上的覆盖物
                 map.setCenter(lnglat);// 把地图是视角移动到你定义的那个经纬度去
