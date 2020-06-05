@@ -3,7 +3,9 @@ package com.lh.shangou.controller.pages.back.approval;
 import com.lh.shangou.controller.BaseController;
 import com.lh.shangou.pojo.dto.PageDTO;
 import com.lh.shangou.pojo.dto.ResponseDTO;
+import com.lh.shangou.pojo.entity.ApprovalLog;
 import com.lh.shangou.pojo.entity.Merchant;
+import com.lh.shangou.pojo.query.ApprovalLogQuery;
 import com.lh.shangou.pojo.query.MerchantQuery;
 import com.lh.shangou.service.ApprovalService;
 import com.lh.shangou.service.BusinessTypeService;
@@ -26,10 +28,10 @@ public class ApprovalController extends BaseController {
     @Resource
     ApprovalService approvalService;
     // 分页商户语句
-    @RequestMapping("getMerchantLogsById/{mid}")
+    @RequestMapping("getMerchantLogsById/{merchantId}")
     @ResponseBody
-    PageDTO getMerchantLogsById(@PathVariable Long mid) {
-        return approvalService.getMerchantLogsById(mid);
+    PageDTO getMerchantLogsById(ApprovalLogQuery query) {
+        return approvalService.getMerchantLogsByQuery(query);
     }
 
 

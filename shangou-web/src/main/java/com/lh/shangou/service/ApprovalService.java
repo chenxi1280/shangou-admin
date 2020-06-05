@@ -1,6 +1,7 @@
 package com.lh.shangou.service;
 
 import com.lh.shangou.pojo.dto.PageDTO;
+import com.lh.shangou.pojo.query.ApprovalLogQuery;
 
 /**
  * creator：杜夫人
@@ -9,4 +10,6 @@ import com.lh.shangou.pojo.dto.PageDTO;
 
 public interface ApprovalService {
     PageDTO getMerchantLogsById(Long mid);
+
+    PageDTO getMerchantLogsByQuery(ApprovalLogQuery query);
 }

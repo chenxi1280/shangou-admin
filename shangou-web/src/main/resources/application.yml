@@ -1,33 +1,36 @@
 server:
   port: 80 #
 #  servlet:
-#    context-path: /apis  #
+#    context-path: /apis  #  项目的上下文路径，如果有nginx代理的话，这个是需要配置为nginx代理服务器的路径
 spring:
   datasource:
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://120.25.223.121:3306/shangou_db?serverTimezone=Asia/Shanghai  #
+    url: jdbc:mysql://120.25.223.121:3306/shangou_db?serverTimezone=Asia/Shanghai  # 数据库的时区地址
     type: com.alibaba.druid.pool.DruidDataSource
   messages:
-    basename: i18n/validate  #
+    basename: i18n/validate  #   验证文件的路径
   profiles:
     active: dev
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss  #统一进行日期格式的数据返回
+    time-zone: Asia/Shanghai # 默认时区
 mybatis:
   configuration:
-    map-underscore-to-camel-case: true  #
-  #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  #
-  mapper-locations: classpath*:mybatis/mapper/**/*.xml  #
+    map-underscore-to-camel-case: true  #  下划线转换程驼峰
+  #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  #  日志也可以这么配置
+  mapper-locations: classpath*:mybatis/mapper/**/*.xml  # mapper.xml文件的路径配置
 ---
 logging:
   level:
-    com.lh.shangou.dao: info  #
+    com.lh.shangou.dao: info  #  线上环境是info
 spring:
   profiles: pro
 ---
 logging:
   level:
-    com.lh.shangou.dao: trace  #dao\u91CC\u8FB9\u8981\u914D\u7F6E\u6210debug\u4EE5\u4E0B\u7684\u7EA7\u522B\uFF0C\u624D\u80FD\u591F\u770B\u5230sql\u8BED\u53E5\uFF0C\u8FD8\u6709\u4E00\u4E2A\u7EA7\u522B TARCE;\u66F4\u8BE6\u7EC6\u7684\u7EA7\u522B\uFF0C\u80FD\u591F\u770B\u5230\u67E5\u8BE2\u51FA\u6765\u7684\u7ED3\u679C
+    com.lh.shangou.dao: trace  #   开发环境的时候，dao包输出的日志级别是trace
 spring:
   profiles: dev
 
