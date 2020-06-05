@@ -3,8 +3,11 @@ package com.lh.shangou.service.impl;
 import com.lh.shangou.consts.enums.ApprovalEnum;
 import com.lh.shangou.dao.ImgCacheDao;
 import com.lh.shangou.dao.MerchantDao;
+import com.lh.shangou.pojo.dto.PageDTO;
 import com.lh.shangou.pojo.dto.ResponseDTO;
 import com.lh.shangou.pojo.entity.Merchant;
+import com.lh.shangou.pojo.query.MerchantQuery;
+import com.lh.shangou.pojo.vo.MerchantVO;
 import com.lh.shangou.service.ImgCacheService;
 import com.lh.shangou.service.MerchantService;
 import org.springframework.stereotype.Service;
@@ -12,6 +15,7 @@ import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 /**
  * creator：杜夫人
@@ -48,5 +52,17 @@ public class MerchantServiceImpl implements MerchantService {
         }
         return ResponseDTO.fail("申请失败");
         // 手动的清楚缓存图片
+    }
+
+    @Override
+    public PageDTO ajaxList(MerchantQuery query) {
+        List<MerchantVO> merchants = merchantDao.ajaxList(query);
+        Integer count = merchantDao.ajaxListCount(query);
+        return PageDTO.setPageData(count, merchants);
+    }
+
+    @Override
+    public PageDTO getMerchantLogsById(Long id) {
+        return null;
     }
 }

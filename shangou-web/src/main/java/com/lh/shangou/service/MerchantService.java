@@ -1,7 +1,9 @@
 package com.lh.shangou.service;
 
+import com.lh.shangou.pojo.dto.PageDTO;
 import com.lh.shangou.pojo.dto.ResponseDTO;
 import com.lh.shangou.pojo.entity.Merchant;
+import com.lh.shangou.pojo.query.MerchantQuery;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,4 +13,8 @@ import org.springframework.stereotype.Service;
 
 public interface MerchantService {
     ResponseDTO add(Merchant merchant);
+
+    PageDTO ajaxList(MerchantQuery query);
+
+    PageDTO getMerchantLogsById(Long id);
 }

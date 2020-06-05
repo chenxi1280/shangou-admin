@@ -16,6 +16,8 @@
 </head>
 <div th:replace="fragment/js::js"></div>
 <link rel="stylesheet" th:href="@{/layui/css/home.css}" media="all">
+
+
 <body class="layui-layout-body">
 <div id="LAY_app">
     <div class="layui-layout layui-layout-admin">
@@ -28,7 +30,7 @@
                     </a>
                 </li>
                 <li class="layui-nav-item layui-hide-xs">
-                    <a  th:href="@{/}" target="_blank" title="前台">
+                    <a th:href="@{/}" target="_blank" title="前台">
                         <i class="layui-icon layui-icon-website"></i>
                     </a>
                 </li>
@@ -62,7 +64,7 @@
                 </li>
                 <li class="layui-nav-item">
                     <div style="display: flex;align-items: center">
-                        <img th:src="${session.photo}" style="width: 30px;height: 30px;border-radius: 100%"/>
+                        <img showBig th:src="${session.photo}" style="width: 30px;height: 30px;border-radius: 100%"/>
                         <a href="javascript:;">
                             <cite th:text="${session.nickName}">5秒真男人</cite>
                         </a>
@@ -142,9 +144,12 @@
 </div>
 <script th:inline="javascript" type="text/javascript">
 
-    layui.use('element', function () {
+
+    layui.use(['element', 'layer'], function () {
         // top=> 指的顶层窗口
-        var element = layui.element;
+        let layer = layui.layer;
+        let element = layui.element;
+
         let iframe = $("#layadmin-iframe");
         $("[name=superMarketMenu]").click(function () {
             $(".layui-nav-child").css({
