@@ -1,14 +1,19 @@
 package com.lh.shangou.service;
 
+import com.lh.shangou.pojo.entity.ImgCache;
 import com.lh.shangou.pojo.vo.PermissionVO;
 import com.lh.shangou.pojo.vo.RoleVO;
+import com.lh.shangou.util.spring.SpringUtil;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -16,6 +21,8 @@ import java.util.stream.Collectors;
  * date: 2020/6/1
  */
 public interface BaseService {
+
+
     /**
      * 把角色的集合设置上权限属性
      *
@@ -74,4 +81,36 @@ public interface BaseService {
         return treeSet;
     }
 
+    // 删除缓存图片
+    default boolean deleteImgCache(Object obj) {
+        ImgCacheService bean = SpringUtil.getBean(ImgCacheService.class);// 从IOC容器里边获取实例
+        return bean.deleteImgCache(obj);
+    }
+
+    /**
+     * 从富文本中提取出所有图片路径变成集合
+     *
+     * @param htmlStr
+     * @return
+     */
+    default List<String> getImgStrToList(String htmlStr) {
+        List<String> list = new ArrayList<>();
+        String img = "";
+        Pattern p_image;
+        Matcher m_image;
+        // String regEx_img = "<img.*src=(.*?)[^>]*?>"; //图片链接地址
+        String regEx_img = "<img.*src\\s*=\\s*(.*?)[^>]*?>";
+        p_image = Pattern.compile(regEx_img, Pattern.CASE_INSENSITIVE);
+        m_image = p_image.matcher(htmlStr);
+        while (m_image.find()) {
+            // 得到<img />数据
+            img = m_image.group();
+            // 匹配<img>中的src数据
+            Matcher m = Pattern.compile("src\\s*=\\s*\"?(.*?)(\"|>|\\s+)").matcher(img);
+            while (m.find()) {
+                list.add(m.group(1));
+            }
+        }
+        return list;
+    }
 }

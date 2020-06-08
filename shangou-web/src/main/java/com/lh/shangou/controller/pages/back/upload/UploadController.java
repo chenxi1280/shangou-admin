@@ -5,12 +5,16 @@ import com.lh.shangou.pojo.dto.ResponseDTO;
 import com.lh.shangou.service.ImgCacheService;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.annotation.Resource;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * creator：杜夫人
@@ -23,6 +27,7 @@ public class UploadController extends BaseController {
     ImgCacheService imgCacheService;
 
     //    img1
+    //    img1,img2
     @RequestMapping("uploadFiles")
     ResponseDTO uploadFiles(MultipartHttpServletRequest request) {
         Collection<MultipartFile> values = request.getFileMap().values();
@@ -50,5 +55,21 @@ public class UploadController extends BaseController {
         return ResponseDTO.ok("上传成功", buffer.toString());
     }
 
+    //   单独给wangeditor写个方法
+    @RequestMapping("wangEditorUploadFiles")
+    @ResponseBody
+    Map<String,Object> wangEditorUploadFiles(MultipartHttpServletRequest request) {
+        ResponseDTO res = this.uploadFiles(request);
 
+        if (res.getRes()) {// 成功
+            String object = res.getObject(String.class);
+            if (!StringUtils.isEmpty(object)) {
+                Map<String,Object> map=new HashMap<>();
+                map.put("errno",0);
+                map.put("data",object.split(","));
+                return map;
+            }
+        }
+        return null;
+    }
 }

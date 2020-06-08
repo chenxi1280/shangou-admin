@@ -1,5 +1,6 @@
 package com.lh.shangou.pojo.dto;
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
@@ -69,6 +70,15 @@ public class ResponseDTO implements Serializable {
         this.errorCode = errorCode;
         this.status = status;
         this.res = false;
+    }
+
+    // 定义了一个函数。泛型含糊
+    public <T> T getObject(Class<T> cls) {
+
+        if (getData() != null) {
+            return JSON.parseObject(JSON.toJSONString(getData()), cls);
+        }
+        return null;
     }
 
     /**

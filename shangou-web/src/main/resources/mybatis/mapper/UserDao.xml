@@ -11,10 +11,11 @@
         <result column="last_login_ip" jdbcType="VARCHAR" property="lastLoginIp"/>
         <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime"/>
         <result column="roles" jdbcType="VARCHAR" property="roles"/>
+        <result column="note" jdbcType="VARCHAR" property="note"/>
     </resultMap>
     <sql id="Base_Column_List">
     user_id, nick_name, real_name, `password`, phone, email, last_login_ip, last_login_time,
-    roles
+    roles, note
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
@@ -30,10 +31,12 @@
             useGeneratedKeys="true">
     insert into user (nick_name, real_name, `password`,
       phone, email, last_login_ip,
-      last_login_time, roles)
+      last_login_time, roles, note
+      )
     values (#{nickName,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
       #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{lastLoginIp,jdbcType=VARCHAR},
-      #{lastLoginTime,jdbcType=TIMESTAMP}, #{roles,jdbcType=VARCHAR})
+      #{lastLoginTime,jdbcType=TIMESTAMP}, #{roles,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}
+      )
   </insert>
     <insert id="insertSelective" keyColumn="user_id" keyProperty="userId"
             parameterType="com.lh.shangou.pojo.entity.User" useGeneratedKeys="true">
@@ -63,6 +66,9 @@
             <if test="roles != null">
                 roles,
             </if>
+            <if test="note != null">
+                note,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="nickName != null">
@@ -88,6 +94,9 @@
             </if>
             <if test="roles != null">
                 #{roles,jdbcType=VARCHAR},
+            </if>
+            <if test="note != null">
+                #{note,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -118,6 +127,9 @@
             <if test="roles != null">
                 roles = #{roles,jdbcType=VARCHAR},
             </if>
+            <if test="note != null">
+                note = #{note,jdbcType=VARCHAR},
+            </if>
         </set>
         where user_id = #{userId,jdbcType=BIGINT}
     </update>
@@ -130,10 +142,10 @@
       email = #{email,jdbcType=VARCHAR},
       last_login_ip = #{lastLoginIp,jdbcType=VARCHAR},
       last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
-      roles = #{roles,jdbcType=VARCHAR}
+      roles = #{roles,jdbcType=VARCHAR},
+      note = #{note,jdbcType=VARCHAR}
     where user_id = #{userId,jdbcType=BIGINT}
-    </update>
-
+  </update>
     <select id="selectUserByPhoneAndPassword" resultType="com.lh.shangou.pojo.vo.UserVO">
         select
         <include refid="Base_Column_List"/>
@@ -144,6 +156,13 @@
         <include refid="Base_Column_List"/>
         from user where phone=#{phone}
     </select>
-
+    <select id="selectUserVOByIds" resultType="com.lh.shangou.pojo.vo.UserVO">
+        select
+        <include refid="Base_Column_List"/>
+        from user where user_id in
+        <foreach collection="ids" open="(" close=")" item="id" separator=",">
+            #{id}
+        </foreach>
+    </select>
 
 </mapper>

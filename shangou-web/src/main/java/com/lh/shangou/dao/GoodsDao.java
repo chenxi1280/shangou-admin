@@ -3,7 +3,10 @@ package com.lh.shangou.dao;
 import com.lh.shangou.pojo.entity.Goods;
 import com.lh.shangou.pojo.query.GoodsQuery;
 import com.lh.shangou.pojo.vo.GoodsVO;
+import com.lh.shangou.pojo.vo.UserVO;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface GoodsDao {
@@ -22,4 +25,5 @@ public interface GoodsDao {
     List<GoodsVO> ajaxList(GoodsQuery query);
 
     Integer ajaxListCount(GoodsQuery query);
+
 }

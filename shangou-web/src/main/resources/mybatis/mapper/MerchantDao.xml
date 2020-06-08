@@ -528,6 +528,7 @@
             </if>
 
         </where>
+        order by create_time DESC
         limit #{start},#{limit}
     </select>
 
@@ -564,5 +565,8 @@
                 and approval_status=#{approvalStatus}
             </if>
         </where>
+    </select>
+    <select id="selectByUserId" resultType="com.lh.shangou.pojo.vo.MerchantVO">
+        select <include refid="Base_Column_List"/> from  merchant where user_id=#{userId}
     </select>
 </mapper>

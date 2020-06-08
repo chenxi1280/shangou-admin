@@ -8,5 +8,7 @@ import lombok.Data;
  * date: 2020/6/5
  */
 @Data
-public class GoodsVO  extends Goods {
+public class GoodsVO extends Goods {
+
+    private String updateUserName;// 更新人的名字
 }

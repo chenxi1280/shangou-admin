@@ -10,9 +10,12 @@
     .layui-table-cell {
         height: auto;
     }
+    thead .layui-table-cell {
+        height: auto;
+    }
 </style>
-<body>
-<h1>[[${goodsId}]]</h1>
+<body class="layui-card-body layui-card">
+
 <!--分页组件-->
 <table id="goodsTable" lay-filter="goodsTable"></table>
 <script type="text/html" id="addForm">
@@ -130,14 +133,8 @@
 
 <script th:inline="javascript" type="text/javascript">
     layui.use(['layer', 'table', 'form'], function () {
-
-
         // 我再js代码里边如何获取控制器传递过来的参数呢？
         let layer = layui.layer;// 弹出层
-
-        let goodsId = [[${goodsId}]];// 这么取获取,thymeleaf内联表达式
-
-
         let table = layui.table;// 分页组件
         let form = layui.form;// 分页组件
         let $ = layui.$;// 使用jquery

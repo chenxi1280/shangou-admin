@@ -17,4 +17,7 @@ public interface MerchantService {
     PageDTO ajaxList(MerchantQuery query);
 
     PageDTO getMerchantLogsById(Long id);
+
+    // 通过用户id查询商户id
+    Long selectMerchantIdByUserId(Long userId);
 }

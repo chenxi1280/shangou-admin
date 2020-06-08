@@ -22,4 +22,6 @@ public interface MerchantDao {
     List<MerchantVO> ajaxList(MerchantQuery query);
 
     Integer ajaxListCount(MerchantQuery query);
+
+    MerchantVO selectByUserId(Long userId);
 }

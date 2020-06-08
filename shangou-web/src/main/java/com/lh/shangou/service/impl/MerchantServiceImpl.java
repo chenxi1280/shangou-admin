@@ -65,4 +65,13 @@ public class MerchantServiceImpl implements MerchantService {
     public PageDTO getMerchantLogsById(Long id) {
         return null;
     }
+
+    @Override
+    public Long selectMerchantIdByUserId(Long userId) {
+        MerchantVO m = merchantDao.selectByUserId(userId);
+        if (m != null) {
+            return m.getMerchantId();
+        }
+        return null;
+    }
 }

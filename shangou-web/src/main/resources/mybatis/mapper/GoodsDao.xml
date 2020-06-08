@@ -349,6 +349,7 @@
                 and is_coupon = #{isCoupon,jdbcType=BOOLEAN}
             </if>
         </where>
+        order by sort
         limit #{start},#{limit}
     </select>
     <select id="ajaxListCount" resultType="Integer">
@@ -379,5 +380,6 @@
             </if>
         </where>
     </select>
+
 
 </mapper>
