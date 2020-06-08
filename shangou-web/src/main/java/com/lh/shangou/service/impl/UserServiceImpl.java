@@ -4,6 +4,8 @@ import com.lh.shangou.dao.PermissionDao;
 import com.lh.shangou.dao.RoleDao;
 import com.lh.shangou.dao.UserDao;
 import com.lh.shangou.pojo.dto.PageDTO;
+import com.lh.shangou.pojo.dto.ResponseDTO;
+import com.lh.shangou.pojo.entity.Role;
 import com.lh.shangou.pojo.entity.User;
 import com.lh.shangou.pojo.query.UserQuery;
 import com.lh.shangou.pojo.vo.PermissionVO;
@@ -120,6 +122,23 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUser(User u) {
         userDao.updateByPrimaryKeySelective(u);
+    }
+
+    @Override
+    public ResponseDTO dispatchUserPermission(Long userId, List<Role> roles) {
+
+
+
+
+
+
+
+
+
+
+
+
+        return null;
     }
 
 

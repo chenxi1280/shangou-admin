@@ -191,14 +191,14 @@
                             });
                             $("#sureDispatch").click(function () {
                                 // 首先应该封装被选中的角色和权限的数据，应该封装成一个集合，这个集合是roleVO,而且里边的属性是permissionList是一个数组
-                                let roleVOs = [];
+                                let roleVOs = [];// 角色参数数组里边
                                 // 对所有选中角色进行遍历，查看是否选中，选中就将其放到集合里边。
                                 $("[name=roleTitle]").each(function () {
                                     if (this.checked) {
                                         let index = $(this).attr("ind").split('-')[1];// 获取系统级角色的下标
-                                        let roleVO = [[${systemRoles}]][index];// 获取系统级别的橘色VO对象
-                                        let permissionsStr = '';
-                                        $("[name=roleName-" + roleVO.flag + "]").each(function () {
+                                        let roleVO = [[${systemRoles}]][index];// 获取系统级别的角色VO对象 permissions(满的)
+                                        let permissionsStr = '';// 逗号分隔的字符串
+                                        $("[name=roleName-" + roleVO.flag + "]").each(function () {//
                                             if (this.checked) {
                                                 let pid = $(this).attr("pid");
                                                 permissionsStr += pid + ",";

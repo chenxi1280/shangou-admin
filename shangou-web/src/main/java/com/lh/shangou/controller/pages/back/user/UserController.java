@@ -4,6 +4,7 @@ import com.lh.shangou.controller.BaseController;
 import com.lh.shangou.pojo.dto.PageDTO;
 import com.lh.shangou.pojo.dto.ResponseDTO;
 import com.lh.shangou.pojo.entity.ApprovalLog;
+import com.lh.shangou.pojo.entity.Role;
 import com.lh.shangou.pojo.query.ApprovalLogQuery;
 import com.lh.shangou.pojo.query.UserQuery;
 import com.lh.shangou.pojo.vo.RoleVO;
@@ -13,6 +14,7 @@ import com.lh.shangou.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -56,5 +58,11 @@ public class UserController extends BaseController {
         return userService.selectHisRolesByPhone(phone);
     }
 
+    // 分页商户语句
+    @RequestMapping("dispatchUserPermission/{userId}")
+    @ResponseBody
+    ResponseDTO dispatchUserPermission(@PathVariable Long userId, @RequestBody List<Role> roles) {
+        return userService.dispatchUserPermission(userId,roles);
+    }
 
 }

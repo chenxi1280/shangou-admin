@@ -2,6 +2,8 @@ package com.lh.shangou.service;
 
 
 import com.lh.shangou.pojo.dto.PageDTO;
+import com.lh.shangou.pojo.dto.ResponseDTO;
+import com.lh.shangou.pojo.entity.Role;
 import com.lh.shangou.pojo.entity.User;
 import com.lh.shangou.pojo.query.UserQuery;
 import com.lh.shangou.pojo.vo.PermissionVO;
@@ -40,4 +42,6 @@ public interface UserService extends BaseService {
     PageDTO ajaxList(UserQuery query);
 
     void updateUser(User u);
+
+    ResponseDTO dispatchUserPermission(Long userId, List<Role> roles);
 }
