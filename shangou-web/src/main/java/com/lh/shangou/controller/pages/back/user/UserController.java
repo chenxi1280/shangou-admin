@@ -35,7 +35,7 @@ public class UserController extends BaseController {
     @Resource
     RoleService roleService;
 
-    // 分页商户语句
+    // 到用户列表页面
     @RequestMapping("list")
     String list(Model model) {
         PageDTO systemRoles = roleService.getSystemRoles();
@@ -44,25 +44,25 @@ public class UserController extends BaseController {
     }
 
 
-    // 分页商户语句
+    // 分页用户
     @RequestMapping("ajaxList")
     @ResponseBody
     PageDTO ajaxList(UserQuery query) {
         return userService.ajaxList(query);
     }
 
-    // 分页商户语句
+    // 获取用户的角色
     @RequestMapping("getUserRoles/{phone}")
     @ResponseBody
     List<RoleVO> getUserRoles(@PathVariable String phone) {
         return userService.selectHisRolesByPhone(phone);
     }
 
-    // 分页商户语句
+    // 对用户进行角色和权限分配
     @RequestMapping("dispatchUserPermission/{userId}")
     @ResponseBody
     ResponseDTO dispatchUserPermission(@PathVariable Long userId, @RequestBody List<Role> roles) {
-        return userService.dispatchUserPermission(userId,roles);
+        return userService.dispatchUserPermission(userId, roles);
     }
 
 }
