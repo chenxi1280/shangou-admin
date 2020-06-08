@@ -182,7 +182,7 @@
                 and phone like CONCAT('%',#{phone},'%')
             </if>
         </where>
-        order by user_id DESC
+        order by user_id
         limit #{start},#{limit}
 
     </select>
