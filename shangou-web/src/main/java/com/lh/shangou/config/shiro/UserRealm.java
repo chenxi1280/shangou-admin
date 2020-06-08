@@ -5,6 +5,7 @@ import com.lh.shangou.pojo.query.UserQuery;
 import com.lh.shangou.pojo.vo.RoleVO;
 import com.lh.shangou.pojo.vo.UserVO;
 import com.lh.shangou.service.UserService;
+import com.lh.shangou.util.net.NetUtil;
 import com.lh.shangou.util.password.PasswordUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -50,11 +51,10 @@ public class UserRealm extends AuthorizingRealm {
         Session session = SecurityUtils.getSubject().getSession();
         Object code = session.getAttribute("code");// 先把code取出来
         UserQuery query = new UserQuery();
-
+        String password = new String((char[]) credentials);// 前端传递过来的// String.valueOf((char[]) credentials)
+        query.setPhone((String) principal);
+        UserVO dbUser = userService.selectDbUserByPhone(query);// 拿到了数据库的用户
         if (StringUtils.isEmpty(code)) {// 走常规密码验证
-            String password = new String((char[]) credentials);// 前端传递过来的// String.valueOf((char[]) credentials)
-            query.setPhone((String) principal);
-            UserVO dbUser = userService.selectDbUserByPhone(query);// 拿到了数据库的用户
             if (dbUser == null) {
                 throw new UnknownAccountException("账户或密码错误");
             } else {// 账户虽然存在，就要开始比较密码
@@ -74,7 +74,6 @@ public class UserRealm extends AuthorizingRealm {
             Object loginCode = session.getAttribute("loginCode");// 咱们自己发的
             if (code.equals(loginCode)) {// 登录成功验证码相等
                 query.setPhone((String) principal);
-                UserVO dbUser = userService.selectDbUserByPhone(query);// 拿到了数据库的用户
                 Object isBack = session.getAttribute("isBack");
                 if (dbUser == null) {
                     if (isBack != null) {
@@ -110,7 +109,11 @@ public class UserRealm extends AuthorizingRealm {
 //        }
         // 应该设置 session
 
-
+        User u = new User();
+        u.setUserId(dbUser.getUserId());
+        u.setLastLoginIp(NetUtil.getIpAddr());
+        u.setLastLoginTime(new Date());
+        userService.updateUser(u);
         // 设置权限
         return new SimpleAuthenticationInfo(authenticationToken.getPrincipal(), authenticationToken.getCredentials(), "userRealm");
     }

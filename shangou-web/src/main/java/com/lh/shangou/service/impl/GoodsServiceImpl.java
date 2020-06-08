@@ -34,7 +34,6 @@ public class GoodsServiceImpl implements GoodsService {
     UserDao userDao;
 
 
-
     @Resource
     MerchantDao merchantDao;
 
@@ -80,14 +79,22 @@ public class GoodsServiceImpl implements GoodsService {
         Merchant m = merchantDao.selectByPrimaryKey(goods.getMerchantId());
         goods.setBusinessTypeId(m.getBusinessType());
         goods.setProvince(m.getProvince());
-
+        if (goods.getIsCoupon() == null) {
+            goods.setIsCoupon(false);
+        }
+        if (goods.getTakeaway() == null) {
+            goods.setTakeaway(false);
+        }
+        if (goods.getOnSale() == null) {
+            goods.setOnSale(false);
+        }
         // 删除缓存图片
-        System.err.println(deleteImgCache(goods));
+        deleteImgCache(goods);
         return ResponseDTO.get(goodsDao.insertSelective(goods) == 1);
     }
 
     @Override
     public Goods getById(Long goodsId) {
-      return  goodsDao.selectByPrimaryKey(goodsId);
+        return goodsDao.selectByPrimaryKey(goodsId);
     }
 }

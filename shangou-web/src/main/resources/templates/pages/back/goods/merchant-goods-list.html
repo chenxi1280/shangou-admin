@@ -17,6 +17,50 @@
     <div id="goodsDetailDiv"></div>
 </script>
 <body class="layui-card-body layui-card">
+<form class="layui-form" style="display: flex;align-items: center;flex-wrap: wrap"
+      id="queryForm">
+    <div style="display: flex;align-items: center;flex-wrap: nowrap">
+        <label class="layui-form-label" style="width: fit-content">名称</label>
+        <input type="text" name="title" id="title"
+               style="width: 120px" class="layui-input">
+    </div>
+    <div style="display: flex;align-items: center;flex-wrap: nowrap">
+        <label class="layui-form-label" style="width: fit-content">最低价</label>
+        <input type="text" name="minPrice" id="minPrice"
+               style="width: 120px" class="layui-input">
+    </div>
+    <div style="display: flex;align-items: center;flex-wrap: nowrap">
+        <label class="layui-form-label" style="width: fit-content;">最高价</label>
+        <input type="text" name="maxPrice" id="maxPrice"
+               style="width: 120px" class="layui-input">
+    </div>
+
+    <div style="display: flex;align-items: center;flex-wrap: nowrap">
+        <label class="layui-form-label" style="width: fit-content;">商品类型</label>
+        <div class="layui-input-block" style="margin: 0;width: 140px">
+            <select name="goodsTypeId" lay-filter="selectGoodsType" class="layui-select" >
+                <option value=""></option>
+                <option th:each="t:${goodsTypes}" th:value="${t.goodsTypeId}"
+                        th:text="${t.typeName}"></option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item" style="margin: 5px;border: solid lightgray 0.1px;margin-left: 10px">
+        <label class="layui-form-label" style="width: fit-content">是否在售</label>
+        <input type="radio" name="onSale" lay-filter="onSale" value="" title="所有" checked>
+        <input type="radio" name="onSale" lay-filter="onSale" value="1" title="在售">
+        <input type="radio" name="onSale" lay-filter="onSale" value="0" title="停售">
+    </div>
+    <div class="layui-form-item" style="margin: 5px;border: solid lightgray 0.1px;margin-left: 10px">
+        <label class="layui-form-label" style="width: fit-content">是否团购</label>
+        <input type="radio" name="isCoupon" lay-filter="isCoupon" value="" title="所有" checked>
+        <input type="radio" name="isCoupon" lay-filter="isCoupon" value="1" title="团购">
+        <input type="radio" name="isCoupon" lay-filter="isCoupon" value="0" title="外卖">
+    </div>
+    <div class="layui-form-item" style="margin: 0">
+        <button class="layui-btn" style="margin-left: 10px" id="queryBtn" lay-submit lay-filter="queryForm">查询</button>
+    </div>
+</form>
 
 <!--分页组件-->
 <table id="goodsTable" lay-filter="goodsTable"></table>
@@ -142,6 +186,10 @@
             })
         });
 
+        form.on('select(selectGoodsType)', function (data) {
+            $("#queryBtn").click();
+        });
+
         //监听工具条
         table.on('tool(goodsTable)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
             var d = obj.data; //获得当前行数据
@@ -199,11 +247,32 @@
             }
             ;
         });
+        form.on('submit(queryForm)', function (data) {
+            tb.reload({
+                where: data.field
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+        form.on('radio(onSale)', function (data) {
+            $("#queryBtn").click();
+        });
+        form.on('radio(isCoupon)', function (data) {
+            $("#queryBtn").click();
+        });
+        onInput($("#queryForm input"));
 
         function editGoods(p) {
             $.post('/pages/back/goods/edit', p, function (res) {
                 layer.msg(res.msg);
             });
+        }
+
+        function onInput(jObj) {
+            jObj.on({
+                'input': function () {
+                    $("#queryBtn").click();// 这里直接换成查询按钮点击事件
+                }
+            })
         }
 
         function onSwitch(field) {// 自定义三个开官事件监听

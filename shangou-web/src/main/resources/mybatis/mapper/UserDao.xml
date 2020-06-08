@@ -164,5 +164,47 @@
             #{id}
         </foreach>
     </select>
+    <select id="ajaxList" resultType="com.lh.shangou.pojo.vo.UserVO">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        <where>
+            <if test="nickName != null and nickName!=''">
+                and nick_name like CONCAT('%',#{nickName},'%')
+            </if>
+            <if test="realName != null and realName!=''">
+                and real_name like CONCAT('%',#{realName},'%')
+            </if>
+            <if test="note != null and note!=''">
+                and note like CONCAT('%',#{note},'%')
+            </if>
+            <if test="phone != null and phone!=''">
+                and phone like CONCAT('%',#{phone},'%')
+            </if>
+        </where>
+        order by user_id DESC
+        limit #{start},#{limit}
+
+    </select>
+    <select id="ajaxListCount" resultType="java.lang.Integer">
+        select
+        COUNT(*)
+        from user
+        <where>
+            user_id>0
+            <if test="nickName != null and nickName!=''">
+                and nick_name like CONCAT('%',#{nickName},'%')
+            </if>
+            <if test="realName != null and realName!=''">
+                and real_name like CONCAT('%',#{realName},'%')
+            </if>
+            <if test="note != null and note!=''">
+                and note like CONCAT('%',#{note},'%')
+            </if>
+            <if test="phone != null and phone!=''">
+                and phone like CONCAT('%',#{phone},'%')
+            </if>
+        </where>
+    </select>
 
 </mapper>

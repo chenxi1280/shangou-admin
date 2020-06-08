@@ -28,4 +28,7 @@ public interface UserDao {
 
     List<UserVO> selectUserVOByIds(@Param("ids") Collection<Long> goodsList);
 
+    List<UserVO> ajaxList(UserQuery query);
+
+    Integer ajaxListCount(UserQuery query);
 }

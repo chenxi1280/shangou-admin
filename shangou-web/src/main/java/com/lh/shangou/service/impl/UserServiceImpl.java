@@ -3,6 +3,7 @@ package com.lh.shangou.service.impl;
 import com.lh.shangou.dao.PermissionDao;
 import com.lh.shangou.dao.RoleDao;
 import com.lh.shangou.dao.UserDao;
+import com.lh.shangou.pojo.dto.PageDTO;
 import com.lh.shangou.pojo.entity.User;
 import com.lh.shangou.pojo.query.UserQuery;
 import com.lh.shangou.pojo.vo.PermissionVO;
@@ -15,7 +16,6 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * creator：杜夫人
@@ -56,7 +56,6 @@ public class UserServiceImpl implements UserService {
     public List<RoleVO> selectHisRolesByPhone(String phone) {
         UserVO u = userDao.selectUserByPhone(phone);
         if (!StringUtils.isEmpty(u.getRoles())) {
-
             List<RoleVO> roles = roleDao.selectHisRolesByRoles(u.getRoles());
             // 在查询完成roles之后，我们应该 roles的permissionVOS赋值
             if (!CollectionUtils.isEmpty(roles)) {
@@ -105,6 +104,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean checkPhoneExist(String phone) {
         return userDao.selectUserByPhone(phone) != null;
+    }
+
+    @Override
+    public PageDTO ajaxList(UserQuery query) {
+        List<UserVO> userVOS = userDao.ajaxList(query);
+
+
+
+        Integer count = userDao.ajaxListCount(query);
+
+        return PageDTO.setPageData(count, userVOS);
+    }
+
+    @Override
+    public void updateUser(User u) {
+        userDao.updateByPrimaryKeySelective(u);
     }
 
 

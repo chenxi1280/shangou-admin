@@ -333,7 +333,7 @@
             <if test="goodsTypeId != null">
                 and goods_type_id = #{goodsTypeId,jdbcType=BIGINT}
             </if>
-            <if test="title != null">
+            <if test="title != null and title!=''">
                 and title like CONCAT('%', #{title},'%')
             </if>
             <if test="minPrice != null">

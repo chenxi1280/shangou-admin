@@ -35,10 +35,13 @@ public class GoodsController extends BaseController {
     // 修改
     @RequestMapping("editPre/{goodsId}")
     String editPre(@PathVariable Long goodsId, Model model) {
+
         List<GoodsTypeVO> goodsTypeVOS = goodsTypeService.getMerchantGoodsTypes(getMerchantId());
         model.addAttribute("goodsTypes", goodsTypeVOS);
+
         Goods g = goodsService.getById(goodsId);
         model.addAttribute("g", g);
+
         return "pages/back/goods/goods-editPre";
     }
 
@@ -82,7 +85,7 @@ public class GoodsController extends BaseController {
     // 平台对商品进行列表查看
     @RequestMapping("ajaxList")
     @ResponseBody
-    PageDTO ajaxList(GoodsQuery query,Model model) {
+    PageDTO ajaxList(GoodsQuery query, Model model) {
         return goodsService.ajaxList(query);
     }
 
@@ -98,9 +101,9 @@ public class GoodsController extends BaseController {
     @ResponseBody
     ResponseDTO edit(Goods goods) {
         goods.setUpdateUser(getUserId());// 设置最后一次的修改人
+//        goods.setMerchantId(getMerchantId());// 设置商品的商户id是当前用户的商户id
         return goodsService.edit(goods);
     }
-
 
     @RequestMapping("delete/{goodsId}")
     @ResponseBody

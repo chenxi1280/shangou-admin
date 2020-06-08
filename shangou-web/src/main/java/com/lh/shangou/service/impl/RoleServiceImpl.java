@@ -56,6 +56,10 @@ public class RoleServiceImpl implements RoleService {
     public PageDTO getSystemRoles() {
         List<RoleVO> roleVOS = roleDao.getSystemRoles();
 
+        List<PermissionVO> permissionVOS = userService.selectHisPermissionByRoles(roleVOS);
+
+        getRoleVOList(roleVOS, permissionVOS);
+
         return PageDTO.setPageData(roleVOS.size(), roleVOS);
     }
 

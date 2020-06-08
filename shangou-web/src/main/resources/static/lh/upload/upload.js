@@ -37,7 +37,6 @@ function uploadFile(options) {
     let url = "/pages/back/upload/uploadFiles";
     $("div[lh-upload]").each(function () {
 
-
         let divId = this.id;
         let uploadDiv = $(this);
         uploadDiv.css({display: 'flex', 'flex-wrap': 'wrap', 'align-items': 'center'})
@@ -52,9 +51,9 @@ function uploadFile(options) {
         divImg.click(function () {
             fileInput.click();
         });
-        let initValue = $(this).attr("value");
+        let initValue = $(this).attr("value");// 这一句话是或div标签的属性的值
 
-        if (initValue != undefined) {
+        if (initValue != undefined) {// 有值
             let arr = initValue.split(',');
             arr.forEach(url => {
                 appendImg(url, divImg);

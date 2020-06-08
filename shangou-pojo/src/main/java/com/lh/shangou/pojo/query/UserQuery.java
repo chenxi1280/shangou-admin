@@ -8,5 +8,6 @@ import lombok.Data;
  */
 @Data
 public class UserQuery extends PageQuery {
-    private String password, phone;
+    private String password, phone, nickName, realName, note;
+
 }

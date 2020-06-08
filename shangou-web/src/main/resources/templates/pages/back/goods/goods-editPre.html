@@ -25,7 +25,9 @@
                         <div class="layui-input-block">
                             <select name="goodsTypeId" class="layui-select" lay-verify="required">
                                 <option th:each="t:${goodsTypes}"
-                                        th:selected="t.goodsTypeId==g.goodsTypeId?'selected':''"
+
+                                        th:selected="${t.goodsTypeId==g.goodsTypeId?true:false}"
+
                                         th:value="${t.goodsTypeId}"
                                         th:text="${t.typeName}"></option>
                             </select>

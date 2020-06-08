@@ -1,6 +1,7 @@
 package com.lh.shangou.service;
 
 
+import com.lh.shangou.pojo.dto.PageDTO;
 import com.lh.shangou.pojo.entity.User;
 import com.lh.shangou.pojo.query.UserQuery;
 import com.lh.shangou.pojo.vo.PermissionVO;
@@ -35,4 +36,8 @@ public interface UserService extends BaseService {
 
     // 检测用户是否存在
     boolean checkPhoneExist(String phone);
+
+    PageDTO ajaxList(UserQuery query);
+
+    void updateUser(User u);
 }
