@@ -14,8 +14,8 @@ function setImgInput(divImg) {
 
 function appendImg(url, divImg) {
     let deleteBtn = $("<span style='color: orange;display: none;position: absolute;z-index: 1;left: 50%;top:50%;cursor: pointer;transform: translate(-50%,-50%)'>删除</span>")
-    let img = $("<div style=\"width: 80px;height: 80px;padding: 5px 0;position: relative;margin-right: 5px\">\n" +
-        "                                                <img src='" + url + "' style=\"width: 100%;height: 100%;border-radius: 5px\"/>\n" +
+    let img = $("<div style=\"width: 80px;height: 80px;padding: 5px 0;position: relative;margin-right: 5px;\">\n" +
+        "                                                <img src='" + url + "' style=\"width: 100%;height: 100%;border-radius: 5px;border: solid  1px lightgrey;\"/>\n" +
         "                                            </div>");
     img.prepend(deleteBtn);
     img.hover(function () {

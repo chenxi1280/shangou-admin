@@ -44,4 +44,6 @@ public interface UserService extends BaseService {
     void updateUser(User u);
 
     ResponseDTO dispatchUserPermission(Long userId, List<Role> roles);
+
+    ResponseDTO edit(User user);
 }

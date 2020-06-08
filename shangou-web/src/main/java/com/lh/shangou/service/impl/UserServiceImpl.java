@@ -12,12 +12,15 @@ import com.lh.shangou.pojo.vo.PermissionVO;
 import com.lh.shangou.pojo.vo.RoleVO;
 import com.lh.shangou.pojo.vo.UserVO;
 import com.lh.shangou.service.UserService;
+import com.lh.shangou.util.password.PasswordUtil;
+import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * creator：杜夫人
@@ -64,8 +67,6 @@ public class UserServiceImpl implements UserService {
                 List<PermissionVO> permissionVOS = this.selectHisPermissionByRoles(roles);// 查出所有的权限
                 return getRoleVOList(roles, permissionVOS);
             }
-
-
         }
         return null;
     }
@@ -113,7 +114,6 @@ public class UserServiceImpl implements UserService {
         List<UserVO> userVOS = userDao.ajaxList(query);
 
 
-
         Integer count = userDao.ajaxListCount(query);
 
         return PageDTO.setPageData(count, userVOS);
@@ -126,20 +126,51 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseDTO dispatchUserPermission(Long userId, List<Role> roles) {
-
-
-
-
-
-
-
-
-
-
-
-
-        return null;
+        // 1、先把角色中的权限字符串取出来，因为要根据权限字符串去查询角色是否存在
+        // 2、为了保险起见，应该让这些权限按照从小到大的顺序排序
+        Set<String> collect = roles.stream().map(e -> {
+            String pStr = e.getPermissions();
+            if (StringUtils.isEmpty(pStr)) {
+                return "";
+            } else {
+                String[] split = pStr.split(",");
+                Arrays.sort(split, Comparator.comparingInt(Integer::valueOf));
+                return StringUtils.arrayToDelimitedString(split, ",");
+            }
+        }).collect(Collectors.toSet());// 把所有角色中的权限字符串取出来当成一个查询参数set
+        List<Role> dbRoles = roleDao.selectByPermissions(collect);
+        Map<String, List<Role>> collect1 = dbRoles.stream().collect(Collectors.groupingBy(Role::getPermissions));
+        TreeSet treeSet = new TreeSet();
+        for (Role r : roles) {
+            List<Role> roles1 = collect1.get(r.getPermissions());
+            if (CollectionUtils.isEmpty(roles1)) {// 没这个权限组，那么就需要新增权限组
+                r.setSystem(false);
+                r.setNote("==>新增分配角色：");
+                roleDao.insertSelective(r);
+                treeSet.add(r.getRoleId());
+            } else {// 已经有这个权限组了，那么直接把这个权限组加入到事先准备好的treeSet里边
+                treeSet.add(roles1.get(0).getRoleId());
+            }
+        }
+        String s = StringUtils.collectionToDelimitedString(treeSet, ",");
+        User u = new User();
+        u.setUserId(userId);
+        u.setRoles(s);
+        return ResponseDTO.get(userDao.updateByPrimaryKeySelective(u) == 1);
     }
 
+    @Override
+    public ResponseDTO edit(User user) {
+        if (StringUtils.isEmpty(user.getPassword())) {
+            user.setPassword(null);
+        } else {// 要对密码加密
+            user.setPassword(PasswordUtil.encodePassword(user.getPassword()));
+        }
+        if (userDao.updateByPrimaryKeySelective(user) == 1) {
 
+            deleteImgCache(user);// 删除缓存图片
+            return ResponseDTO.ok("修改成功！", user);
+        }
+        return ResponseDTO.fail("修改失败");
+    }
 }

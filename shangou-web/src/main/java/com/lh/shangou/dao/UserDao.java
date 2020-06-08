@@ -22,6 +22,9 @@ public interface UserDao {
 
     int updateByPrimaryKey(User record);
 
+
+
+
     UserVO selectUserByPhoneAndPassword(UserQuery query);
 
     UserVO selectUserByPhone(String phone);

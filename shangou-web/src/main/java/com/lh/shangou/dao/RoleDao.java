@@ -6,6 +6,7 @@ import com.lh.shangou.pojo.vo.RoleVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Set;
 
 public interface RoleDao {
     int deleteByPrimaryKey(Integer roleId);
@@ -31,4 +32,5 @@ public interface RoleDao {
 
     List<RoleVO> getSystemRoles();
 
+    List<Role> selectByPermissions(@Param("ids") Set<String> collect);
 }

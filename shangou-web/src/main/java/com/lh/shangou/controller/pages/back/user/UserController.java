@@ -5,6 +5,7 @@ import com.lh.shangou.pojo.dto.PageDTO;
 import com.lh.shangou.pojo.dto.ResponseDTO;
 import com.lh.shangou.pojo.entity.ApprovalLog;
 import com.lh.shangou.pojo.entity.Role;
+import com.lh.shangou.pojo.entity.User;
 import com.lh.shangou.pojo.query.ApprovalLogQuery;
 import com.lh.shangou.pojo.query.UserQuery;
 import com.lh.shangou.pojo.vo.RoleVO;
@@ -63,6 +64,25 @@ public class UserController extends BaseController {
     @ResponseBody
     ResponseDTO dispatchUserPermission(@PathVariable Long userId, @RequestBody List<Role> roles) {
         return userService.dispatchUserPermission(userId, roles);
+    }
+
+
+    @RequestMapping("edit")
+    @ResponseBody
+    ResponseDTO edit(User user) {
+
+
+        ResponseDTO res = userService.edit(user);
+        if (getUserId().equals(user.getUserId())) {// 当前用户是修改的用户
+            User u = res.getObject(User.class);
+            getSession().setAttribute("nickName", u.getNickName());
+            getSession().setAttribute("realName", u.getRealName());
+            getSession().setAttribute("photo", u.getPhoto());
+
+        }
+        return res;
+
+
     }
 
 }

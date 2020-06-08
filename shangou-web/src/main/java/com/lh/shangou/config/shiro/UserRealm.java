@@ -63,13 +63,7 @@ public class UserRealm extends AuthorizingRealm {
                     throw new CredentialsException("账户或密码错误");
                 }
             }
-            session.setAttribute("userId", dbUser.getUserId());
-            session.setAttribute("nickName", dbUser.getNickName());
-            session.setAttribute("realName", dbUser.getRealName());
-            session.setAttribute("phone", dbUser.getPhone());
-            // 设置角色
-            List<RoleVO> roleVOS = userService.selectHisRolesByPhone(dbUser.getPhone());
-            session.setAttribute("hisRoles", roleVOS);
+
         } else {// 验证码登录的方式
             Object loginCode = session.getAttribute("loginCode");// 咱们自己发的
             if (code.equals(loginCode)) {// 登录成功验证码相等
@@ -89,13 +83,7 @@ public class UserRealm extends AuthorizingRealm {
                         }
                     }
                 }
-                session.setAttribute("userId", dbUser.getUserId());
-                session.setAttribute("nickName", dbUser.getNickName());
-                session.setAttribute("realName", dbUser.getRealName());
-                session.setAttribute("phone", dbUser.getPhone());
-                // 设置角色
-                List<RoleVO> roleVOS = userService.selectHisRolesByPhone(dbUser.getPhone());
-                session.setAttribute("hisRoles", roleVOS);
+
             } else {
                 throw new CredentialsException("验证码错误");
             }
@@ -108,6 +96,14 @@ public class UserRealm extends AuthorizingRealm {
 //            throw new AuthenticationException("账户名或密码错误");
 //        }
         // 应该设置 session
+        session.setAttribute("userId", dbUser.getUserId());
+        session.setAttribute("nickName", dbUser.getNickName());
+        session.setAttribute("realName", dbUser.getRealName());
+        session.setAttribute("phone", dbUser.getPhone());
+        session.setAttribute("photo", dbUser.getPhoto());
+        // 设置角色
+        List<RoleVO> roleVOS = userService.selectHisRolesByPhone(dbUser.getPhone());
+        session.setAttribute("hisRoles", roleVOS);
 
         User u = new User();
         u.setUserId(dbUser.getUserId());

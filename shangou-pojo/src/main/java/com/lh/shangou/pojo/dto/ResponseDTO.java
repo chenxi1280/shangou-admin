@@ -72,7 +72,7 @@ public class ResponseDTO implements Serializable {
         this.res = false;
     }
 
-    // 定义了一个函数。泛型含糊
+    // 定义了一个函数。泛型函数
     public <T> T getObject(Class<T> cls) {
 
         if (getData() != null) {

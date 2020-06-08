@@ -10,7 +10,7 @@
 </style>
 <body class="layui-card-body layui-card">
 <div style="padding: 10px;" class="layui-card">
-    <form id="QueryForm" class="layui-form" method="post"
+    <form id="queryForm" class="layui-form" method="post"
           style="display: flex;align-items: center">
         <div class="layui-hide-xs" style="display: flex;align-items: center">
             <span style="width: fit-content">用户昵称:</span>
@@ -25,17 +25,7 @@
             <label style="width:  fit-content">手机号:</label><input class="layui-input" name="phone" id="phone"
                                                                   style="width: 120px"/>
         </div>
-        <div class="layui-hide-xs" style="display: flex;align-items: center;margin-left: 20px">
-            <label style="width:  fit-content">选择身份</label>
-            <div style="width: 120px">
-                <select name="principal">
-                    <option value=""></option>
-                    <option value="ADMIN">超级管理员</option>
-                    <option value="CONSUMER">消费者</option>
-                    <option value="MERCHANT">商家</option>
-                </select>
-            </div>
-        </div>
+
         <div style="display: flex;align-items: center;margin-left: 20px">
             <button type="button" class="layui-btn" id="queryBtn" lay-submit lay-filter="queryForm">查询</button>
         </div>
@@ -52,7 +42,7 @@
                  style="border: solid lightgray 1px;border-radius: 5px;padding: 10px;width: fit-content;margin: 5px">
                 <input type="checkbox" name="roleTitle" lay-skin="primary" lay-filter="roleTitle"
                        th:id="'roleId-'+${r.flag}" th:ind="'role-'+${rStat.index}"><span
-                    style="font-size: 14px;font-weight: bold" th:text="${r.name}">角色名称</span>
+                    style="font-size: 14px;font-weight: bold;cursor: pointer" th:text="${r.name}">角色名称</span>
                 <div style="padding-left: 20px">
                     <div th:each="p:${r.permissionVOS}" style="padding: 3px">
                         <input type="checkbox" lay-filter="permissionTitle" th:title="${p.name}"
@@ -91,28 +81,30 @@
                 , cols: [[ //表头
                     {width: 40, type: "checkbox"}
                     , {field: 'userId', title: 'ID', width: 60}
-                    , {field: 'nickName', title: '用户昵称', width: 100}
+                    , {field: 'nickName', title: '用户昵称', width: 140}
                     , {field: 'realName', title: '真实姓名', width: 100}
                     , {
-                        field: '', title: '用户头像', width: 80, templet: function (d) {
-                            return '<div ><img style="width: 50px;height: 50px;border-radius: 5px" src="' + d.photo + '"></div>'
+                        field: '', title: '用户头像', width: 100, templet: function (d) {
+                            return '<div ><img showBig style="width: 50px;height: 50px;border-radius: 5px" src="' + d.photo + '"></div>'
                         }
                     }
                     , {field: 'phone', title: '手机号', width: 120}
                     , {field: 'lastLoginTime', title: '最近登陆时间', width: 160}
                     , {field: 'lastLoginIp', title: '最近登录ip', width: 140}
-                    , {field: 'note', title: '备注', width: 140}
+                    , {field: 'note', title: '备注', width: 140,edit:'text'}
                     , {
                         field: '', title: '操作', width: 180, templet: function (d) {
                             return '<div >' +
                                 '<button class="layui-btn  layui-btn-warm layui-btn-xs" lay-event="showPermissions">调整权限</button>' +
-                                '<button class="layui-btn  layui-btn-normal layui-btn-xs" lay-event="edit">修改</button>' +
                                 '<button class="layui-btn layui-btn-danger  layui-btn-xs" lay-event="lock">锁定</button>' +
                                 '</div>'
                         }
                     }
                 ]]
                 , toolbar: 'default'
+                , done() {
+                    showBigImg();
+                }
             });
             //监听头部工具栏的事件
             table.on('toolbar(userTableFilter)', function (obj) {
@@ -130,6 +122,15 @@
                 }
                 ;
             });
+            table.on('edit(userTableFilter)', function (obj) { //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+                let p = {};
+                p.userId = obj.data.userId;
+                p[obj.field] = obj.value;
+                $.post('/pages/back/user/edit', p, function (res) {
+                        layer.msg(res.msg);
+                    }
+                );
+            });
             //监听行中工具栏事件
             table.on('tool(userTableFilter)', function (obj) {
                 let d = obj.data;
@@ -144,7 +145,6 @@
                                 content: $('#showPermissionDiv').html() //这里content是一个普通的String
                             });
                             let hisRoles = res;//返回的是一个权限组（角色的集合）
-                            console.log(hisRoles);
                             for (let x = 0; x < hisRoles.length; x++) {
                                 let r = hisRoles[x];
                                 $("[name=roleTitle]").each(function () {
@@ -154,14 +154,16 @@
                                     }
                                 });
                                 let permissions = r.permissionVOS;// 拿到当前角色的权限
-                                for (let x = 0; x < permissions.length; x++) {
-                                    let p = permissions[x];
-                                    $("[id^=permissionId-]").each(function () {
-                                        let flag = this.id.split('-')[1];
-                                        if (flag == p.flag) {
-                                            this.checked = true;
-                                        }
-                                    })
+                                if(permissions!=null){
+                                    for (let x = 0; x < permissions.length; x++) {
+                                        let p = permissions[x];
+                                        $("[id^=permissionId-]").each(function () {
+                                            let flag = this.id.split('-')[1];
+                                            if (flag == p.flag) {
+                                                this.checked = true;
+                                            }
+                                        })
+                                    }
                                 }
 
                             }
@@ -207,6 +209,7 @@
                                         permissionsStr = permissionsStr.substring(0, permissionsStr.length - 1);
                                         roleVO.permissions = permissionsStr;
                                         roleVOs.push(roleVO);
+
                                     }
                                 });
 
@@ -251,9 +254,23 @@
                 });
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });
+            onInput($("#queryForm input"));
+
         });
     })
+    function onInput(jObj) {
 
+
+        jObj.on({
+
+            'input': function () {
+
+                $("#queryBtn").click();// 这里直接换成查询按钮点击事件
+
+            }
+
+        })
+    }
 
 </script>
 
