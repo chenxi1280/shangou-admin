@@ -1,5 +1,6 @@
 package com.lh.shangou.service.impl;
 
+import com.lh.shangou.config.webmvc.WebMvcConfig;
 import com.lh.shangou.dao.PermissionDao;
 import com.lh.shangou.dao.RoleDao;
 import com.lh.shangou.dao.UserDao;
@@ -19,6 +20,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -126,51 +128,86 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseDTO dispatchUserPermission(Long userId, List<Role> roles) {
-        // 1、先把角色中的权限字符串取出来，因为要根据权限字符串去查询角色是否存在
-        // 2、为了保险起见，应该让这些权限按照从小到大的顺序排序
-        Set<String> collect = roles.stream().map(e -> {
-            String pStr = e.getPermissions();
-            if (StringUtils.isEmpty(pStr)) {
-                return "";
+        TreeSet treeSet = new TreeSet();// 就是装最后分配好的角色id
+        // 1、先把权限字符串取出来进行排序操作
+        // 当作查询参数,服务器也要对权限字符串进行排序
+        Set<String> collect = roles.stream().map(elem -> {
+            String permissions = elem.getPermissions();
+            if (StringUtils.isEmpty(permissions)) {
+                return "";// 这里返回空字符串才行
             } else {
-                String[] split = pStr.split(",");
-                Arrays.sort(split, Comparator.comparingInt(Integer::valueOf));
+                // StringUtils 和js中的join方法很强大
+                String[] split = permissions.split(",");
+                // 数组排序
+//                Arrays.sort(split);// 从小到大排序(这里要注意的是，如果是字符串，大小排序不是按照数字来的)
+                Arrays.sort(split, Comparator.comparingInt(Integer::valueOf));// 特别关键
+                // 就是这个方法，就是把数组直接变成字符串
                 return StringUtils.arrayToDelimitedString(split, ",");
             }
-        }).collect(Collectors.toSet());// 把所有角色中的权限字符串取出来当成一个查询参数set
-        List<Role> dbRoles = roleDao.selectByPermissions(collect);
-        Map<String, List<Role>> collect1 = dbRoles.stream().collect(Collectors.groupingBy(Role::getPermissions));
-        TreeSet treeSet = new TreeSet();
+        }).collect(Collectors.toSet());
+        List<Role> roles1 = roleDao.selectByPermissions(collect);
+        Map<String, List<Role>> collect1 = roles1.stream().collect(Collectors.groupingBy(Role::getPermissions));
         for (Role r : roles) {
-            List<Role> roles1 = collect1.get(r.getPermissions());
-            if (CollectionUtils.isEmpty(roles1)) {// 没这个权限组，那么就需要新增权限组
-                r.setSystem(false);
-                r.setNote("==>新增分配角色：");
+            List<Role> roles2 = collect1.get(r.getPermissions());// 从查询结果里边取角色
+            if (CollectionUtils.isEmpty(roles2)) {// 结果集里边没有这个角色，就需要新增角色
+                r.setSystem(false);// 不是系统级
+                r.setNote("==> 新增角色：");
+                // 有没有RoleId有关系吗？
                 roleDao.insertSelective(r);
                 treeSet.add(r.getRoleId());
-            } else {// 已经有这个权限组了，那么直接把这个权限组加入到事先准备好的treeSet里边
-                treeSet.add(roles1.get(0).getRoleId());
+            } else {
+                treeSet.add(roles2.get(0).getRoleId());
             }
         }
-        String s = StringUtils.collectionToDelimitedString(treeSet, ",");
         User u = new User();
         u.setUserId(userId);
-        u.setRoles(s);
+        u.setRoles(StringUtils.collectionToDelimitedString(treeSet, ","));
         return ResponseDTO.get(userDao.updateByPrimaryKeySelective(u) == 1);
     }
 
     @Override
-    public ResponseDTO edit(User user) {
+    public ResponseDTO edit(User user) {// 修改用户
+
+
+        User dbUser = userDao.selectByPrimaryKey(user.getUserId());
         if (StringUtils.isEmpty(user.getPassword())) {
             user.setPassword(null);
-        } else {// 要对密码加密
+        } else {
+            // 密码是不是应该需要加密
             user.setPassword(PasswordUtil.encodePassword(user.getPassword()));
         }
         if (userDao.updateByPrimaryKeySelective(user) == 1) {
+            deleteImgCache(user);// 删除现在的图片缓存
+//            replaceOldFile(dbUser, user);
 
-            deleteImgCache(user);// 删除缓存图片
-            return ResponseDTO.ok("修改成功！", user);
+//          aop 如何实现
+
+            if (!StringUtils.isEmpty(dbUser.getPhoto())) {// 每次更换图片，不管是用户，还是商品，还是任何，应该封装一个工具类
+                if (dbUser.getPhoto().equals(user.getPhoto())) {
+                } else {
+                    if (!StringUtils.isEmpty(user.getPhoto())) {
+                        WebMvcConfig.deleteFile(dbUser.getPhoto());
+                    }
+                }
+            }
+            return ResponseDTO.ok("更新成功！", user);
+            // 这样做有问题？
+            // 但是如果用户本身就有图片呢？原来的图片的怎么办？？把原来的图片删除
         }
-        return ResponseDTO.fail("修改失败");
+
+
+        return ResponseDTO.fail("更新失败！");
+    }
+
+    // 第一个参数，就传父类，如果没有父类对象，就两个参数的 class都一样
+    private void replaceOldFile(Object user, Object dbUser) {
+        // 1、先把父类的class找到！
+        Class cls = user.getClass();
+        Field[] declaredFields = dbUser.getClass().getDeclaredFields();// 只能得到一个
+
+
+        User.class.getDeclaredFields();// 也能得到全部
+
+
     }
 }

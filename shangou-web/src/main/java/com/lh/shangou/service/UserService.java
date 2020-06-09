@@ -9,6 +9,7 @@ import com.lh.shangou.pojo.query.UserQuery;
 import com.lh.shangou.pojo.vo.PermissionVO;
 import com.lh.shangou.pojo.vo.RoleVO;
 import com.lh.shangou.pojo.vo.UserVO;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -43,6 +44,8 @@ public interface UserService extends BaseService {
 
     void updateUser(User u);
 
+    // 事务控制
+    @Transactional
     ResponseDTO dispatchUserPermission(Long userId, List<Role> roles);
 
     ResponseDTO edit(User user);

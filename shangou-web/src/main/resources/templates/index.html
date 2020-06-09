@@ -2,7 +2,27 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <title>闪购</title>
 <div th:replace="fragment/js::js"></div>
-<body>
-<h1>前端首页</h1>
+<body style="border: solid green">
+
+<div style="position: absolute;border: orange solid ;left: 0;right: 0;top: 0;bottom: 0">
+
+    <div class="layui-row" style="border: solid red;height: 100%">
+        <div class="layui-col-xs12   layui-col-md6 layui-col-md-offset3" style="border: solid red;height: 100%">
+
+            <div style="border: solid green;position: absolute;top: 0;left: 0;right: 0;height: 40px">上</div>
+            <div style="border: solid black;position: absolute;top: 40px;left: 0;right: 0;bottom: 50px;overflow-y: auto">
+                <h1 th:each="x:${#numbers.sequence(1,500)}" th:text="${x}"></h1>
+            </div>
+            <div>
+                <div th:replace="fragment/bottom_menu::bottom_menu"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
 </body>
 </html>

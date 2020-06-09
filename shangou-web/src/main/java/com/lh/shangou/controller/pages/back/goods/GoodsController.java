@@ -10,6 +10,8 @@ import com.lh.shangou.pojo.vo.GoodsTypeVO;
 import com.lh.shangou.pojo.vo.GoodsVO;
 import com.lh.shangou.service.GoodsService;
 import com.lh.shangou.service.GoodsTypeService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -99,6 +101,11 @@ public class GoodsController extends BaseController {
 
     @RequestMapping("edit")
     @ResponseBody
+    // 需要商户管理角色才能访问这个接口
+
+    @RequiresRoles("merchant")
+    @RequiresPermissions("goods:edit")
+// 可以用拥有这个角色，但是不具备修改商品的功能
     ResponseDTO edit(Goods goods) {
         goods.setUpdateUser(getUserId());// 设置最后一次的修改人
 //        goods.setMerchantId(getMerchantId());// 设置商品的商户id是当前用户的商户id

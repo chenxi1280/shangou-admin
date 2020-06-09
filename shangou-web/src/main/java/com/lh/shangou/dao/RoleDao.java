@@ -33,4 +33,6 @@ public interface RoleDao {
     List<RoleVO> getSystemRoles();
 
     List<Role> selectByPermissions(@Param("ids") Set<String> collect);
+
+
 }

@@ -63,6 +63,7 @@ public class UserController extends BaseController {
     @RequestMapping("dispatchUserPermission/{userId}")
     @ResponseBody
     ResponseDTO dispatchUserPermission(@PathVariable Long userId, @RequestBody List<Role> roles) {
+
         return userService.dispatchUserPermission(userId, roles);
     }
 
@@ -70,19 +71,14 @@ public class UserController extends BaseController {
     @RequestMapping("edit")
     @ResponseBody
     ResponseDTO edit(User user) {
-
-
         ResponseDTO res = userService.edit(user);
         if (getUserId().equals(user.getUserId())) {// 当前用户是修改的用户
             User u = res.getObject(User.class);
             getSession().setAttribute("nickName", u.getNickName());
             getSession().setAttribute("realName", u.getRealName());
             getSession().setAttribute("photo", u.getPhoto());
-
         }
         return res;
-
-
     }
 
 }

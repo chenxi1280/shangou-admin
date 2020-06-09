@@ -2,7 +2,6 @@ package com.lh.shangou.dao;
 
 import com.lh.shangou.pojo.entity.User;
 import com.lh.shangou.pojo.query.UserQuery;
-import com.lh.shangou.pojo.vo.GoodsVO;
 import com.lh.shangou.pojo.vo.UserVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -23,9 +22,7 @@ public interface UserDao {
     int updateByPrimaryKey(User record);
 
 
-
-
-    UserVO selectUserByPhoneAndPassword(UserQuery query);
+    UserVO selectUserByPhoneAndPassword(UserQuery query);// mybatis拦截器
 
     UserVO selectUserByPhone(String phone);
 
