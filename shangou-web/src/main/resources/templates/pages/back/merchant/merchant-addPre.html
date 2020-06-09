@@ -172,6 +172,7 @@
 
 <script th:inline="javascript" type="text/javascript">
     $(function () {
+        initMap();
         // 这些图片都是必须要上传的
         let validateArr = ['doorImg', 'interiorImg', 'cardUserImg', 'cardGuohuiImg', 'cardHandImg', 'businessLicenseImg', 'securityPermitImg'];
         layui.use(['layer', 'form'], function () {
@@ -197,7 +198,6 @@
 
                 let childrenSelect = $("#childrenSelect");
                 childrenSelect.empty();// 清空孩子们
-
                 children.forEach(c => {
                     let op = $("<option value='" + c.typeId + "'>" + c.name + "</option>");// 一定要变成jquery对象
                     childrenSelect.append(op);
@@ -228,7 +228,7 @@
                 $.post('/pages/back/merchant/add', data.field, function (res) {
                     layer.msg(res);
                     if (res.res) {// 这里如果申请成功了，那么应该跳转到提示商户审核中的页面去，静态界面
-                        window.location='/pages/back/merchant/approvalStatus'
+                        window.location = '/pages/back/merchant/approvalStatus'
                     }
                 });
 

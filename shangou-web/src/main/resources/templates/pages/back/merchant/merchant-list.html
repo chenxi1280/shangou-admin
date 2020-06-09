@@ -125,6 +125,7 @@
 
 <script th:inline="javascript" type="text/javascript">
     let currentMerchantId;// 当前点击的商户id,给个变量
+    initMap();
     layui.use(['layer', 'table', 'form'], function () {
         // 我再js代码里边如何获取控制器传递过来的参数呢？
         let layer = layui.layer;// 弹出层
