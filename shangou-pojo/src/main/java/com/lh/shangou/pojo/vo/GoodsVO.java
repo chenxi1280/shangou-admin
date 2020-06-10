@@ -11,4 +11,5 @@ import lombok.Data;
 public class GoodsVO extends Goods {
 
     private String updateUserName;// 更新人的名字
+    private Integer shopCarCount;// 购物车的数量
 }

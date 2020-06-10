@@ -164,7 +164,7 @@
                 let gid = this.goods.goodsId;
                 let count = parseInt($("#carGoodsCount-" + gid).text().trim());
                 sum += count * this.goods.nowPrice;
-                oldSum += count * (this.goods.oldPrice-this.goods.nowPrice);
+                oldSum += count * (this.goods.oldPrice - this.goods.nowPrice);
                 allCount += count;
             }
         });
@@ -174,14 +174,14 @@
         if (sum <= 0) {
             $("#settlementDiv").css({
                 background: 'gray'
-            })
+            });
             $("#showCar").css({
                 background: 'gray'
             })
         } else {
             $("#settlementDiv").css({
                 background: 'orange'
-            })
+            });
             $("#showCar").css({
                 background: 'orange'
             })
@@ -198,6 +198,9 @@
                 goodsId: gid,
                 count: finalCount
             });
+        }else {
+            localStorage.setItem("redirectUrl", '/pages/front/merchant/merchantShop/' + [[${m.merchantId}]]);// 购物车也存到本地浏览器
+            window.location = '/loginPage';
         }
     }
 
@@ -269,7 +272,7 @@
                 form.render();
                 getSumMoney();// 算账
                 updateCarCount(gid, count - 1);
-            })
+            });
             form.on('checkbox(checkItem)', function (data) {
                 getSumMoney();// 算账
             });
@@ -282,7 +285,6 @@
         $("#checkItem-" + gid)[0].checked = true;
         form.render();
         getSumMoney();// 算账
-        updateCarCount(gid, count + 1);
     }
 
     /**
@@ -314,7 +316,6 @@
         let merchantInfoDivH = $('#merchantInfoDiv').height();
         $('#goodsInfoDiv').scroll(function () {
             var scroH = $(this).scrollTop();  //滚动高度
-            console.log(scroH)
             if (scroH > merchantInfoDivH - 1) {  // 滚动130后，马上给type和商品换上可以滚动
                 $("#shade").css({
                     display: 'none'
@@ -334,7 +335,6 @@
             $("#showCar").click(function () {
                 lhLayer($("#shopCarLayer"))
             });
-
             $("[id^=typeId-]").click(function () {
                 $(this).siblings().css({
                     background: 'rgb(240,240,240)',
@@ -393,11 +393,21 @@
                         goodsDiv.append(item);
 
                         $("#addCount-" + gid)[0].goods = g;
-
                         $("#cutCount-" + gid)[0].goods = g;
+                        console.log(g.shopCarCount);
+                        if(g.shopCarCount!=null){
+                            for (let x = 0; x < g.shopCarCount; x++) {// 回填用户的购物车的数量
+                                appendCar($("#addCount-" + gid)[0], form);
+                            }
+                        }
+
                     }
+
                     $("[id^=addCount-]").click(function () {// 增加购物车
                         appendCar(this, form);
+                        let goodsCountObj = $("#goodsCount-" + this.goods.goodsId);
+                        let count = parseInt(goodsCountObj.text().trim());
+                        updateCarCount(this.goods.goodsId, count);
                     });
                     $("[id^=cutCount-]").click(function () {
                         let domObj = this;

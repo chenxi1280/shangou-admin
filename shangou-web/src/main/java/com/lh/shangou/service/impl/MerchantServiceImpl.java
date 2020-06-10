@@ -1,19 +1,19 @@
 package com.lh.shangou.service.impl;
 
 import com.lh.shangou.consts.enums.ApprovalEnum;
-import com.lh.shangou.dao.GoodsDao;
-import com.lh.shangou.dao.GoodsTypeDao;
-import com.lh.shangou.dao.ImgCacheDao;
-import com.lh.shangou.dao.MerchantDao;
+import com.lh.shangou.dao.*;
 import com.lh.shangou.pojo.dto.PageDTO;
 import com.lh.shangou.pojo.dto.ResponseDTO;
 import com.lh.shangou.pojo.entity.Merchant;
+import com.lh.shangou.pojo.entity.ShopCar;
 import com.lh.shangou.pojo.query.MerchantQuery;
 import com.lh.shangou.pojo.vo.GoodsTypeVO;
 import com.lh.shangou.pojo.vo.GoodsVO;
 import com.lh.shangou.pojo.vo.MerchantVO;
+import com.lh.shangou.pojo.vo.ShopCarVO;
 import com.lh.shangou.service.ImgCacheService;
 import com.lh.shangou.service.MerchantService;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * creator：杜夫人
@@ -38,7 +39,8 @@ public class MerchantServiceImpl implements MerchantService {
     GoodsDao goodsDao;
     @Resource
     GoodsTypeDao goodsTypeDao;
-
+    @Resource
+    ShopCarDao shopCarDao;
     @Resource
     ImgCacheService imgCacheService;
 
@@ -135,11 +137,20 @@ public class MerchantServiceImpl implements MerchantService {
             List<GoodsVO> g = goodsDao.selectGoodsByTypes(goodsTypeVOS);
             // 按照商品类型分组
             Map<Long, List<GoodsVO>> collect = g.stream().collect(Collectors.groupingBy(GoodsVO::getGoodsTypeId));
-
             for (GoodsTypeVO t : goodsTypeVOS) {
                 t.setGoodsVOS(collect.get(t.getGoodsTypeId()));// 设置这种商品类型的商品
             }
+            // 根据用户id和商户id查询用户的购物车
+            List<ShopCarVO> cars = shopCarDao.selectCarsByMerchantIdAndUserId(merchantVO.getMerchantId(), (Long) SecurityUtils.getSubject().getSession().getAttribute("userId"));
 
+            for (GoodsVO goodsVO : g) {
+                for (ShopCarVO car : cars) {
+                    if (goodsVO.getGoodsId().equals(car.getGoodsId())) {
+                        goodsVO.setShopCarCount(car.getCount());
+                        break;
+                    }
+                }
+            }
         }
         return merchantVO;
     }
