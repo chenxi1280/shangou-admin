@@ -263,6 +263,8 @@
             userPosition.lat = res.location.lat;
             setPositionText(userPosition);
             setCookie("userPosition", JSON.stringify(userPosition));
+            $("#goodsContainer").empty();
+
             flowGoods(flow, layer);
         });
         $("#provinceDiv").click(function () {
