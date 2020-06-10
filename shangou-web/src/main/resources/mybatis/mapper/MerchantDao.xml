@@ -594,4 +594,7 @@
         <include refid="Base_Column_List"/>
         from merchant where user_id=#{userId}
     </select>
+    <select id="selectByPK" resultType="com.lh.shangou.pojo.vo.MerchantVO">
+        select <include refid="Base_Column_List"/> from merchant where merchant_id=#{merchantId}
+    </select>
 </mapper>

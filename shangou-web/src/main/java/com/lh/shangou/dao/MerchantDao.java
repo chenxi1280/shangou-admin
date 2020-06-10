@@ -24,4 +24,6 @@ public interface MerchantDao {
     Integer ajaxListCount(MerchantQuery query);
 
     MerchantVO selectByUserId(Long userId);
+
+    MerchantVO selectByPK(Long merchantId);
 }

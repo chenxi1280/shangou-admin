@@ -79,6 +79,7 @@ public class GoodsServiceImpl implements GoodsService {
         Merchant m = merchantDao.selectByPrimaryKey(goods.getMerchantId());
         goods.setBusinessTypeId(m.getBusinessType());
         goods.setProvince(m.getProvince());
+        goods.setSold(0);// 一个也没有卖出去
         if (goods.getIsCoupon() == null) {
             goods.setIsCoupon(false);
         }

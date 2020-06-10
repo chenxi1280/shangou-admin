@@ -48,7 +48,7 @@ public class LoginController extends BaseController {
 
     // 这个方法是跳转到登录页面用的
     @RequestMapping("/loginPage")
-    String loginPage(HttpServletRequest request, boolean isBack) {// 是否是后台登录
+    String loginPage(HttpServletRequest request, boolean isBack, Model model) {// 是否是后台登录
         // 就应该判断以下 是来自于哪个访问路径的
         if (isBack) {
             return "loginPage";

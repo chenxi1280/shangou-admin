@@ -5,10 +5,12 @@ import com.lh.shangou.pojo.dto.PageDTO;
 import com.lh.shangou.pojo.dto.ResponseDTO;
 import com.lh.shangou.pojo.entity.Merchant;
 import com.lh.shangou.pojo.query.MerchantQuery;
+import com.lh.shangou.pojo.vo.MerchantVO;
 import com.lh.shangou.service.BusinessTypeService;
 import com.lh.shangou.service.MerchantService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -36,6 +38,14 @@ public class MerchantControllerFront extends BaseController {
                 || query.getMinLng() == null) {// 只要有一个是null，直接不查
             return PageDTO.setPageData(0, null);
         }
-        return merchantService.ajaxList(query);
+        return merchantService.getNearbyMerchantsGoods(query);
     }
+
+    @RequestMapping("merchantShop/{merchantId}")
+    String merchantShop(@PathVariable Long merchantId, Model model) {
+        MerchantVO m = merchantService.selectMerchantById(merchantId);
+        model.addAttribute("m", m);
+        return "/pages/front/merchant/merchantShop";
+    }
+
 }
