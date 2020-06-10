@@ -9,4 +9,5 @@ import lombok.Data;
  */
 @Data
 public class MerchantVO extends Merchant {
+    private GoodsVO bestGoods;
 }

@@ -17,4 +17,7 @@ public class MerchantQuery extends PageQuery {
     private String approvalStatus;   //  审核状态：等值查询
     private Boolean isOpen;   //  营业状态：等值查询
     private Boolean isPlatSend;   //  平台配送状态：等值查询
+    private Double maxLng, maxLat, minLng, minLat;// 最小最大经纬度
+
+
 }

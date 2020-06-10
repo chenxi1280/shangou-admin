@@ -20,4 +20,6 @@ public interface MerchantService {
 
     // 通过用户id查询商户id
     Long selectMerchantIdByUserId(Long userId);
+
+    ResponseDTO editMerchant(Merchant merchant);
 }

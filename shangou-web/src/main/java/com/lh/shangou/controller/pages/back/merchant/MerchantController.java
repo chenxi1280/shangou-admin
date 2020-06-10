@@ -66,6 +66,11 @@ public class MerchantController extends BaseController {
         merchant.setUserId(getUserId());
         return merchantService.add(merchant);
     }
+    @RequestMapping("editMerchant")
+    @ResponseBody
+    ResponseDTO editMerchant(Merchant merchant) {
+        return merchantService.editMerchant(merchant);
+    }
 
 
 }

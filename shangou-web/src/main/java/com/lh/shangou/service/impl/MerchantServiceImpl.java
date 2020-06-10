@@ -56,7 +56,7 @@ public class MerchantServiceImpl implements MerchantService {
 
     @Override
     public PageDTO ajaxList(MerchantQuery query) {
-        List<MerchantVO> merchants = merchantDao.ajaxList(query);
+        List<MerchantVO> merchants = merchantDao.ajaxList(query) ;
         Integer count = merchantDao.ajaxListCount(query);
         return PageDTO.setPageData(count, merchants);
     }
@@ -73,5 +73,10 @@ public class MerchantServiceImpl implements MerchantService {
             return m.getMerchantId();
         }
         return null;
+    }
+
+    @Override
+    public ResponseDTO editMerchant(Merchant merchant) {
+        return ResponseDTO.get(merchantDao.updateByPrimaryKeySelective(merchant)==1);
     }
 }

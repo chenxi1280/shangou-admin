@@ -43,7 +43,7 @@
         <result column="max_delivery_area" jdbcType="DOUBLE" property="maxDeliveryArea"/>
     </resultMap>
     <sql id="Base_Column_List">
-    merchant_id, user_id, phone, shop_name, shop_logo, shop_detail, email, contact_name,
+    merchant_id,  user_id, phone, shop_name, shop_logo, shop_detail, email, contact_name,
     pcd, address, `location`, lng, lat, is_open, approval_status, street, title1, title2,
     title3, min_price, business_start_time1, business_end_time1, business_start_time2,
     business_end_time2, province, door_img, interior_img, business_type, takeaway_phone,
@@ -526,7 +526,18 @@
             <if test="approvalStatus != null and approvalStatus!=''">
                 and approval_status=#{approvalStatus}
             </if>
-
+            <if test="maxLng != null ">
+                and lng &lt;=#{maxLng}
+            </if>
+            <if test="minLng != null ">
+                and lng &gt;=#{minLng}
+            </if>
+            <if test="maxLat != null ">
+                and lat &lt;=#{maxLat}
+            </if>
+            <if test="minLat != null ">
+                and lat &gt;=#{minLat}
+            </if>
         </where>
         order by create_time DESC
         limit #{start},#{limit}
@@ -564,9 +575,23 @@
             <if test="approvalStatus != null and approvalStatus!=''">
                 and approval_status=#{approvalStatus}
             </if>
+            <if test="maxLng != null ">
+                and lng &lt;=#{maxLng}
+            </if>
+            <if test="minLng != null ">
+                and lng &gt;=#{minLng}
+            </if>
+            <if test="maxLat != null ">
+                and lat &lt;=#{maxLat}
+            </if>
+            <if test="minLat != null ">
+                and lat &gt;=#{minLat}
+            </if>
         </where>
     </select>
     <select id="selectByUserId" resultType="com.lh.shangou.pojo.vo.MerchantVO">
-        select <include refid="Base_Column_List"/> from  merchant where user_id=#{userId}
+        select
+        <include refid="Base_Column_List"/>
+        from merchant where user_id=#{userId}
     </select>
 </mapper>
