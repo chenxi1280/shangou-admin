@@ -217,7 +217,7 @@
                 "                        <input type=\"checkbox\" id='checkItem-" + gid + "' name=\"checkItem\" lay-skin=\"primary\" lay-filter='checkItem'>\n" +
                 "                    </div>\n" +
                 "                    <div style=\"margin: 5px\">\n" +
-                "                        <img src='" + g.pic + "' style=\"width: 40px\"/>\n" +
+                "                        <img src='" + g.pic + "' style=\"width: 40px;border-radius: 3px\"/>\n" +
                 "                    </div>\n" +
                 "                    <div id=\"goodsItemDiv\" style=\"flex: 1;position: relative \">\n" +
                 "                        <div style=\"margin-left: 5px\">" + g.title + "</div>\n" +
@@ -364,7 +364,7 @@
                         let gid = g.goodsId;
                         let item = $("<div style=\"display: flex;padding: 2px 5px;border-bottom: solid 0.5px rgb(240,240,240);\">\n" +
                             "                                <div style=\"margin: 10px 5px\">\n" +
-                            "                                    <img  src='" + g.pic + "' style=\"width: 60px\"/>\n" +
+                            "                                    <img  src='" + g.pic + "' style=\"width: 60px;border-radius: 3px\"/>\n" +
                             "                                </div>\n" +
                             "                                <div id=\"goodsItemDiv\" style=\"flex: 1;position: relative \">\n" +
                             "                                    <h3 style=\"font-weight: bold;margin-left: 5px\">" + g.title + "</h3>\n" +
@@ -394,7 +394,6 @@
 
                         $("#addCount-" + gid)[0].goods = g;
                         $("#cutCount-" + gid)[0].goods = g;
-                        console.log(g.shopCarCount);
                         if(g.shopCarCount!=null){
                             for (let x = 0; x < g.shopCarCount; x++) {// 回填用户的购物车的数量
                                 appendCar($("#addCount-" + gid)[0], form);
