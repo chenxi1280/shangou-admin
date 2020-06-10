@@ -1,5 +1,5 @@
 server:
-  port: 8012 #
+  port: 80 #
 #  servlet:
 #    context-path: /apis  #  项目的上下文路径，如果有nginx代理的话，这个是需要配置为nginx代理服务器的路径m
 spring:

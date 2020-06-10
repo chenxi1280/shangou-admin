@@ -12,6 +12,7 @@
         #bottom_menu > div {
             padding: 0 15px;
             cursor: pointer;
+            width: 25%;
             text-align: center;
             font-size: 13px;
 
@@ -19,7 +20,7 @@
     </style>
     <div th:url="@{/}">
         <div>
-            <img th:src="@{/images/home/home.png}"/>
+            <img th:src="@{/images/menu/home.png}"/>
         </div>
         <div>
             首页
@@ -27,7 +28,7 @@
     </div>
     <div th:url="@{/pages/back/shopCar/list}">
         <div style="text-align: center">
-            <img th:src="@{/images/home/home_gray.png}"/>
+            <img th:src="@{/images/menu/car_gray.png}"/>
         </div>
         <div>
             购物车
@@ -36,7 +37,7 @@
 
     <div th:url="@{/pages/back/order/listUserOrders}">
         <div>
-            <img th:src="@{/images/home/home_gray.png}"/>
+            <img th:src="@{/images/menu/order_gray.png}"/>
         </div>
         <div>
             订单
@@ -44,7 +45,7 @@
     </div>
     <div th:url="@{/pages/front/user/userInfo}">
         <div>
-            <img th:src="@{/images/home/home_gray.png}"/>
+            <img th:src="@{/images/menu/my_gray.png}"/>
         </div>
         <div>
             我的
@@ -53,8 +54,20 @@
 
     <script th:inline="javascript" type="text/javascript">
         $(function () {
-            $("#bottom_menu>div").click(function () {
-                window.location = $(this).attr("url");
+            let pathName = window.location.pathname;
+            $("#bottom_menu>div").each(function () {
+                let jthis=$(this);
+                let url = jthis.attr("url");
+                if(pathName.startsWith(url)){
+                    let jImg= jthis.find("img");
+                    let imgUrl=jImg.attr("src");
+                    let  newImg=imgUrl.replace('_gray','');
+                    jImg.attr("src",newImg);
+                    jthis.css({color:'orange'})
+                }
+                jthis.click(function () {
+                    window.location = url;
+                });
             })
 
         })
