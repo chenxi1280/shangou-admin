@@ -6,6 +6,7 @@ import com.lh.shangou.pojo.entity.Address;
 import com.lh.shangou.pojo.query.AddressQuery;
 import com.lh.shangou.service.AddressService;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -34,5 +35,12 @@ public class AddressController extends BaseController {
         address.setUserId(getUserId());
         return addressService.add(address);
     }
+    @RequestMapping("delete/{id}")
+    @ResponseBody
+    ResponseDTO delete(@PathVariable Long id) {
+        return addressService.delete(id);
+    }
+
+
 
 }

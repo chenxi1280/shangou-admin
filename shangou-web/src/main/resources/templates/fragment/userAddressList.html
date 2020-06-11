@@ -73,8 +73,8 @@
             addressListDiv.empty();// 清空
             adds.forEach(a => {
                 let phone = a.phone.substring(0, 3) + "****" + a.phone.substring(7)
-                let item = $("<div style=\"display: flex;align-items: center;padding: 10px 20px;border-bottom: solid lightgray 0.1px\">\n" +
-                    "                    <div   style=' margin-right: 30px'>\n" +
+                let item = $("<div id='addressParent-" + a.addressId + "' style=\"display: flex;align-items: center;padding: 10px 20px;border-bottom: solid lightgray 0.1px\">\n" +
+                    "                    <div   style=' margin-right: 60px'>\n" +
                     "                        <div style=\"margin: 5px\"><span >" + a.receiver + "</span> <span >" + phone + "</span>\n" +
                     "                        </div>\n" +
                     "                        <div style=\"margin: 5px\"><span style=\"background: #50d15a;color: white;padding: 1px 2px;border-radius:2px\"\n" +
@@ -83,9 +83,11 @@
                     "                        </div>\n" +
                     "                    </div>\n" +
                     "                    <div style=\"padding-left: 50px;position: absolute;right: 20px;\">\n" +
+                    "                        <i id='deleteAddress-" + a.addressId + "' class=\"layui-icon layui-icon-delete\" style=\"font-size: 25px\"></i>\n" +
                     "                        <i class=\"layui-icon layui-icon-edit\" style=\"font-size: 25px\"></i>\n" +
                     "                    </div>\n" +
                     "                </div>");
+
 
                 item.children("div:eq(0)").click(function () {
                     layer.close(open);
@@ -93,6 +95,21 @@
                 });
                 addressListDiv.append(item);
             });
+            $("[id^=deleteAddress-]").click(function () {
+                let id = this.id.split('-')[1];
+
+                layer.confirm('您确定操作吗?', function (index) {
+                    //do something
+                    let parentDiv = $("#addressParent-" + id);
+                    $.post('/pages/back/address/delete/' + id, {}, function (res) {
+                        if (res.res) {
+                            parentDiv.remove();
+                        }
+                    });
+
+                    layer.close(index);
+                });
+            })
         }
 
         // 渲染展示用户收货地址

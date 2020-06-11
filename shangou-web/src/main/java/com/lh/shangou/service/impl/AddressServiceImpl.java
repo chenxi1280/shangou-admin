@@ -42,4 +42,9 @@ public class AddressServiceImpl implements AddressService {
     public Address selectAddressById(Long addressId) {
         return addressDao.selectByPrimaryKey(addressId);
     }
+
+    @Override
+    public ResponseDTO delete(Long id) {
+        return ResponseDTO.get(addressDao.deleteByPrimaryKey(id) == 1);
+    }
 }

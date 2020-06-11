@@ -15,4 +15,6 @@ public interface AddressService {
     ResponseDTO add(Address address);
 
     Address selectAddressById(Long addressId);
+
+    ResponseDTO delete(Long id);
 }
