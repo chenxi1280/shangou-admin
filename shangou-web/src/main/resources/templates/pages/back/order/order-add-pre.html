@@ -191,7 +191,8 @@
                 deliverFee = res.data.deliverFee;
                 $("#deliveryFee").text(deliverFee);
                 $("#distance").text('(距离' + res.data.distance + '米)');
-                $("#nowAllCost").text((parseFloat(p.nowAllCost)+parseFloat(deliverFee)).toFixed(2));
+                p.deliveryNo = res.data.deliveryNo;// 达达单号
+                $("#nowAllCost").text((parseFloat(p.nowAllCost) + parseFloat(deliverFee)).toFixed(2));
             }
         });
 
@@ -215,23 +216,22 @@
             });
             $("#commit").click(function () {
                 let od = {};
-                od.merchantId = p.merchant.merchantId;
-                console.log(curentAddress);
-                od.receiverName = curentAddress.receiverName;
-                od.receiverPhone = curentAddress.receiverPhone;
-                od.receiverAddress = curentAddress.name + curentAddress.floorDoorNumber;
-                od.tag = curentAddress.tag;
-                od.receiverLng = curentAddress.lng;
-                od.receiverLat = curentAddress.lat;
-                od.receiverCityCode = curentAddress.cityCode;
-                od.couponRelief = 0;
-                od.allRelief = p.allRelief;
-                od.redBagRelief = 0;
-                od.actuallyPaid = p.nowAllCost + deliverFee;
+                od.merchantId = p.merchant.merchantId;// 商户号
+                od.receiverName = curentAddress.receiverName;//收货地址
+                od.receiverPhone = curentAddress.receiverPhone;//收货电话
+                od.receiverAddress = curentAddress.name + curentAddress.floorDoorNumber;//地址门牌号
+                od.tag = curentAddress.tag;//地址标签
+                od.receiverLng = curentAddress.lng;//经度
+                od.receiverLat = curentAddress.lat;//纬度
+                od.receiverCityCode = curentAddress.cityCode;// 城市编码
+                od.couponRelief = 0;// 优惠券减免
+                od.allRelief = p.allRelief;// 全部减免
+                od.redBagRelief = 0;//红包减免
+                od.actuallyPaid = p.nowAllCost + deliverFee;//实际付款
                 od.deliveryFee = deliverFee;// 配送费；
-                od.allCost = p.oldAllCost;
-                od.packagingFee = p.allPackagingFee;
-
+                od.allCost = p.oldAllCost;// 原价
+                od.packagingFee = p.allPackagingFee;// 包装费
+                od.deliveryNo = p.deliveryNo;// 达达单号
                 // 差一个配送费
 
 
