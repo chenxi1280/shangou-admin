@@ -54,7 +54,8 @@
                             </div>
                             <div style="display: flex;justify-content: space-between;padding: 10px 0">
                                 <div>配送费</div>
-                                <div>¥<span id="deliveryFee">5</span></div>
+                                <div><span id="distance" style="color: lightgray;font-size: 12px"></span>¥<span
+                                        id="deliveryFee">5</span></div>
                             </div>
                             <div style="display: flex;justify-content: space-between;padding: 10px 0">
                                 <div>运费优惠</div>
@@ -105,6 +106,7 @@
     let errorImg = '';// 声明错误图片路径
     let adds = [];
     let curentAddress = {};
+    let deliverFee = 0;
 
     // 初始化：挂载数据到标签里边
     function mountedData(d) {
@@ -181,20 +183,27 @@
         // 去查询运费
         $.post('/pages/back/order/getDeliveryFee', {
             merchantId: p.merchant.merchantId,
-            addressId: defaultAdd.addressId
+            addressId: defaultAdd.addressId,
+            actuallyPaid: p.nowAllCost,
         }, function (res) {
+            console.log(res)
             if (res) {
-                $("#deliveryFee").text(res.data.deliverFee)
+                deliverFee = res.data.deliverFee;
+                $("#deliveryFee").text(deliverFee);
+                $("#distance").text('(距离' + res.data.distance + '米)');
+                $("#nowAllCost").text((parseFloat(p.nowAllCost)+parseFloat(deliverFee)).toFixed(2));
             }
         });
-    }
 
+
+    }
 
     $(function () {
         layui.use(['layer', 'form',], function () {
             var layer = layui.layer;
             var form = layui.form;
             mountedData(p);
+            initMap();
             $("#showPackagingFeeDetail").click(function () {
                 showPackagingFeeDetail(p.orderInfos, p.allPackagingFee)
             });
@@ -218,7 +227,8 @@
                 od.couponRelief = 0;
                 od.allRelief = p.allRelief;
                 od.redBagRelief = 0;
-                od.actuallyPaid = p.nowAllCost;
+                od.actuallyPaid = p.nowAllCost + deliverFee;
+                od.deliveryFee = deliverFee;// 配送费；
                 od.allCost = p.oldAllCost;
                 od.packagingFee = p.allPackagingFee;
 

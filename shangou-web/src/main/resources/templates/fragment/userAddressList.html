@@ -122,24 +122,28 @@
                     });
                     form.render();
                     initMap();// 渲染地图
-                    form.on('submit(commit)', function (d) {
-                        $.post('/pages/back/address/add', d.field, function (res) {// 新增收货地址完成，应该立刻刷新最新的收货地址列表
-                            layer.msg(res.msg);
-                            layer.close(addOpen);
-                            if (res.res) {
-                                $.get('/pages/back/address/getUserAddress', {}, function (res) {
-                                    if (res.res) {
-                                        let list = res.data;
-                                        if (list.length > 0) {
-                                            renderAddress(list, selectAddress, f);
+                    getCityInfo(function (r) {
+                        form.on('submit(commit)', function (d) {
+                            d.field.cityCode = r.citycode;
+                            $.post('/pages/back/address/add', d.field, function (res) {// 新增收货地址完成，应该立刻刷新最新的收货地址列表
+                                layer.msg(res.msg);
+                                layer.close(addOpen);
+                                if (res.res) {
+                                    $.get('/pages/back/address/getUserAddress', {}, function (res) {
+                                        if (res.res) {
+                                            let list = res.data;
+                                            if (list.length > 0) {
+                                                renderAddress(list, selectAddress, f);
+                                            }
                                         }
-                                    }
-                                });
-                            }
+                                    });
+                                }
 
-                        });
-                        return false;
-                    })
+                            });
+                            return false;
+                        })
+                    });
+
                 })
 
             });

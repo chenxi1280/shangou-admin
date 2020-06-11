@@ -38,11 +38,9 @@
 
         function getCityInfo(f) {// 获得城市信息要做的回调函数
             geolocation.getCityInfo(function (status, result) {
-                console.log(result)
                 f(result);
             });
         }
-
         // 初始化map,selectedPosition选择地址后的回调函数
         function initMap(selectedPosition) {
             map = new AMap.Map('mapContainer', {// 创建一个map对象
@@ -92,7 +90,6 @@
                         console.log('定位错误')
                     }
                 });
-
 
                 // 无需再手动执行search方法，autoComplete会根据传入input对应的DOM动态触发search
                 autoComplete.on('select', function (a) {

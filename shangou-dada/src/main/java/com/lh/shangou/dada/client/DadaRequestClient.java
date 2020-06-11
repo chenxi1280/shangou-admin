@@ -1,12 +1,12 @@
 package com.lh.shangou.dada.client;
 
-
 import com.lh.shangou.dada.config.AppConfig;
 import com.lh.shangou.dada.config.AppConstant;
-import com.lh.shangou.dada.service.BaseService;
 import com.lh.shangou.dada.utils.HttpClientUtil;
 import com.lh.shangou.dada.utils.JSONUtil;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -15,24 +15,26 @@ import java.util.TreeMap;
 /**
  * DATE: 18/9/3
  *
- * @author: wan  请求客户端
+ * @author: wan
  */
+@Component
 public class DadaRequestClient {
 
-    private BaseService apiService;
-
+    @Resource
     private AppConfig appConfig;
 
-    public DadaRequestClient(BaseService baseService, AppConfig appConfig) {
-        this.apiService = baseService;
-        this.appConfig = appConfig;
-    }
-
-    // 核心方法
-    public DadaApiResponse callRpc() {
-        String requestUrl = this.appConfig.getHost().concat(this.apiService.getUrl());
-        String requestParams = this.getRequestParams();
-
+    // 请求路径，参数对象
+    public DadaApiResponse callRpc(String url, Object params) {
+        String requestUrl = this.appConfig.getHost().concat(url);
+        Map<String, String> pMap = new HashMap<>();
+        pMap.put("source_id", this.appConfig.getSourceId());
+        pMap.put("app_key", this.appConfig.getAppKey());
+        pMap.put("timestamp", String.valueOf(System.currentTimeMillis()));
+        pMap.put("format", AppConstant.FORMAT);
+        pMap.put("v", AppConstant.V);
+        pMap.put("body", JSONUtil.toJson(params));
+        pMap.put("signature", this.getSign(pMap));
+        String requestParams = JSONUtil.toJson(pMap);
         try {
             String resp = HttpClientUtil.postRequest(requestUrl, requestParams);
             return JSONUtil.fromJson(resp, DadaApiResponse.class);
@@ -40,20 +42,6 @@ public class DadaRequestClient {
             return DadaApiResponse.except();
         }
     }
-
-    private String getRequestParams() {
-        Map<String, String> requestParams = new HashMap<String, String>();
-        requestParams.put("source_id", this.appConfig.getSourceId());
-        requestParams.put("app_key", this.appConfig.getAppKey());
-        requestParams.put("timestamp", String.valueOf(System.currentTimeMillis()));
-        requestParams.put("format", AppConstant.FORMAT);
-        requestParams.put("v", AppConstant.V);
-        requestParams.put("body", this.apiService.getParams());
-        requestParams.put("signature", this.getSign(requestParams));
-        return JSONUtil.toJson(requestParams);
-    }
-
-    // 签名
     private String getSign(Map<String, String> requestParams) {
         //请求参数键值升序排序
         Map<String, String> sortedParams = new TreeMap<String, String>(requestParams);

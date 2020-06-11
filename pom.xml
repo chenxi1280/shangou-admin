@@ -27,7 +27,6 @@
                 <artifactId>shangou-dada</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
-
             <!-- 用阿里巴巴的FastJSON -->
             <dependency>
                 <groupId>com.alibaba</groupId>

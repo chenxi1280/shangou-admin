@@ -15,12 +15,14 @@ public class AppConstant {
 
     public final static String V = "1.0";
 
-    public final static String SOURCE_ID = "";// 就是 正式的你的那个商户号,就是平台的商户号 ！
+    public final static String SOURCE_ID = "59717";
 
-    public final static String QA_SOURCE_ID = "73758";// 测试号
+    public final static String QA_SOURCE_ID = "73753";// 测试商户id
 
-    public final static String APP_KEY = ""; // app的key
+    public final static String QA_SHOP_ID = "11047059";// 测试门店
 
-    public final static String APP_SECRET = ""; // app的密码
+    public final static String APP_KEY = "dada1ebb96e5497bb14";
+
+    public final static String APP_SECRET = "fb5e2cd0cdc76f3a02d2d1be8fa63d58";
 
 }
