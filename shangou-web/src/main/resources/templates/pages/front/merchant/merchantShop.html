@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div th:replace="fragment/js::js"></div>
+<div th:replace="fragment/packagingFee::packagingFee"></div>
 <script type="text/javascript" th:src="@{/lh/layer/layer.js}"></script>
 <body>
 <style>
@@ -18,7 +19,7 @@
         /*transform: translate3d(0, 100%, 0);*/
     }
 </style>
-<!--#fd0c2c到#fd2a47-->
+
 <div style="position: absolute;left: 0;top: 0;bottom: 0;right: 0;">
     <div class="layui-col-xs12 layui-col-md6 layui-col-md-offset3 "
          style="height: 100%;position: relative;">
@@ -104,12 +105,17 @@
                                     0
                                 </div>
                             </div>
-                            <div style="padding:15px 0 0 10px">
+                            <div style="padding:5px 0 0 10px">
                                 <span style="color: orangered;font-size: 20px;font-weight: bold"
                                       id="totalMoney">¥0.00</span>
-                                <span style="color: gray;">已减<span id="allRelief">0.00</span>元</span>
+                                <span style="color: gray;font-size: 12px">已减<span id="allRelief">0.00</span>元</span>
+                                <div>
+                                    <span id="showPackgingFee" style="font-size: 12px">(含包装费:<span
+                                            style="font-size: 12px"
+                                            id="allPackagingFee"></span><i
+                                            style="font-size: 12px" class="layui-icon-help layui-icon"></i>)</span>
+                                </div>
                             </div>
-
                         </div>
 
                         <div id="settlementDiv"
@@ -138,12 +144,6 @@
                             style="margin-left: 3px">清空购物车</span>
                     </div>
                 </div>
-                <form id="infosForm" style="display: none" th:action="@{/pages/back/order/orderAddPre}" method="post">
-                    <input id="infos" name="infos"/>
-                    <input name="merchantId" th:value="${m.merchantId}">
-                    <input id="allCost" name="allCost" type="hidden"/>
-
-                </form>
                 <div id="shopCarContent" style="padding-bottom: 50px;overflow-y: auto;max-height: 70%">
 
                 </div>
@@ -156,21 +156,42 @@
 <script th:inline="javascript" type="text/javascript">
     // 算购物车里边的钱
     function getSumMoney() {
-        let sum = 0.0;// 定义 现在的总价
-        let oldSum = 0.0;// 定义原来商品总价
-        let allCount = 0;// 定义总数
+        // 定义一个订单对象来封装所需要的参数
+        let order = {};
+
+        let sum = 0.0;// 定义 现在的商品总价
+        let allRelief = 0.0;// 定义总的减免费用
+        let allCount = 0;// 定义商品总数
+        let allPackagingFee = 0;// 定义总的包装费
+        let oldAllCost = 0;// 定义商品原价综合
+
         $("[name=checkItem]").each(function () {
             if (this.checked) {// 选中
                 let gid = this.goods.goodsId;
-                let count = parseInt($("#carGoodsCount-" + gid).text().trim());
-                sum += count * this.goods.nowPrice;
-                oldSum += count * (this.goods.oldPrice - this.goods.nowPrice);
-                allCount += count;
+
+                let count = parseInt($("#carGoodsCount-" + gid).text().trim());// 取出当前选中的购物车的总数
+
+                sum += count * (this.goods.nowPrice + this.goods.packagingFee);// 加包装费
+                oldAllCost += count * (this.goods.oldPrice + this.goods.packagingFee);// 加包装费
+
+                allRelief += count * (this.goods.oldPrice - this.goods.nowPrice);
+
+                if (this.goods.packagingFee != null) {
+                    allPackagingFee += count * this.goods.packagingFee;// 包装费累加
+                }
+                allCount += count;// 商品总数累加
             }
         });
+        order.allCount = allCount;// 总数
+        order.nowAllCost = sum.toFixed(2);// 现在总价
+        order.allRelief = allRelief.toFixed(2);// 总减免
+        order.oldAllCost = oldAllCost.toFixed(2);// 原总价
+        order.allPackagingFee = allPackagingFee.toFixed(2);// 原总价
+
+        $("#allPackagingFee").text(order.allPackagingFee);
         $("[id=allCount]").text(allCount);
         $("#totalMoney").text("¥" + sum.toFixed(2));
-        $("#allRelief").text(oldSum.toFixed(2));
+        $("#allRelief").text(allRelief.toFixed(2));
         if (sum <= 0) {
             $("#settlementDiv").css({
                 background: 'gray'
@@ -186,7 +207,7 @@
                 background: 'orange'
             })
         }
-        return sum.toFixed(2);
+        return order;
     }
 
     function updateCarCount(gid, finalCount) {
@@ -198,7 +219,7 @@
                 goodsId: gid,
                 count: finalCount
             });
-        }else {
+        } else {
             localStorage.setItem("redirectUrl", '/pages/front/merchant/merchantShop/' + [[${m.merchantId}]]);// 购物车也存到本地浏览器
             window.location = '/loginPage';
         }
@@ -292,13 +313,13 @@
      * @returns {[]}
      */
     function getOrderInfos() {
-        let orderInfos = [];
+        let orderInfos = [];// 订单详情集合
         $("[name=checkItem]").each(function () {
             if (this.checked) {
-                let orderInfo = this.goods;
-                let nowCount = $("#carGoodsCount-" + orderInfo.goodsId).text().trim();
+                let orderInfo = this.goods;// 把商品对象取出来，同时要把每个商品设置上一个数量
+                let nowCount = $("#carGoodsCount-" + orderInfo.goodsId).text().trim();// 拿到商品数量
                 orderInfo.count = nowCount;
-                orderInfo.originalGoodsId = orderInfo.goodsId;
+                orderInfo.originalGoodsId = orderInfo.goodsId;// 这里多余
                 orderInfos.push(orderInfo);
             }
         });
@@ -335,6 +356,9 @@
             $("#showCar").click(function () {
                 lhLayer($("#shopCarLayer"))
             });
+            $("#showPackgingFee").click(function () {
+                showPackagingFeeDetail(getOrderInfos(), getSumMoney().allPackagingFee)
+            });
             $("[id^=typeId-]").click(function () {
                 $(this).siblings().css({
                     background: 'rgb(240,240,240)',
@@ -354,7 +378,7 @@
                 // allTypes.filter()
                 // allTypes.reduce()
 
-                console.log(type)
+                console.log(type);
                 let goodsList = type.goodsVOS;// 取出商品集合
                 let goodsDiv = $("#goodDiv");
                 goodsDiv.empty();
@@ -394,7 +418,7 @@
 
                         $("#addCount-" + gid)[0].goods = g;
                         $("#cutCount-" + gid)[0].goods = g;
-                        if(g.shopCarCount!=null){
+                        if (g.shopCarCount != null) {
                             for (let x = 0; x < g.shopCarCount; x++) {// 回填用户的购物车的数量
                                 appendCar($("#addCount-" + gid)[0], form);
                             }
@@ -444,26 +468,42 @@
                     $("#showCar").click();
                 });
             });
+            // 点击结算触发事件
             $("#settlementDiv").click(function () {
-                let allCost = getSumMoney();
+                let order = getSumMoney();// 获取当前所需订单的某些数据：总金额，商品总数，总减免，
+                let allCost = order.nowAllCost;
                 if (allCost <= 0) {
                     layer.msg('您先选点商品吧')
                 } else {
-                    $("#allCost").val(allCost);
-                    let infoStr = JSON.stringify(getOrderInfos());
+                    let param = {};// 定义好一个传递参数的对象
+                    // param.merchant=[[${m}]];// 这样做，会浪费消费者设备的许多空间（）
+
+                    let m = [[${m}]];// 由于这个商户里边有很多数据，比如商品类型，商品，所以只取出 所需要的
+                    let m1 = {};
+                    m1.merchantId = m.merchantId;
+                    m1.shopName = m.shopName;
+                    // m1.shopLogo = m.shopLogo;
+                    m1.lng = m.lng;// 经纬度取出来算运费钱
+                    m1.lat = m.lat;
+                    param.merchant = m1;// 把商户放进去
+                    // 订单详情信息
+                    param.orderInfos = getOrderInfos();// 把订单详情放进去，包括了商品和商品的数量
+
+                    param.nowAllCost = order.nowAllCost;// 订单总金额放进去
+                    param.oldAllCost = order.oldAllCost;// 订单总金额放进去
+                    param.allRelief = order.allRelief;// 订单总减免
+                    param.allCount = order.allCount;
+                    param.allPackagingFee = order.allPackagingFee;
+                    // 到这，传递参数封装完毕
+                    localStorage.setItem("orderParam", JSON.stringify(param));// 购物车也存到本地浏览器,如果要求高一点
 
                     let userId = [[${session.userId}]];
-                    if (userId == null || userId == undefined) {// 没有登录
-                        // localStorage.setItem("orderInfos", infoStr);// 购物车也存到本地浏览器,如果要求高一点
+                    if (userId == null || userId == undefined) {// 没有登录,先去登录再说
                         localStorage.setItem("redirectUrl", '/pages/front/merchant/merchantShop/' + [[${m.merchantId}]]);// 购物车也存到本地浏览器
                         window.location = '/loginPage';
                     } else {
-                        // 应该传递一个orderInfo集合到后台
-                        let orderInfos = getOrderInfos();
-                        $("#infos").val(infoStr);
-                        console.log(orderInfos);
-                        $("#infosForm").submit()
-
+                        console.log(param);
+                        window.location = '/pages/back/order/addPre';
                     }
                 }
             });

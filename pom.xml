@@ -7,6 +7,7 @@
     <modules>
         <module>shangou-pojo</module>
         <module>shangou-web</module>
+        <module>shangou-dada</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -21,7 +22,18 @@
     </properties>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.lh.shangou</groupId>
+                <artifactId>shangou-dada</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
 
+            <!-- 用阿里巴巴的FastJSON -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>1.2.62</version>
+            </dependency>
             <dependency>
                 <groupId>com.lh.shangou</groupId>
                 <artifactId>shangou-pojo</artifactId>

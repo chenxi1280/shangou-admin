@@ -17,7 +17,7 @@
     <dependencies>
         <dependency>
             <groupId>com.lh.shangou</groupId>
-            <artifactId>shangou-pojo</artifactId>
+            <artifactId>shangou-dada</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -70,7 +70,6 @@
             <version>2.0.0</version>
         </dependency>
         <!--    shiro的5个依赖包-->
-
 
 
         <!-- https://mvnrepository.com/artifact/com.github.wxpay/wxpay-sdk -->

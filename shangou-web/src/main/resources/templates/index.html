@@ -4,8 +4,6 @@
 <div th:replace="fragment/js::js"></div>
 <div th:replace="fragment/map::map"></div>
 <style>
-
-
     .headImg::after {
         opacity: 0.1;
         content: "";
@@ -90,9 +88,8 @@
                     <div id="newPersonDiv">
                         <div style="padding: 10px">
                             <img style="width: 100%"
-                                 src="https://imgcps.jd.com/djmarketing14/img_464085/img_463558/img_464079/wqU4/5paw5Lq65LiT5Lqr5ruh5YeP5Yi4/wqUyMA/5rKD5bCU546b5paw5Lq65LiT5Lqr/56eS5p2AMy44NeaKmA/54Ot6ZSA/56eS5p2ANi4yMeaKmA/wqUxLjU/wqUxLjU/wqU0Ljk/5Y6f5Lu3My45/IA/5Y6f5Lu3Ny45/5paw5Lq66aKGODjlhYPnpLzljIU/t-5e9e8c2ac941a59653aa0e8c/0a814760.png">
+                                 src="https://imgcps.jd.com/djmarketing14/img_466294/img_465784/img_465778/wqUxNQ/5paw5Lq65LiT5Lqr5ruh5YeP5Yi4/wqUyMA/5rKD5bCU546b5paw5Lq65LiT5Lqr/56eS5p2ANeaKmA/54Ot6ZSA/54Ot6ZSA/wqUyLjk/wqUxLjU/wqUxLjU/5Y6f5Lu3NS44/IA/IA/5paw5Lq66aKGODjlhYPnpLzljIU/t-5e9e8c2ac941a59653aa0e8c/246b15aa.png">
                         </div>
-
                         <img src="https://img30.360buyimg.com/mobilecms/jfs/t1/127240/9/4454/12084/5edfd922Eed41abbd/2b34cbc3250f81d6.jpg"
                              style="width: 100%"/>
                     </div>
@@ -140,7 +137,6 @@
 </div>
 <script th:inline="javascript" type="text/javascript">
     let position;
-
 
     function flowGoods(flow, layer) {
         let goodsContainer = $("#goodsContainer");
@@ -232,10 +228,11 @@
 
     }
 
-
     function getCookiePosition() {
+
         if (position == undefined) {
             let pStr = getCookie("userPosition");
+
             if (pStr == null) {
                 layer.msg("定位失败，请手动选择位置");
                 getCityInfo(function (res) {
@@ -250,7 +247,6 @@
             }
         }
     }
-
     layui.use(['layer', 'form', 'carousel', 'flow'], function () {
         let carousel = layui.carousel;
         let flow = layui.flow;
@@ -270,7 +266,6 @@
         $("#provinceDiv").click(function () {
             toggleMap();
         });
-
         //建造实例
         carousel.render({
             elem: '#advertisement'

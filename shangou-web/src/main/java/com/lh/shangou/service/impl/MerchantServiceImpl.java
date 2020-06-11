@@ -154,4 +154,9 @@ public class MerchantServiceImpl implements MerchantService {
         }
         return merchantVO;
     }
+
+    @Override
+    public MerchantVO selectMerchantBaseInfoById(Long merchantId) {
+        return merchantDao.selectByPK(merchantId);
+    }
 }

@@ -35,4 +35,6 @@ public interface MerchantService {
      * @return
      */
     MerchantVO selectMerchantById(Long merchantId);
+
+    MerchantVO selectMerchantBaseInfoById(Long merchantId);
 }
