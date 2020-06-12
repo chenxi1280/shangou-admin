@@ -12,7 +12,6 @@
          style="height: 100%;position: relative;">
         <form id="payForm" th:action="@{/pages/back/pay/unifiedPay}" method="post">
             <input name="orderId" type="hidden" th:value="${order.orderId}"/>
-            <input name="orderId"  th:value="${order.orderId}"/>
             <!--     这个code是微信支付需要的code-->
             <input name="code" type="hidden" th:value="${code}"/>
 
@@ -31,7 +30,7 @@
                         <img th:src="@{/images/pay/wxpay.png}" style="height: 2rem"/>
                     </div>
                     <div>
-                        <input style="width: 25px;height: 25px" type="radio" name="payType" value="微信支付" id="wxPay"/>
+                        <input style="width: 25px;height: 25px" type="radio" name="payType" value="微信" id="wxPay"/>
                     </div>
                 </div>
                 <div style="display: flex;justify-content: space-between;padding: 10px;align-items: center">
@@ -52,10 +51,14 @@
                     </div>
                 </div>
             </div>
-            <div id="nowPay"
-                 style="color: white;font-weight: bold;font-size: 1rem;background: orangered;border-radius: 5px;text-align: center;padding: 10px;margin-top: 10px">
-                立即支付
+            <div style="padding: 10px">
+                <div id="nowPay"
+                     style="color: white;font-weight: bold;font-size: 1rem;background: orangered;border-radius: 5px;text-align: center;padding: 10px;margin-top: 10px">
+                    立即支付
+                </div>
             </div>
+
+
 
         </form>
 

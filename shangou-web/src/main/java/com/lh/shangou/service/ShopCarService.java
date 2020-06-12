@@ -9,4 +9,6 @@ import com.lh.shangou.pojo.entity.ShopCar;
  */
 public interface ShopCarService {
     ResponseDTO editCount(ShopCar car);
+
+    ResponseDTO deleteAllCars(ShopCar car);
 }

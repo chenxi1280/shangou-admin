@@ -31,6 +31,12 @@ public class ShopCarController extends BaseController {
         car.setUserId(getUserId());
         return shopCarService.editCount(car);
     }
+    @RequestMapping("deleteAllCars")
+    @ResponseBody
+    ResponseDTO deleteAllCars(ShopCar car) {
+        car.setUserId(getUserId());
+        return shopCarService.deleteAllCars(car);
+    }
 
 
 }

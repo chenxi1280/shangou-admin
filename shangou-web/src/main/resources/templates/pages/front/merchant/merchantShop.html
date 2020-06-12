@@ -134,10 +134,10 @@
         <div lh-layer id="shopCarLayer">
             <div style="padding: 10px;height: 70%">
                 <div style="display: flex;justify-content: space-between;border-bottom: solid lightgray 1px;">
-                    <div class="layui-form" style="display: flex;align-items: center">
-                        <input type="checkbox" id="checkAll" lay-skin="primary" lay-filter="checkAll"> 全选(已选<span
-                            id="allCount">0</span>件,共<span
-                            id="allWeight">2.4</span>kg)
+                    <div class="layui-form" style="display: flex;">
+                        <input type="checkbox" id="checkAll" lay-skin="primary" lay-filter="checkAll">
+                        全选(已选<span id="allCount" style="margin-top: 3px">0</span>件,共
+                        <span id="allWeight" style="margin-top: 3px">2.4</span><span style="margin-top: 3px">kg)</span>
                     </div>
                     <div style="display: flex;align-items: center" id="clearShopCar">
                         <i style="font-size: 25px" class=" layui-icon-delete layui-icon"></i><span
@@ -463,8 +463,12 @@
             $("#clearShopCar").click(function () {
                 layer.confirm('您确定清空购物车吗？', {icon: 3, title: ' ',}, function (index) {
                     $("#shopCarContent").empty();
+                    $("[id^=goodsCount]").text(0);
                     getSumMoney();
                     layer.close(index);
+                    $.post('/pages/back/shopCar/deleteAllCars', {merchantId: [[${m.merchantId}]]}, function (res) {
+
+                    });
                     $("#showCar").click();
                 });
             });

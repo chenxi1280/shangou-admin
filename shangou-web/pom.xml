@@ -69,8 +69,10 @@
         </dependency>
         <!--    shiro的5个依赖包-->
 
-
-
+        <dependency>
+            <groupId>com.lh.shangou</groupId>
+            <artifactId>shangou-pay</artifactId>
+        </dependency>
 
         <!--注：如提示报错，先升级基础包版，无法解决可联系技术支持，短信SDK-->
         <dependency>

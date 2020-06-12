@@ -23,9 +23,16 @@
     </properties>
     <dependencyManagement>
         <dependencies>
+<!--            达达配送费-->
             <dependency>
                 <groupId>com.lh.shangou</groupId>
                 <artifactId>shangou-dada</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+<!--            微信支付、支付宝支付-->
+            <dependency>
+                <groupId>com.lh.shangou</groupId>
+                <artifactId>shangou-pay</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <!-- 用阿里巴巴的FastJSON -->

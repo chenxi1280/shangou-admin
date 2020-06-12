@@ -27,4 +27,10 @@ public class ShopCarServiceImpl implements ShopCarService {
             return ResponseDTO.get(shopCarDao.insertSelective(car) == 1);
         }
     }
+
+    @Override
+    public ResponseDTO deleteAllCars(ShopCar car) {
+        shopCarDao.deleteAllCars(car);
+        return ResponseDTO.ok("成功");
+    }
 }

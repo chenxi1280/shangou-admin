@@ -24,4 +24,6 @@ public interface ShopCarDao {
     int selectCarCountByCar(ShopCar car);
 
     int updateByCar(ShopCar car);
+
+    void deleteAllCars(ShopCar car);
 }
