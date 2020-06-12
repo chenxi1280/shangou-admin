@@ -2,6 +2,7 @@ package com.lh.shangou.dao;
 
 import com.lh.shangou.pojo.entity.ShopCar;
 import com.lh.shangou.pojo.vo.ShopCarVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public interface ShopCarDao {
 
     int updateByPrimaryKey(ShopCar record);
 
-    List<ShopCarVO> selectCarsByMerchantIdAndUserId(Long merchantId, Long userId);
+    List<ShopCarVO> selectCarsByMerchantIdAndUserId(@Param("merchantId") Long merchantId,@Param("userId")  Long userId);
 
     int selectCarCountByCar(ShopCar car);
 

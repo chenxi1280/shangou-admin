@@ -253,7 +253,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.lh.shangou.pojo.entity.SgOrder">
+    <update id="updateByPrimaryKeySelective" parameterType="com.lh.shangou.pojo.entity.SgOrder">
     update sg_order
     <set>
       <if test="merchantId != null">
@@ -379,10 +379,192 @@
       commission_type = #{commissionType,jdbcType=VARCHAR}
     where order_id = #{orderId,jdbcType=BIGINT}
   </update>
-  <select id="selectByPrimaryK" resultType="com.lh.shangou.pojo.vo.OrderVO">>
+  <select id="selectByPrimaryK" resultType="com.lh.shangou.pojo.vo.OrderVO">
     select
-    <include refid="Base_Column_List" />
+    *
     from sg_order
-    where order_id = #{orderId,jdbcType=BIGINT}
+    where order_id = #{orderId}
   </select>
+
+  <insert id="insertVOSelective" keyColumn="order_id" keyProperty="orderId"   useGeneratedKeys="true">
+    insert into sg_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="merchantId != null">
+        merchant_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="payStatus != null">
+        pay_status,
+      </if>
+      <if test="receiverName != null">
+        receiver_name,
+      </if>
+      <if test="receiverPhone != null">
+        receiver_phone,
+      </if>
+      <if test="receiverAddress != null">
+        receiver_address,
+      </if>
+      <if test="tag != null">
+        tag,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="payTime != null">
+        pay_time,
+      </if>
+      <if test="payType != null">
+        pay_type,
+      </if>
+      <if test="couponRelief != null">
+        coupon_relief,
+      </if>
+      <if test="redBagRelief != null">
+        red_bag_relief,
+      </if>
+      <if test="goodsRelief != null">
+        goods_relief,
+      </if>
+      <if test="platRelief != null">
+        plat_relief,
+      </if>
+      <if test="arrivalTime != null">
+        arrival_time,
+      </if>
+      <if test="note != null">
+        note,
+      </if>
+      <if test="actuallyPaid != null">
+        actually_paid,
+      </if>
+      <if test="allCost != null">
+        all_cost,
+      </if>
+      <if test="allRelief != null">
+        all_relief,
+      </if>
+      <if test="packagingFee != null">
+        packaging_fee,
+      </if>
+      <if test="deliveryFee != null">
+        delivery_fee,
+      </if>
+      <if test="isPlatSend != null">
+        is_plat_send,
+      </if>
+      <if test="receiverLng != null">
+        receiver_lng,
+      </if>
+      <if test="receiverLat != null">
+        receiver_lat,
+      </if>
+      <if test="receiverCityCode != null">
+        receiver_city_code,
+      </if>
+      <if test="isCoupon != null">
+        is_coupon,
+      </if>
+      <if test="merchantPrice != null">
+        merchant_price,
+      </if>
+      <if test="commission != null">
+        commission,
+      </if>
+      <if test="commissionType != null">
+        commission_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="merchantId != null">
+        #{merchantId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="payStatus != null">
+        #{payStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverName != null">
+        #{receiverName,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverPhone != null">
+        #{receiverPhone,jdbcType=CHAR},
+      </if>
+      <if test="receiverAddress != null">
+        #{receiverAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null">
+        #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payTime != null">
+        #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payType != null">
+        #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="couponRelief != null">
+        #{couponRelief,jdbcType=DECIMAL},
+      </if>
+      <if test="redBagRelief != null">
+        #{redBagRelief,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsRelief != null">
+        #{goodsRelief,jdbcType=DECIMAL},
+      </if>
+      <if test="platRelief != null">
+        #{platRelief,jdbcType=DECIMAL},
+      </if>
+      <if test="arrivalTime != null">
+        #{arrivalTime,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null">
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="actuallyPaid != null">
+        #{actuallyPaid,jdbcType=DECIMAL},
+      </if>
+      <if test="allCost != null">
+        #{allCost,jdbcType=DECIMAL},
+      </if>
+      <if test="allRelief != null">
+        #{allRelief,jdbcType=DECIMAL},
+      </if>
+      <if test="packagingFee != null">
+        #{packagingFee,jdbcType=DECIMAL},
+      </if>
+      <if test="deliveryFee != null">
+        #{deliveryFee,jdbcType=DECIMAL},
+      </if>
+      <if test="isPlatSend != null">
+        #{isPlatSend,jdbcType=BOOLEAN},
+      </if>
+      <if test="receiverLng != null">
+        #{receiverLng,jdbcType=DOUBLE},
+      </if>
+      <if test="receiverLat != null">
+        #{receiverLat,jdbcType=DOUBLE},
+      </if>
+      <if test="receiverCityCode != null">
+        #{receiverCityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isCoupon != null">
+        #{isCoupon,jdbcType=BOOLEAN},
+      </if>
+      <if test="merchantPrice != null">
+        #{merchantPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="commission != null">
+        #{commission,jdbcType=DECIMAL},
+      </if>
+      <if test="commissionType != null">
+        #{commissionType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
 </mapper>

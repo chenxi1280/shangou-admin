@@ -17,4 +17,6 @@ public interface SgOrderDao {
     int updateByPrimaryKey(SgOrder record);
 
     OrderVO selectByPrimaryK(Long orderId);
+
+    int insertVOSelective(OrderVO orderVO);
 }

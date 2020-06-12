@@ -6,10 +6,13 @@ import com.lh.shangou.dada.pojo.query.deliver.DeliverFeeQuery;
 import com.lh.shangou.dada.service.DeliverService;
 import com.lh.shangou.dao.AddressDao;
 import com.lh.shangou.dao.MerchantDao;
+import com.lh.shangou.dao.OrderItemDao;
 import com.lh.shangou.dao.SgOrderDao;
 import com.lh.shangou.pojo.dto.ResponseDTO;
 import com.lh.shangou.pojo.entity.Address;
 import com.lh.shangou.pojo.entity.Merchant;
+import com.lh.shangou.pojo.entity.OrderItem;
+import com.lh.shangou.pojo.entity.SgOrder;
 import com.lh.shangou.pojo.query.OrderQuery;
 import com.lh.shangou.pojo.vo.MerchantVO;
 import com.lh.shangou.pojo.vo.OrderVO;
@@ -17,8 +20,11 @@ import com.lh.shangou.service.AddressService;
 import com.lh.shangou.service.MerchantService;
 import com.lh.shangou.service.OrderService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.Date;
+import java.util.List;
 
 /**
  * creator：杜夫人
@@ -33,6 +39,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Resource
     SgOrderDao sgOrderDao;
+
+    @Resource
+    OrderItemDao orderItemDao;
 
     @Override
     public OrderVO payPre(OrderQuery query) {
@@ -85,5 +94,41 @@ public class OrderServiceImpl implements OrderService {
 
 
         return deliverService.getDeliveryFee(deliverFee, shop);
+    }
+
+    @Override
+    public ResponseDTO addOrder(OrderVO orderVO) {
+        Date now = new Date();
+        orderVO.setCreateTime(now);
+        orderVO.setPayStatus("待付款");
+
+        int x = sgOrderDao.insertVOSelective(orderVO);
+
+        if (x == 1) {
+            List<OrderItem> orderItems = orderVO.getOrderItems();
+            for (OrderItem item : orderItems) {
+                item.setOrderId(orderVO.getOrderId());
+                item.setCreateTime(now);
+            }
+            // 第一种：直接for循环插入数据，但是这么搞不是mybatis的批处理
+            if (!CollectionUtils.isEmpty(orderItems)) {// 如果你们以后工作中有任这么写，强烈建议单词不要超过一千个循环
+                int y = orderItemDao.inserts(orderItems);
+                if (y == orderItems.size()) {
+                    //
+                    OrderVO orderVO1 = new OrderVO();
+                    orderVO1.setOrderId(orderVO.getOrderId());
+                    return ResponseDTO.ok("下单成功", orderVO1);// 但是会造成
+                }
+            }
+            // 第二种：mybatis的foreach(这种方式，性能略高，在执行插入数据的时候，其实for循环插入和批量插入，性能影响不是很大)
+
+        }
+        return ResponseDTO.fail("下单失败");
+    }
+
+    @Override
+    public OrderVO getOrderVOById(Long orderId) {
+
+        return sgOrderDao.selectByPrimaryK(orderId);
     }
 }
