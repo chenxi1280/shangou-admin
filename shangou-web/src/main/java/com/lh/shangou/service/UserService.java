@@ -49,4 +49,6 @@ public interface UserService extends BaseService {
     ResponseDTO dispatchUserPermission(Long userId, List<Role> roles);
 
     ResponseDTO edit(User user);
+
+    Long selectUserIdByMerchantId(Long merchantId);
 }

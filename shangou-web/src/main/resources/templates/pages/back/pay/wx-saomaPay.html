@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <link rel="icon" th:href="@{/images/logo/logo.png}" type="image/x-icon"/><!--公司网址图标-->
-<div th:replace="plugins/js::js"></div>
+<div th:replace="fragment/js::js"></div>
 <!--二维码生成插件-->
 <script type="text/javascript" th:src="@{/jquery/jquery.qrcode.js}"></script>
 <script type="text/javascript" th:src="@{/jquery/utf.js}"></script>
@@ -9,6 +9,10 @@
 <script type="text/javascript" th:src="@{/lh/layer/layer.js}"></script>
 <body>
 <!--#fd0c2c到#fd2a47-->
+<!--qrcodeUrl-->
+<!--allCost-->
+<!--orderId-->
+<!--createTime-->
 <div class="layui-row" style="position: absolute;left: 0;top: 0;bottom: 0;right: 0">
     <div class="layui-col-xs12 layui-col-md6 layui-col-md-offset3 "
          style="height: 100%;position: relative;">
@@ -19,7 +23,7 @@
                     <div style="padding: 10px;background: white">
                         <div style="font-size: 16px">
                             <label>订单号：</label>
-                            <label th:text="${orderid}">123</label>
+                            <label th:text="${orderId}">123</label>
                         </div>
                         <div style="font-size: 16px">
                             <label>订单金额：</label>

@@ -10,7 +10,7 @@ import java.io.IOException;
  * 支付宝的配置类
  */
 public class AlipayConfig {
-    public final static String DOM_URL = "http://lhtjj.com"; // 不要以 / 结尾
+    public final static String DOM_URL = "http://zk688t.natappfree.cc"; // 不要以 / 结尾
 
     // 应用ID,您的APPID，收款账号既是您的APPID对应支付宝账号
     public static String app_id = "2016102502320704";
@@ -23,7 +23,7 @@ public class AlipayConfig {
 
     // 服务器异步通知页面路径  需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
     // 异步通知接口：不是前台通知接口，需要加端口和api(域名+路径)：我们的服务器接收支付宝收到的款的通知：收到款的通知之后，修改订单付款状态，一定带有订单编号，付款金额，sign(签名)
-    public static String notify_url = DOM_URL + "/api/pages/front/pay/aliPayResYb";
+    public static String notify_url = DOM_URL + "/pages/front/pay/aliPayResYb";
 
     // 页面跳转同步通知页面路径 需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
     public static String return_url = DOM_URL + "/pages/back/order/userListOrder";// 订单列表页面，用付款完成之后，用户跳转的路径

@@ -69,6 +69,13 @@
 </script>
 
 <body class="layui-layout-body">
+<!--音频文件-->
+<audio id="playOrder">
+    <source th:src="@{/audio/order.mp3}"/>
+</audio>
+
+<!--&lt;!&ndash;视频文件&ndash;&gt;-->
+<!--<video></video>-->
 <div id="LAY_app">
     <div class="layui-layout layui-layout-admin">
         <!-- 头部区域 -->
@@ -194,6 +201,18 @@
 
 
     layui.use(['element', 'layer', 'form'], function () {
+
+        // 在这里就应该跟服务创建一个websocket连接,这样我们以后接收消息
+        getWebSocket({
+            onmessage(res) {
+                console.log(res);
+                if (res.msg.startsWith('您有新的外卖订单')) {
+                    // 播报语音
+                    document.getElementById('playOrder').play();
+
+                }
+            }
+        })
         // top=> 指的顶层窗口
         let layer = layui.layer;
         let element = layui.element;

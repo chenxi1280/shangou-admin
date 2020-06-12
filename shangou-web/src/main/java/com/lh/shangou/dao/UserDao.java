@@ -31,4 +31,6 @@ public interface UserDao {
     List<UserVO> ajaxList(UserQuery query);
 
     Integer ajaxListCount(UserQuery query);
+
+    Long selectUserIdByMerchantId(Long merchantId);
 }

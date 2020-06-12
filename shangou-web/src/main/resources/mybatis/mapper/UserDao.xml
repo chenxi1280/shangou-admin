@@ -15,11 +15,11 @@
     <result column="photo" jdbcType="VARCHAR" property="photo" />
   </resultMap>
   <sql id="Base_Column_List">
-    user_id, nick_name, real_name, `password`, phone, email, last_login_ip, last_login_time, 
+    user_id, nick_name, real_name, `password`, phone, email, last_login_ip, last_login_time,
     roles, note, photo
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from user
     where user_id = #{userId,jdbcType=BIGINT}
@@ -29,13 +29,13 @@
     where user_id = #{userId,jdbcType=BIGINT}
   </delete>
   <insert id="insert" keyColumn="user_id" keyProperty="userId" parameterType="com.lh.shangou.pojo.entity.User" useGeneratedKeys="true">
-    insert into user (nick_name, real_name, `password`, 
-      phone, email, last_login_ip, 
-      last_login_time, roles, note, 
+    insert into user (nick_name, real_name, `password`,
+      phone, email, last_login_ip,
+      last_login_time, roles, note,
       photo)
-    values (#{nickName,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{lastLoginIp,jdbcType=VARCHAR}, 
-      #{lastLoginTime,jdbcType=TIMESTAMP}, #{roles,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, 
+    values (#{nickName,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+      #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{lastLoginIp,jdbcType=VARCHAR},
+      #{lastLoginTime,jdbcType=TIMESTAMP}, #{roles,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR},
       #{photo,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" keyColumn="user_id" keyProperty="userId" parameterType="com.lh.shangou.pojo.entity.User" useGeneratedKeys="true">
@@ -215,4 +215,7 @@
       </if>
     </where>
   </select>
+    <select id="selectUserIdByMerchantId" resultType="java.lang.Long">
+      select user_id from merchant where merchant_id=#{merchantId}
+    </select>
 </mapper>

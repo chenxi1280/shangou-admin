@@ -199,15 +199,16 @@ public class UserServiceImpl implements UserService {
         return ResponseDTO.fail("更新失败！");
     }
 
+    @Override
+    public Long selectUserIdByMerchantId(Long merchantId) {
+        return userDao.selectUserIdByMerchantId(merchantId);
+    }
+
     // 第一个参数，就传父类，如果没有父类对象，就两个参数的 class都一样
     private void replaceOldFile(Object user, Object dbUser) {
         // 1、先把父类的class找到！
         Class cls = user.getClass();
         Field[] declaredFields = dbUser.getClass().getDeclaredFields();// 只能得到一个
-
-
         User.class.getDeclaredFields();// 也能得到全部
-
-
     }
 }

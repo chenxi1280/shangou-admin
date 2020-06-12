@@ -9,6 +9,7 @@ import java.util.Date;
 /**
  * creator：lhtjj
  * date: 2020/4/30
+ * 需要一个自己封装的支付宝的订单参数
  */
 @Data
 public class Order implements Serializable {
