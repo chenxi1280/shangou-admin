@@ -3,6 +3,8 @@ package com.lh.shangou.dao;
 import com.lh.shangou.pojo.entity.SgOrder;
 import com.lh.shangou.pojo.vo.OrderVO;
 
+import java.util.List;
+
 public interface SgOrderDao {
     int deleteByPrimaryKey(Long orderId);
 
@@ -19,4 +21,9 @@ public interface SgOrderDao {
     OrderVO selectByPrimaryK(Long orderId);
 
     int insertVOSelective(OrderVO orderVO);
+
+    List<OrderVO> findUserOrders(Long userId);
+
+    int updateOrderStatus(SgOrder updateOrder);
+
 }

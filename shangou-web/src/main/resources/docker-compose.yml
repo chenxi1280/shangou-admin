@@ -1,0 +1,45 @@
+version: '3.1'
+services:  #指的是生命一堆容器的服务
+  mysql80:           # 服务的名称，不是容器的名称，服务的名称是可以随便定义的
+    restart: always   # 代表只要docker启动，那么这个容器就跟着一起启动
+    image: mysql:8.0.20  # 指定镜像路径
+    container_name: mysql80  # 指定容器名称
+    ports:  #可以映射多个端口
+      - 3306:3306   #  指定端口号的映射
+    environment:
+      MYSQL_ROOT_PASSWORD: root   # 指定MySQL的ROOT用户登录密码
+      TZ: Asia/Shanghai        # 指定时区
+    volumes:
+      - /docker/mysql80/data:/var/lib/mysql   # 映射数据卷
+  mysql57:           # 服务的名称，不是容器的名称，服务的名称是可以随便定义的
+    restart: always   # 代表只要docker启动，那么这个容器就跟着一起启动
+    image: mysql:5.7.28  # 指定镜像路径
+    container_name: mysql57  # 指定容器名称
+    ports:  #可以映射多个端口
+      - 13306:3306   #  指定端口号的映射
+    environment:
+      MYSQL_ROOT_PASSWORD: root   # 指定MySQL的ROOT用户登录密码
+      TZ: Asia/Shanghai        # 指定时区
+    volumes:
+      - /docker/mysql57/data:/var/lib/mysql   # 映射数据卷
+  sg:
+    restart: always
+    image: java:8
+    container_name: shangou
+    ports:
+      - 8081:8081
+      - 8082:8081
+    volumes:
+      - /webapps/shangou.jar:/shangou.jar
+    command: java -jar /shangou.jar --spring.profiles.active=pro1
+  tomcat:
+    restart: always
+    image: tomcat:8.5.15
+    container_name: tomcat85
+    ports:
+      - 8080:8080
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - /docker/tomcat/webapps:/usr/local/tomcat/webapps
+      - /docker/tomcat/logs:/usr/local/tomcat/logs

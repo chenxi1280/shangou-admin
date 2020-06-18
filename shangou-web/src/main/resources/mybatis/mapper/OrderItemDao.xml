@@ -12,6 +12,17 @@
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="user_id" jdbcType="BIGINT" property="userId"/>
     </resultMap>
+    <sql id="Base_Column_List">
+  order_id,
+goods_img,
+goods_count,
+origin_goods_id,
+goods_title,
+goods_price,
+merchant_id,
+create_time,
+user_id
+    </sql>
     <insert id="insert" parameterType="com.lh.shangou.pojo.entity.OrderItem">
     insert into order_item (order_id, goods_img, goods_count,
       origin_goods_id, goods_title, goods_price,
@@ -95,4 +106,13 @@
             )
         </foreach>
     </insert>
+    <select id="findOrderInfoByOrderId" resultType="com.lh.shangou.pojo.vo.OrderItemVO">
+        select
+        <include refid="Base_Column_List"/>
+        from order_item
+        where order_id in
+        <foreach collection="ids" item="m" separator="," close=")" open="(">
+            #{m.orderId}
+        </foreach>
+    </select>
 </mapper>

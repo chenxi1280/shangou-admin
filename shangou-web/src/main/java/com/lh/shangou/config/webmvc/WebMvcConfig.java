@@ -98,9 +98,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
         return realPath;
     }
 
-
     public static boolean deleteFile(String url) {
         File f = new File(getUploadPath() + url);
         return f.delete();
     }
+
 }

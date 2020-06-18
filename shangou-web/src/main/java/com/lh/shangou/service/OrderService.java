@@ -5,6 +5,8 @@ import com.lh.shangou.pojo.query.OrderQuery;
 import com.lh.shangou.pojo.vo.OrderVO;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * creator：杜夫人
  * date: 2020/6/11
@@ -19,4 +21,6 @@ public interface OrderService {
     ResponseDTO addOrder(OrderVO orderVO);
 
     OrderVO getOrderVOById(Long orderId);
+
+    List<OrderVO> findUserOrders(Long userId);
 }

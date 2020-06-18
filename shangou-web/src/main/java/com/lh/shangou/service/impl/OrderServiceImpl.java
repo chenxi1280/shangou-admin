@@ -14,17 +14,23 @@ import com.lh.shangou.pojo.entity.Merchant;
 import com.lh.shangou.pojo.entity.OrderItem;
 import com.lh.shangou.pojo.entity.SgOrder;
 import com.lh.shangou.pojo.query.OrderQuery;
+import com.lh.shangou.pojo.vo.GoodsVO;
 import com.lh.shangou.pojo.vo.MerchantVO;
+import com.lh.shangou.pojo.vo.OrderItemVO;
 import com.lh.shangou.pojo.vo.OrderVO;
 import com.lh.shangou.service.AddressService;
 import com.lh.shangou.service.MerchantService;
 import com.lh.shangou.service.OrderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * creator：杜夫人
@@ -32,6 +38,7 @@ import java.util.List;
  */
 @Service
 public class OrderServiceImpl implements OrderService {
+    Logger logger = LoggerFactory.getLogger(GoodsVO.class);
 
     @Resource
     DeliverService deliverService;// 引入达达配送服务接口
@@ -130,5 +137,48 @@ public class OrderServiceImpl implements OrderService {
     public OrderVO getOrderVOById(Long orderId) {
 
         return sgOrderDao.selectByPrimaryK(orderId);
+    }
+
+    @Override
+    public List<OrderVO> findUserOrders(Long userId) {
+
+        List<OrderVO> marketOrders = sgOrderDao.findUserOrders(userId);
+
+        if (!CollectionUtils.isEmpty(marketOrders)) {
+            // 根据订单查询它的订单信息
+            List<OrderItemVO> orderInfoVOS = orderItemDao.findOrderInfoByOrderId(marketOrders);
+            Map<Long, List<OrderItemVO>> collect = orderInfoVOS.stream().collect(Collectors.groupingBy(OrderItemVO::getOrderId));
+            // 继续查询商家信息
+            List<Merchant> merchantVOS = merchantDao.getByObjects(marketOrders);
+            Map<Long, List<Merchant>> collect1 = merchantVOS.stream().collect(Collectors.groupingBy(Merchant::getMerchantId));
+            Map<Long, List<OrderItemVO>> collect2 = orderInfoVOS.stream().collect(Collectors.groupingBy(OrderItemVO::getOrderId));
+            long now = System.currentTimeMillis();
+            SgOrder updateOrder = new SgOrder();
+            for (OrderVO m : marketOrders) {
+                List<Merchant> merchants = collect1.get(m.getMerchantId());
+                if (!CollectionUtils.isEmpty(merchants)) {// 有商家
+                    m.setMerchant(merchants.get(0));
+                }
+                List<OrderItemVO> orderInfoVOS1 = collect2.get(m.getOrderId());
+                m.setOrderItemVOs(orderInfoVOS1);
+
+                // 此处简化开发，利用查询的时候将支付超时的订单设置为已取消，
+                // 实际项目之中应该使用RabbitMQ的延时队列和死信队列，发送延时消息，或者用redis实现延时队列
+
+                // 先获取订单创建时间和支付状态，如果支付状态是待付款，并且创建时间已经离现在超过三十分钟，就把订单设置为已取消
+                if ("待付款".equals(m.getPayStatus())) {
+                    long createTime = m.getCreateTime().getTime();
+                    if (now - createTime > 30 * 60 * 1000) { // 已经过了三十分钟
+                        updateOrder.setOrderId(m.getOrderId());
+                        updateOrder.setPayStatus("已取消");
+                        if (sgOrderDao.updateOrderStatus(updateOrder) != 1) {
+                            logger.error("更新订单状态为已取消时候产生了异常，请排查问题！");
+                        }
+                    }
+                }
+            }
+            return marketOrders;
+        }
+        return null;
     }
 }

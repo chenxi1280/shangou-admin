@@ -18,6 +18,20 @@
     </script>
     <script th:inline="javascript" type="text/javascript">
 
+        // let imgPrefix= [[@{/}]];
+        const imgPrefix = '/api';
+        // 有一个thymeleaf转义 字符串
+        $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+            // Modify options, control originalOptions, store jqXHR, etc
+
+            let oldUrl = options.url;
+            if (oldUrl.startsWith("/pages/")) {
+                options.url = '/api' + oldUrl;
+            }
+            console.log(options)
+        });
+
+
         function showBigImg() {// 渲染大图查看
             $("img[showBig]").unbind("click").click(function () {// 先解除绑定，再绑定，绑定图片点击事件，否则会出现绑定两次点击事件
                 let bigImg = layer.open({// 弹框之后，如遇到select标签，radio,checkbox之类，需要使用表单渲染
@@ -97,6 +111,16 @@
             var cval = getCookie(name);
             if (cval != null)
                 document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
+        }
+
+        function imgAddPrefix() {// 一定会做一个文件服务器，专门用来保存图片， 音频视频。
+            $("img").each(function () {// 这个就是给所有图片加上前缀
+                if (this.src.indexOf('/upload/') > -1) {
+                    let sr = this.src.substring(this.src.indexOf('/upload/'));
+                    console.log(imgPrefix + sr);
+                    $(this).attr("src", imgPrefix + sr)
+                }
+            })
         }
 
         //是手机返回true

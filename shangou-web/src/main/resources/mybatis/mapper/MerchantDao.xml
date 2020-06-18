@@ -597,4 +597,11 @@
     <select id="selectByPK" resultType="com.lh.shangou.pojo.vo.MerchantVO">
         select <include refid="Base_Column_List"/> from merchant where merchant_id=#{merchantId}
     </select>
+    <select id="getByObjects" resultType="com.lh.shangou.pojo.entity.Merchant">
+        select <include refid="Base_Column_List"></include> from merchant
+        where merchant_id in
+        <foreach collection="ids" open="(" close=")" separator="," item="o">
+            #{o.merchantId}
+        </foreach>
+    </select>
 </mapper>

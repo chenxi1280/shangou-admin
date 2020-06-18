@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * creator：杜夫人
  * date: 2020/5/19
  */
-@Component
+@Component// 再把它延后
 public class SpringUtil implements ApplicationContextAware {
 
     Logger logger = LoggerFactory.getLogger(SpringUtil.class);

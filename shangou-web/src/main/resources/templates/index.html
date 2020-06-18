@@ -13,7 +13,7 @@
 <div style="position: absolute;left: 0;right: 0;top: 0;bottom: 0;">
     <div class="layui-row" style="height: 100%">
         <div class="layui-col-xs12   layui-col-md6 layui-col-md-offset3" style="height: 100%;">
-            <!--             最上面的背景图片-->
+            <!--             最上面的背景图片的-->
             <div style="position: absolute;top: 0;left: 0;right: 0;height: 40px;z-index: 1">
                 <div class="headImg"
                      th:style="'display: flex;height: 100%;justify-content: space-between;align-items: center;background-image: url(https://img30.360buyimg.com/mobilecms/jfs/t1/149845/16/306/3141/5edfd8d5E6aaa0f45/210d35ef98807409.jpg);color: white;background-size:cover; '"
@@ -48,12 +48,12 @@
                                 <div style="padding: 10px 0">
                                     <div class="layui-carousel" id="advertisement" style="border-radius: 10px;">
                                         <div carousel-item style="border-radius: 10px;">
-                                                <img style="width:100%;border-radius: 10px"
-                                                     src="https://img30.360buyimg.com/mobilecms/jfs/t1/149193/22/193/273257/5ede0714E239b9241/11053dbd7dc07a32.png">
-                                                <img style="width:100%;border-radius: 10px "
-                                                     src="https://img30.360buyimg.com/mobilecms/jfs/t1/128253/3/4225/280110/5eda7012E5a05d3a1/477463351000f992.png">
-                                                <img style="width:100%; border-radius: 10px"
-                                                     src="https://img30.360buyimg.com/mobilecms/jfs/t1/149193/22/193/273257/5ede0714E239b9241/11053dbd7dc07a32.png">
+                                            <img style="width:100%;border-radius: 10px"
+                                                 src="https://img30.360buyimg.com/mobilecms/jfs/t1/149193/22/193/273257/5ede0714E239b9241/11053dbd7dc07a32.png">
+                                            <img style="width:100%;border-radius: 10px "
+                                                 src="https://img30.360buyimg.com/mobilecms/jfs/t1/128253/3/4225/280110/5eda7012E5a05d3a1/477463351000f992.png">
+                                            <img style="width:100%; border-radius: 10px"
+                                                 src="https://img30.360buyimg.com/mobilecms/jfs/t1/149193/22/193/273257/5ede0714E239b9241/11053dbd7dc07a32.png">
                                         </div>
                                     </div>
 
@@ -197,6 +197,7 @@
                                 "                                        </div>\n" +
                                 "                                    </div>");
                             goodsContainer.prepend(item);
+                            imgAddPrefix();// 给图片上前缀。
                         });
                         $(".layui-flow-more").css({width: '46%', 'margin': '5px'});
 
@@ -219,7 +220,6 @@
         let cityArea = $("#cityArea");
         cityArea.text(p.address);
         cityArea.next().css({display: 'none'})
-
     }
 
     function getCookiePosition() {
@@ -243,9 +243,11 @@
     }
 
     layui.use(['layer', 'form', 'carousel', 'flow'], function () {
+
         let carousel = layui.carousel;
         let flow = layui.flow;
         let layer = layui.layer;
+        layer.msg('当前服务器所在端口：' + [[${application.serverPort}]]);
         initMap(function (res) {// 点击之后要做的事情
             position = res.location;
             let userPosition = {};

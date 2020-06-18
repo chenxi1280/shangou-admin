@@ -1,6 +1,7 @@
 package com.lh.shangou.pojo.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.lh.shangou.pojo.entity.Merchant;
 import com.lh.shangou.pojo.entity.OrderItem;
 import com.lh.shangou.pojo.entity.SgOrder;
 import lombok.Data;
@@ -19,4 +20,15 @@ public class OrderVO extends SgOrder {
 
     private String orderItemsStr;// 订单详情的JSON字符串
 
+    private Merchant merchant;
+    private List<OrderItemVO> orderItemVOs;
+
+    public void setOrderItemVOs(List<OrderItemVO> orderItemVOs) {
+
+        this.orderItemVOs = orderItemVOs;
+    }
+
+    public List<OrderItemVO> getOrderItemVOs() {
+        return orderItemVOs;
+    }
 }

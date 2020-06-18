@@ -2,14 +2,20 @@ package com.lh.shangou.controller;
 
 import com.lh.shangou.config.webmvc.WebMvcConfig;
 import com.lh.shangou.service.MerchantService;
+import com.lh.shangou.util.spring.SpringUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
@@ -20,8 +26,16 @@ import java.util.UUID;
  * date: 2020/5/20
  */
 public class BaseController {
+
+
     @Resource
     MerchantService merchantService;
+
+    @Resource
+    Environment environment;// 这个就spring的智能机制，如果你在这里要引用一个另一个容器中的实例，那么， 它就先先把你需要的这个实例先创建出来。
+
+    @Resource
+    ServletContext servletContext;// 给整个程序设置属性
 
     protected String saveFile(MultipartFile f, String uploadPath) {// 很多控制器里边都可能会有保存文件的操作
         if (f != null && !f.isEmpty()) {
@@ -77,5 +91,12 @@ public class BaseController {
         }
         return merchantId;
     }
+
+    @PostConstruct
+
+    public void setInfo() {
+        servletContext.setAttribute("serverPort", environment.getProperty("server.port"));
+    }
+
 
 }

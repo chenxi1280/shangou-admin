@@ -113,9 +113,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PageDTO ajaxList(UserQuery query) {
+
+
         List<UserVO> userVOS = userDao.ajaxList(query);
-
-
         Integer count = userDao.ajaxListCount(query);
 
         return PageDTO.setPageData(count, userVOS);

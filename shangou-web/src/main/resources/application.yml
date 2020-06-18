@@ -1,7 +1,3 @@
-server:
-  port: 80 #
-#  servlet:
-#    context-path: /apis  #  项目的上下文路径，如果有nginx代理的话，这个是需要配置为nginx代理服务器的路径m
 spring:
   datasource:
     username: root
@@ -12,7 +8,7 @@ spring:
   messages:
     basename: i18n/validate  #   验证文件的路径
   profiles:
-    active: dev
+    active: pro1
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss  #统一进行日期格式的数据返回
     time-zone: Asia/Shanghai   # 默认时区
@@ -21,14 +17,35 @@ mybatis:
     map-underscore-to-camel-case: true  #  下划线转换程驼峰
   #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  #  日志也可以这么配置
   mapper-locations: classpath*:mybatis/mapper/**/*.xml  # mapper.xml文件的路径配置
-
-
+server:
+  servlet:
+    context-path: /api  # 这个是配置项目上下文路径
 ---
 logging:
   level:
     com.lh.shangou.dao: info  #  线上环境是info
 spring:
-  profiles: pro
+  profiles: pro1
+server:
+  port: 8081
+---
+logging:
+  level:
+    com.lh.shangou.dao: info  #  线上环境是info
+spring:
+  profiles: pro2
+server:
+  port: 8082
+---
+logging:
+  level:
+    com.lh.shangou.dao: info  #  线上环境是info
+spring:
+  profiles: pro3
+server:
+  port: 8083
+
+
 ---
 logging:
   level:

@@ -1,13 +1,11 @@
 package com.lh.shangou.service;
 
-import com.lh.shangou.pojo.entity.ImgCache;
 import com.lh.shangou.pojo.vo.PermissionVO;
 import com.lh.shangou.pojo.vo.RoleVO;
 import com.lh.shangou.util.spring.SpringUtil;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
