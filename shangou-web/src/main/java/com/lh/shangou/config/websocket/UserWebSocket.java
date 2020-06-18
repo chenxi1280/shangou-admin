@@ -23,7 +23,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Component
 @ServerEndpoint(value = "/pages/back/shanGouWebSocket/{userId}", configurator = MyEndpointConfigure.class)
 public class UserWebSocket {
-
     // 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。原子类(BAT面试)
     private static final AtomicInteger OnlineCount = new AtomicInteger(0);
 

@@ -93,9 +93,9 @@ public class BaseController {
     }
 
     @PostConstruct
-
     public void setInfo() {
-        servletContext.setAttribute("serverPort", environment.getProperty("server.port"));
+        String property = environment.getProperty("server.port");
+        servletContext.setAttribute("serverPort",property );
     }
 
 

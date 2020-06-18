@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -40,11 +39,11 @@ import java.util.*;
 @Controller
 //@Sl4j
 public class PayControllerFront {
+    Logger log = LoggerFactory.getLogger(GoodsVO.class);
 
 
     @Resource
     UserService userService;
-    Logger log = LoggerFactory.getLogger(GoodsVO.class);
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {// 统一对日期进行入参处理(必须传yyyy-MM-dd HH:mm:ss)
