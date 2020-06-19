@@ -217,7 +217,7 @@ public class PayControllerFront {
     // 支付宝的通知的同步接口:重定向接口
     @RequestMapping("/aliPayResTb")
     String aliPayResTb() {
-        return "/pages/back/order/userOrderList";
+        return "pages/back/order/userOrderList";
     }
 
 }

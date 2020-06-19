@@ -2,10 +2,7 @@ package com.lh.shangou.dao;
 
 import com.lh.shangou.pojo.entity.Goods;
 import com.lh.shangou.pojo.query.GoodsQuery;
-import com.lh.shangou.pojo.vo.GoodsTypeVO;
-import com.lh.shangou.pojo.vo.GoodsVO;
-import com.lh.shangou.pojo.vo.MerchantVO;
-import com.lh.shangou.pojo.vo.UserVO;
+import com.lh.shangou.pojo.vo.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Collection;
@@ -33,4 +30,6 @@ public interface GoodsDao {
 
     // 根据商品类型把商品全部找出来
     List<GoodsVO> selectGoodsByTypes(@Param("ids") List<GoodsTypeVO> goodsTypeVOS);
+
+    List<GoodsVO> getByIds(@Param("ids") List carVOS);
 }

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragment/js::js"></div>
+<body style="overflow-x: hidden">
+<style>
+    #userMenuDiv img {
+        width: 3rem;
+    }
+</style>
+<div class="layui-row" style="position: absolute;left: 0;top: 0;bottom: 0;right: 0;">
+    <div class="layui-col-xs12 layui-col-md6 layui-col-md-offset3 " style="height: 100%">
+        <div style="position: relative">
+            <img th:src="@{/images/pages/front/user/myBg.png}" style="width: 100%">
+            <div style="position: absolute;left: 15px;right: 15px;display: flex;justify-content: space-between;top: 15px;color: white;">
+                <div>
+                </div>
+                <div><i class="layui-icon layui-icon-notice" style="font-size: 1rem"></i>
+                </div>
+            </div>
+            <div style="position: absolute;left: 15px;right: 15px;display: flex;align-items: center;top: 2rem;color: white;">
+
+                <div>
+                    <img th:if="${session.photo==null}" th:src="@{/images/logo/logo_gray.png}"
+                         style="width: 3rem;border-radius: 100%">
+                    <img th:if="${session.photo!=null}" th:src="${session.photo}" style="width: 3rem;border-radius: 100%">
+                </div>
+                <div style="margin-left: 10px;color: white">
+                    <div th:if="${session.userId==null}">
+                        <div style="padding:8px 10px;border-radius: 5px;border: solid lightgray 1px;cursor: pointer;user-select: none">
+                            <a onclick="top.location='/loginPage'" style="color: white">登录/注册</a>
+                        </div>
+                    </div>
+                    <div th:if="${session.userId!=null}">
+                        <div th:text="${session.nickName}">原来你，这么好</div>
+                        <div style="margin-top: 5px;font-size: 1rem"
+                             th:text="${#strings.substring(session.phone,0,3)+'****'+#strings.substring(session.phone,7)}">电话
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <div>
+            <div style="display: flex;align-items: center">
+                <div style="display: flex;padding: 10px;align-items: center">
+                    <div style="text-align: center">
+                        <img th:src="@{/images/pages/front/user/moneyPakage.png}" style="width: 30px;">
+                        <div style="font-size: 0.7rem;margin-top: 5px">
+                            我的钱包
+                        </div>
+                    </div>
+                    <img th:src="@{/images/pages/front/user/right_icon.png}" style="margin-left: 1rem;height: 3rem">
+                </div>
+                <div style="display: flex;flex-grow: 1;text-align: center">
+                    <div style="width: 25%">
+                        <div>
+                            0
+                        </div>
+                        <div style="margin-top: 5px">
+                            红包
+                        </div>
+                    </div>
+                    <div style="width: 25%">
+                        <div>
+                            --
+                        </div>
+                        <div style="margin-top: 5px">
+                            优惠券
+                        </div>
+                    </div>
+                    <div style="width: 25%">
+                        <div>
+                            --
+                        </div>
+                        <div style="margin-top: 5px">
+                            白条
+                        </div>
+                    </div>
+                    <div style="width: 25%">
+                        <div>
+                            --
+                        </div>
+                        <div style="margin-top: 5px">
+                            鲜豆
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="padding-bottom: 30px">
+            <div id="userMenuDiv" style="display: flex;flex-wrap: wrap">
+                <div style="width: 25%;padding-bottom: 10px;border-bottom: solid lightgray 0.1px;display: flex;justify-content: center;align-items: center"
+                     th:each="c:${myMenus}">
+                    <div style="text-align: center;">
+                        <img th:src="@{${c.pic}}"/>
+                        <div style="margin-top: 10px" th:text="${c.text}">我的关注</div>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center;padding: 30px" th:if="${session.userId!=null}">
+                <button class="layui-btn layui-btn-primary" style="color: red"
+                        onclick="top.location='/clientLogout'" onmouseenter="this.style.border='solid red 1px'"
+                        onmouseleave="this.style.border=''">退出登录
+                </button>
+            </div>
+
+        </div>
+        <div th:replace="fragment/bottom_menu::bottom_menu"></div>
+    </div>
+</div>
+<script th:inline="javascript" type="text/javascript">
+    $(function () {
+        layui.use(['rate', 'carousel'], function () {
+            var carousel = layui.carousel;
+
+            //建造实例
+            carousel.render({
+                elem: '#carousel_1'
+                , width: '100%' //设置容器宽度
+                , height: '5rem' //设置容器宽度
+                , arrow: 'none' //始终显示箭头
+                //,anim: 'updown' //切换动画方式
+            });
+
+        })
+    })
+</script>
+</body>
+</html>

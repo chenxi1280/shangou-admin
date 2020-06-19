@@ -21,8 +21,12 @@ public class PageDTO implements Serializable {// 传递给layui使用的DTO对�
     private Integer count = 0;
 
     private Object data;
+    private Object moreData;
 
     public static PageDTO setPageData(Integer count, Object data) {
-        return new PageDTO(0, "成功", count, data);
+        return new PageDTO(0, "成功", count, data,null);
+    }
+    public static PageDTO setPageData(Integer count, Object data, Object moreData) {
+        return new PageDTO(0, "成功", count, data,moreData);
     }
 }

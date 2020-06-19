@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<div th:replace="fragment/js::js"></div>
+<style>
+    /*修改layui表格的高度*/
+    /*.layui-table-cell {*/
+    /*    height: auto;*/
+    /*}*/
+
+    #queryForm input {
+        width: 80px;
+    }
+
+    #payTypeDiv > div {
+        padding: 10px;
+        border: solid #1E9FFF 1px;
+        cursor: pointer;
+        font-weight: bold;
+        border-right: none;
+        user-select: none;
+    }
+
+    #payTypeDiv > div:hover {
+        background: #1E9FFF;
+        color: white;
+    }
+</style>
+<body style="margin: 10px">
+<div style="padding: 10px;" class="layui-card">
+    <form id="queryForm" class="layui-form" method="post"
+          style="display: flex;align-items: center">
+        <div  class="layui-hide-xs" style="display: flex;align-items: center">
+            <span style="width: fit-content">单号后4位:</span>
+            <input class="layui-input" name="orderId" id="orderId"/>
+        </div>
+        <div class="layui-hide-xs" style="display: flex;align-items: center;margin-left: 20px">
+            <label style="width:  fit-content">收货人:</label><input class="layui-input" name="receiverName"
+                                                                  id="receiverName"/>
+        </div>
+        <div style="display: flex;align-items: center;margin-left: 20px">
+            <label style="width:  fit-content">手机后4位:</label><input class="layui-input" name="receiverPhone"
+                                                                    id="receiverPhone"/>
+        </div>
+
+        <div class="layui-hide-xs" style="display: flex;align-items: center;margin-left: 20px">
+            <label style="width:  fit-content">下单日期:</label>
+            <input class="layui-input" name="createDateRange" id="createDateRange" style="width: 190px"/>
+        </div>
+        <div style="display: flex;align-items: center;margin-left: 20px">
+            <button type="button"  class="layui-btn" id="queryBtn" lay-submit lay-filter="commit">查询</button>
+        </div>
+    </form>
+    <div style="padding-top: 10px;display: flex;align-items: center">
+        <div style="display: flex" id="payTypeDiv">
+            <div style="background: #1E9FFF;color: white">
+                全部订单
+            </div>
+            <div>
+                待发货
+            </div>
+            <div>
+                待收货
+            </div>
+            <div>
+                已完成
+            </div>
+            <div>
+                已取消
+            </div>
+            <div style="border: solid #1E9FFF 1px;">已退款</div>
+        </div>
+        <div  class="layui-hide-xs" style="margin-left: 20px;display: flex;align-items: center">
+            <label style="font-weight: bold">本页累计：</label><span style="color: red">¥ </span>
+            <h2 style="font-weight: bold;color: red;margin-left: 5px" id="allCost"></h2>
+        </div>
+    </div>
+
+    <table id="orderTable" lay-filter="orderTableFilter"></table>
+    <!--        <div th:include="plugins/splitBar::splitBar"></div>-->
+</div>
+<script type="text/html" id="orderInfoDiv">
+    <div style="overflow-y: scroll">
+        <div style="background: rgb(245,245,245);padding: 10px;">
+            <div style="background: white;padding: 10px;border-radius: 5px">
+                <div>
+                    <div style="display: flex;justify-content: space-between">
+                        <div>
+                            <div style="display: flex;align-items: center">
+                            <span style="background: #50d15a;color: white;padding: 1px 2px;border-radius:2px"
+                                  id="odTag">公司</span>
+                                <h3 style="font-weight: bold" id="odAddress">大西洋国际大厦12-1</h3>
+                            </div>
+                            <div style="color: gray">
+                                <span id="odReceiverName">黎杭</span>
+                                <span style="margin-left: 5px" id="odReceiverPhone">182****0162</span>
+                            </div>
+                        </div>
+                        <h3 id="odPayStatus" style="font-weight: bold;text-align: center;padding: 10px"></h3>
+                    </div>
+                    <hr>
+                    <div style="display: flex;justify-content: space-between;align-items: center">
+                        <h3 style="font-weight: bold" id="arrivalTime">送达时间</h3>
+                        <div style="color: #1E9FFF" id="odArrivalTime"><span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="background: white;padding: 10px;border-radius: 5px;margin-top: 10px">
+                <div>
+                    <div>
+                        <div id="infosDiv">
+                        </div>
+                        <div style="text-align: center;background: rgb(240,240,240);border-radius: 5px">共<span
+                                id="odAllCount">5</span>件
+                        </div>
+                        <div style="display: flex;justify-content: space-between;padding: 10px 0">
+                            <div>包装费</div>
+                            <div id="odPackagingFee">¥0.5</div>
+                        </div>
+                        <div style="display: flex;justify-content: space-between;padding: 10px 0">
+                            <div>配送费</div>
+                            <div id="odDeliveryFee">¥5</div>
+                        </div>
+                        <div style="display: flex;justify-content: space-between;padding: 10px 0">
+                            <div>运费优惠</div>
+                            <div style="color: lightgray">0</div>
+                        </div>
+                        <div style="display: flex;justify-content: space-between;padding: 10px 0">
+                            <div>红包</div>
+                            <div style="color: lightgray">0</div>
+                        </div>
+                        <div style="padding-right: 10px">
+                            <div style="width: 100%;padding: 5px;" id="odNote"></div>
+                        </div>
+                        <hr>
+                        <div style="display: flex;align-items: center;justify-content: flex-end">
+                            <div>共节省<span>¥0</span></div>
+                            <div style="display: flex;margin-left: 20px;align-items: center">实付金额<h2
+                                    style="color: orangered;font-weight: bold;margin-left: 10px" id="odActuallyPaid"
+                            >¥60.8</h2></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</script>
+
+<!--// 加上th:inline='javascript' 否则可能会因为小于或者大于符号导致 thymeleaf模板引擎解析错误。-->
+<script th:inline="javascript" type="text/javascript">
+    $(function () {
+        let payStatus = '';
+        $("#payTypeDiv>div").click(function () {
+            $("#payTypeDiv>div").css({background: '', color: ''})
+            $(this).css({background: '#1E9FFF', color: 'white'});
+            let payType = $(this).text().trim();
+            payStatus = payType == '全部订单' ? '' : payType;
+            $("#queryBtn").click();
+        });
+        layui.use(['table', 'layer', 'laydate', 'form', 'laypage'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var laydate = layui.laydate;
+            var form = layui.form;
+            laydate.render({
+                elem: '#createDateRange' //指定元素
+                , range: '至'
+            });
+            //第一个实例
+            var orderTable = table.render({
+                elem: '#orderTable'
+                , page: true
+                , url: '/pages/back/order/ajaxListOrderBack' //数据接口
+                , cols: [[ //表头
+                    {field: 'orderId', title: 'ID', width: 60}
+                    , {
+                        field: '', title: '付款状态', width: 90, templet: function (d) {
+                            let payStatus = d.payStatus;
+                            let color = '';
+                            switch (payStatus) {
+                                case '待发货':
+                                    color = 'blue';
+                                    break;
+                                case '待收货':
+                                    color = 'red';
+                                    break;
+                                case '已退款':
+                                    color = 'orange';
+                                    break;
+                                case '已完成':
+                                    color = 'green';
+                                    break;
+                            }
+                            return '<div style="color: ' + color + ';font-weight: bold" >' + d.payStatus + '</div>'
+                        }
+                    }
+                    , {
+                        field: 'nickName', width: 180, title: '收货人-电话', templet: function (d) {
+                            return '<div >' + d.receiverName + '-' + d.receiverPhone + '</div>'
+                        }
+                    }
+                    , {field: 'receiverAddress', title: '收货地址', width: 160}
+                    , {field: 'createTime', title: '下单时间', width: 140}
+                    , {field: 'payTime', title: '付款时间', width: 140}
+                    , {field: 'payType', title: '付款方式', width: 100}
+                    , {field: 'arrivalTime', title: '送达时间', width: 150}
+                    , {field: 'note', title: '备注'}
+                    , {
+                        field: 'actuallyPaid', title: '实付款', width: 80, templet: function (d) {
+                            let color=d.payStatus=='待付款'||'已取消'==d.payStatus?'gray':'red';
+                            return '<div style="font-weight: bold;font-size: 16px;color: '+color+'" >' + d.actuallyPaid + '</div>'
+                        }
+                    }
+                    , {
+                        field: '', fixed: 'right', width: 160, title: '操作', templet: function (d) {
+                            let payStatus = d.payStatus;
+                            let div = $("<div> <button   class='layui-btn  layui-btn-primary layui-btn-xs' lay-event='showOrder' >查看</button></div>");
+                            let item;
+                            switch (payStatus) {
+                                case '待发货':
+                                    item = $("<button class='layui-btn  layui-btn-danger layui-btn-sm' lay-event='fahuo'>发货</button>")
+                                    break;
+                                case '待收货':
+                                    item = $("<button class='layui-btn  layui-btn-normal layui-btn-sm' lay-event='shouhuo'>客户已收货</button>")
+                                    break;
+                            }
+                            div.append(item);
+                            return div.html();
+                        }
+                    }
+                ]]
+                , toolbar: 'true'
+                , done(res) {
+                    $("#allCost").text(res.moreData)
+                }
+            });
+            //监听行中工具栏事件
+            table.on('tool(orderTableFilter)', function (obj) {
+                let d = obj.data;
+                switch (obj.event) {
+                    case 'fahuo':
+                        layer.confirm('确定发货吗?', {icon: 3}, function (index) {
+                            let od = {};
+                            od.payStatus = '待收货';
+                            od.orderId = d.orderId;
+                            //do something
+                            $.post("/pages/back/order/editOrderPayStatus", od, function (res) {
+                                if (res.res) {
+                                    orderTable.reload();
+                                    console.log(res);
+                                }
+                            }, "json");
+                            layer.close(index);
+                        });
+                        break;
+                    case 'showOrder':
+
+                        let wid=isMobile()?'100%':'500px';
+
+                        var showOrder = layer.open({
+                            type: 1,
+                            area: [wid, '96%'],
+                            title: '订单详情',
+                            shadeClose: true,
+                            content: $('#orderInfoDiv').html() //这里content是一个普通的String
+                        });
+                        let infosDiv = $("#infosDiv");
+                        infosDiv.empty();
+                        $("#odPayStatus").text(d.payStatus);
+                        $("#odAddress").text(d.receiverAddress);
+                        $("#odAllCount").text(d.orderInfoVOS.length);
+                        $("#odActuallyPaid").text(d.actuallyPaid);
+                        $("#odDeliveryFee").text(d.deliveryFee);
+                        $("#odPackagingFee").text(d.packagingFee);
+                        $("#odReceiverName").text(d.receiverName);
+                        $("#odReceiverPhone").text(d.receiverPhone);
+                        $("#odArrivalTime").text(d.arrivalTime);
+                        $("#odTag").text(d.tag);
+                        $("#odNote").html("备注：<span style='color:  red;font-weight: bold'>" + d.note + "</span>");
+                        let infos = d.orderInfoVOS;
+                        $.each(infos, function (i, f) {// f表示每个订单详情
+                            let item = $("<div style=\"display: flex;align-items: center\">\n" +
+                                "                                    <div>\n" +
+                                "                                        <img src='" + f.pic + "' style=\"width: 40px;height: 40px\"\n" +
+                                "                                             onerror=\"this.src=errorImg\"/>\n" +
+                                "                                    </div>\n" +
+                                "                                    <div style=\"margin-left: 10px;flex-grow: 1\">\n" +
+                                "                                        <div style='font-weight: bold'>" + f.title + "</div>\n" +
+                                "                                        <div style=\"display: flex;justify-content: space-between;padding: 10px 0;\">\n" +
+                                "                                            <div>¥<span>" + f.price + "</span> x <span style='color: red;font-weight: bold'>" + f.count + "</span>\n" +
+                                "                                            </div>\n" +
+                                "                                            <div>¥<span>" + f.price * f.count + "</span></div>\n" +
+                                "                                        </div>\n" +
+                                "                                    </div>\n" +
+                                "                                </div>");
+                            infosDiv.append(item);
+                        });
+                        break;
+                    case 'shouhuo':
+                        layer.confirm('确定客户已收货吗?', {icon: 3}, function (index) {
+                            let od = {};
+                            od.payStatus = '已完成';
+                            od.orderId = d.orderId;
+                            //do something
+                            $.post("/pages/back/order/editOrderPayStatus", od, function (res) {
+                                if (res.res) {
+                                    orderTable.reload();
+                                    console.log(res);
+                                }
+                            }, "json");
+                            layer.close(index);
+                        });
+                        break;
+                }
+            });
+            form.on('submit(commit)',function (d) {
+                let where = d.field;
+                where.payStatus = payStatus;
+                // 此函数就是去获取数据的函数
+                orderTable.reload({
+                    where: where
+                    , page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                });
+            });
+            keypress($("#queryForm input"), function () {// 回车键按下
+                $("#queryBtn").click();
+            })
+        });
+    })
+
+
+</script>
+
+
+</body>
+
+
+</html>
+
+

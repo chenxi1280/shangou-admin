@@ -1,5 +1,6 @@
 package com.lh.shangou.service;
 
+import com.lh.shangou.pojo.dto.PageDTO;
 import com.lh.shangou.pojo.dto.ResponseDTO;
 import com.lh.shangou.pojo.query.OrderQuery;
 import com.lh.shangou.pojo.vo.OrderVO;
@@ -23,4 +24,8 @@ public interface OrderService {
     OrderVO getOrderVOById(Long orderId);
 
     List<OrderVO> findUserOrders(Long userId);
+
+    OrderVO getOrderVODetailByOrderId(String orderId);
+
+    PageDTO ajaxListOrderBack(OrderQuery query);
 }

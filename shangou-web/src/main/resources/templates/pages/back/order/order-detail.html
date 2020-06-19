@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link rel="icon" th:href="@{/images/logo/logo.png}" type="image/x-icon"/><!--公司网址图标-->
+<div th:replace="fragment/js::js"></div>
+<script type="text/javascript" th:src="@{/lh/layer/layer.js}"></script>
+<body>
+
+<!--#fd0c2c到#fd2a47-->
+<div class="layui-row" style="position: absolute;left: 0;top: 0;bottom: 0;right: 0">
+    <div class="layui-col-xs12 layui-col-md6 layui-col-md-offset3 " style="height: 100%">
+        <h3 style="text-align: center;">订单详情</h3>
+        <div style="background: rgb(245,245,245);padding: 10px;overflow-y: auto;bottom: 50px;top: 30px;left: 0;right: 0;position: absolute">
+            <div style="background: white;padding: 10px;border-radius: 5px">
+                <div>
+                    <h3 th:text="${od.payStatus}" style="font-weight: bold;text-align: center;padding: 10px"></h3>
+                    <div style="display: flex;align-items: center">
+                        <span style="background: #50d15a;color: white;padding: 1px 2px;border-radius:2px">公司</span>
+                        <h3 style="font-weight: bold" th:text="${od.receiverAddress}">大西洋国际大厦12-1</h3>
+                    </div>
+                    <div style="color: gray">
+                        <span th:text="${od.receiverName}">黎杭</span>
+                        <span style="margin-left: 5px" th:text="${od.receiverPhone}">182****0162</span>
+                    </div>
+                    <hr>
+                    <div style="display: flex;justify-content: space-between;align-items: center">
+                        <h3 style="font-weight: bold">送达时间</h3>
+                        <div style="color: #1E9FFF"><span th:text="${od.arrivalTime}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="background: white;padding: 10px;border-radius: 5px;margin-top: 10px">
+                <div>
+                    <div style="display: flex;align-items: center;justify-content: space-between">
+                        <h4 style="font-weight: bold" th:text="${od.merchant.shopName}">永辉超市-石桥铺店</h4>
+                        <div style="color: #1E9FFF;border-radius: 5px 0 5px 0;border: solid 1px #1E9FFF;padding: 0 5px">
+                            达达专送
+                        </div>
+                    </div>
+                    <hr>
+                    <div>
+                        <div style="display: flex;align-items: center" th:each="info:${od.orderItemVOs}">
+                            <div>
+                                <img th:src="@{${info.goodsImg}}" style="width: 40px;height: 40px"/>
+                            </div>
+                            <div style="margin-left: 10px;flex-grow: 1">
+                                <div th:text="${info.goodsTitle}">福临门水晶米</div>
+                                <div style="display: flex;justify-content: space-between;padding: 10px 0;font-weight: bold">
+                                    <div>¥<span th:text="${info.goodsPrice}">29.8</span> x <span
+                                            th:text="${info.goodsCount}">1</span>
+                                    </div>
+                                    <div>¥<span th:text="${info.goodsPrice*info.count}">29.8</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="text-align: center;background: rgb(240,240,240);border-radius: 5px">共<span
+                                th:text="${#lists.size(od.orderItemVOs)}">5</span>件
+                        </div>
+                        <div style="display: flex;justify-content: space-between;padding: 10px 0">
+                            <div>包装费</div>
+                            <div th:text="'¥'+${od.packagingFee}">¥0.5</div>
+                        </div>
+                        <div style="display: flex;justify-content: space-between;padding: 10px 0">
+                            <div>配送费</div>
+                            <div th:text="${od.deliveryFee}">¥5</div>
+                        </div>
+                        <div style="display: flex;justify-content: space-between;padding: 10px 0">
+                            <div>运费优惠</div>
+                            <div style="color: lightgray">暂无优惠</div>
+                        </div>
+                        <div style="display: flex;justify-content: space-between;padding: 10px 0">
+                            <div>红包</div>
+                            <div style="color: lightgray">暂无红包</div>
+                        </div>
+                        <div style="padding-right: 10px">
+                            <div>备注</div>
+                            <div th:text="${od.note}" style="width: 100%;padding: 5px;"></div>
+                        </div>
+                        <hr>
+                        <div style="display: flex;align-items: center;justify-content: flex-end">
+                            <div>共节省<span th:text="${od.allRelief}">¥60.8</span></div>
+                            <div style="display: flex;margin-left: 20px;align-items: center">实付金额<h2
+                                    style="color: orangered;font-weight: bold;margin-left: 10px"
+                                    th:text="${od.actuallyPaid}">¥60.8</h2></div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+        <div>
+            <div th:replace="fragment/bottom_menu::bottom_menu"></div>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript" type="text/javascript">
+    // 算购物车里边的钱
+    function goMerchantShop(id) {
+        top.location.href = '/pages/front/merchant/merchantShop/' + id;
+    }
+
+    $(function () {
+        layui.use(['layer', 'form',], function () {
+            var layer = layui.layer;
+            var form = layui.form;
+        });
+
+    })
+
+</script>
+
+
+</body>
+
+</html>

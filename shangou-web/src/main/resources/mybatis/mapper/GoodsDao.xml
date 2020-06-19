@@ -401,6 +401,14 @@
             #{t.goodsTypeId}
         </foreach>
     </select>
+    <select id="getByIds" resultType="com.lh.shangou.pojo.vo.GoodsVO">
+        select
+        <include refid="Base_Column_List"/>
+        from goods where goods_id in
+        <foreach collection="ids" separator="," item="g" open="(" close=")">
+            #{g.goodsId}
+        </foreach>
+    </select>
 
 
 </mapper>

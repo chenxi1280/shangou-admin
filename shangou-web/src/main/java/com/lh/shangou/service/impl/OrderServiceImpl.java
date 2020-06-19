@@ -8,6 +8,7 @@ import com.lh.shangou.dao.AddressDao;
 import com.lh.shangou.dao.MerchantDao;
 import com.lh.shangou.dao.OrderItemDao;
 import com.lh.shangou.dao.SgOrderDao;
+import com.lh.shangou.pojo.dto.PageDTO;
 import com.lh.shangou.pojo.dto.ResponseDTO;
 import com.lh.shangou.pojo.entity.Address;
 import com.lh.shangou.pojo.entity.Merchant;
@@ -27,6 +28,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -180,5 +183,35 @@ public class OrderServiceImpl implements OrderService {
             return marketOrders;
         }
         return null;
+    }
+
+    @Override
+    public OrderVO getOrderVODetailByOrderId(String orderId) {
+
+        OrderVO marketOrder = sgOrderDao.selectByPrimaryKeyVO(orderId);
+        Merchant merchant = merchantDao.selectByPrimaryKey(marketOrder.getMerchantId());
+        marketOrder.setMerchant(merchant);
+        List<OrderItemVO> orderInfoByOrderId = orderItemDao.findOrderInfoByOrderId(Collections.singletonList(marketOrder));
+        marketOrder.setOrderItemVOs(orderInfoByOrderId);
+        return marketOrder;
+    }
+
+    @Override
+    public PageDTO ajaxListOrderBack(OrderQuery query) {
+        List<OrderVO> marketOrderVOS = sgOrderDao.ajaxListOrderBack(query);
+
+        BigDecimal allCost = new BigDecimal(0);
+
+        if (!CollectionUtils.isEmpty(marketOrderVOS)) {
+            List<OrderItemVO> orderInfoByOrderId = orderItemDao.findOrderInfoByOrderId(marketOrderVOS);
+            Map<Long, List<OrderItemVO>> collect = orderInfoByOrderId.stream().collect(Collectors.groupingBy(OrderItemVO::getOrderId));
+
+            for (OrderVO m : marketOrderVOS) {
+                m.setOrderItemVOs(collect.get(m.getOrderId()));
+                allCost = allCost.add(m.getActuallyPaid());// 收集本次查询的总收款
+            }
+        }
+        Integer count = sgOrderDao.ajaxListOrderBackCount(query);
+        return PageDTO.setPageData(count, marketOrderVOS, allCost);
     }
 }

@@ -30,6 +30,6 @@ public interface MerchantDao {
 
     MerchantVO selectByPK(Long merchantId);
 
-    List<Merchant> getByObjects(@Param("ids") List<OrderVO> marketOrders);
+    List<Merchant> getByObjects(@Param("ids") List marketOrders);
 
 }

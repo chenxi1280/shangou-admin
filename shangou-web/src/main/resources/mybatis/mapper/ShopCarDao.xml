@@ -102,5 +102,8 @@
     <delete id="deleteAllCars">
         delete from shop_car where merchant_id=#{merchantId} and user_id=#{userId}
     </delete>
+    <select id="selectByUserId" resultType="com.lh.shangou.pojo.vo.ShopCarVO">
+        select <include refid="Base_Column_List"></include> from shop_car where user_id=#{userId}
+    </select>
 
 </mapper>

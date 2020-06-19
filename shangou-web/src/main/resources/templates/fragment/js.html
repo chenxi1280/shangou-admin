@@ -19,19 +19,17 @@
     <script th:inline="javascript" type="text/javascript">
 
         // let imgPrefix= [[@{/}]];
-        const imgPrefix = '/api';
+        const imgPrefix = '';
         // 有一个thymeleaf转义 字符串
         $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
             // Modify options, control originalOptions, store jqXHR, etc
 
             let oldUrl = options.url;
             if (oldUrl.startsWith("/pages/")) {
-                options.url = '/api' + oldUrl;
+                options.url = imgPrefix+ oldUrl;
             }
             console.log(options)
         });
-
-
         function showBigImg() {// 渲染大图查看
             $("img[showBig]").unbind("click").click(function () {// 先解除绑定，再绑定，绑定图片点击事件，否则会出现绑定两次点击事件
                 let bigImg = layer.open({// 弹框之后，如遇到select标签，radio,checkbox之类，需要使用表单渲染
@@ -46,7 +44,15 @@
             });
         }
 
-
+        // 按下回车键,传入输入框，和回调事件
+        function keypress(obj, f) {
+            obj.keypress(function (e) {
+                if (e.keyCode == 13) {//回车键
+                    e.preventDefault();//阻止回车键表单提交
+                    f();
+                }
+            });
+        }
         //图片上传预览功能,file:指的是文件,img指的JS dom对象q("#carPhoto")[0]
         function imgPreview(file, imgDom) {
             //判断是否支持FileReader

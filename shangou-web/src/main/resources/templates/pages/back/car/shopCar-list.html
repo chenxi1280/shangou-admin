@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link rel="icon" th:href="@{/images/logo/logo.png}" type="image/x-icon"/><!--公司网址图标-->
+<div th:replace="fragment/js::js"></div>
+<script type="text/javascript" th:src="@{/lh/layer/layer.js}"></script>
+<body>
+
+<!--#fd0c2c到#fd2a47-->
+<div class="layui-row" style="position: absolute;left: 0;top: 0;bottom: 0;right: 0">
+    <div class="layui-col-xs12 layui-col-md6 layui-col-md-offset3 "
+         style="height: 100%;position: relative;" th:if="${cars!=null}">
+        <h3 style="text-align: center;">我的全部购物车(<span th:text="${#lists.size(cars)}">10</span>)</h3>
+        <div style="background: rgb(250,250,250);position: absolute;top: 30px;left: 0;right: 0;bottom: 50px;overflow-y: auto">
+            <div style="padding:  10px;margin-bottom: 10px;" th:each="item:${cars}">
+                <div class="layui-card" style=" border-radius: 5px;box-shadow: 0 0 10px lightgrey"
+                     th:onclick="'javascript:goMerchantShop('+${item.value[0].merchantId}+')'">
+                    <div class="layui-card-header">
+                        <div style="display: flex;justify-content: space-between">
+                            <div style=" display: flex;align-items: center"><span
+                                    th:text="${item.key}">永辉超市-石桥铺店</span></div>
+                            <div style="color: lightgray"><i
+                                    class="layui-icon layui-icon-right"
+                                    style="font-size: 13px;margin-left: 5px;margin-top: 2px"></i></div>
+                        </div>
+                    </div>
+                    <div class="layui-card-body">
+                        <div style="overflow-x: auto;display: flex;justify-content: space-between;padding: 10px 0">
+                            <div style="text-align: center" th:each="shopCar:${item.value}">
+                                <div th:if="${shopCar.goodsVO!=null}" style="position: relative">
+
+                                    <img th:src="@{${shopCar.goodsVO.pic}}"
+                                         style="height: 50px;width: 50px;border-radius: 5px;margin-right: 5px"/>
+                                    <div style="position: absolute;right: 2px;top:2px;width: 12px;height: 12px;background: red;color: white;border-radius: 100%;font-size: 10px;display: flex;justify-content: center;align-items: center"
+                                         th:text="${shopCar.count}">5
+                                    </div>
+                                    <div style="padding: 5px">¥<span th:text="${shopCar.goodsVO.nowPrice}">19.8</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div th:replace="fragment/bottom_menu::bottom_menu"></div>
+        </div>
+    </div>
+</div>
+
+
+<script th:inline="javascript" type="text/javascript">
+    // 算购物车里边的钱
+    function goMerchantShop(id) {
+        top.location.href = '/pages/front/merchant/merchantShop/' + id;
+    }
+
+    $(function () {
+        layui.use(['layer', 'form',], function () {
+            var layer = layui.layer;
+            var form = layui.form;
+        });
+    })
+</script>
+
+
+</body>
+
+</html>

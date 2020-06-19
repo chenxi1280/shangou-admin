@@ -9,6 +9,7 @@ import com.lh.shangou.pojo.query.ApprovalLogQuery;
 import com.lh.shangou.service.ApprovalService;
 import com.lh.shangou.service.ShopCarService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -36,6 +37,13 @@ public class ShopCarController extends BaseController {
     ResponseDTO deleteAllCars(ShopCar car) {
         car.setUserId(getUserId());
         return shopCarService.deleteAllCars(car);
+    }
+
+    @RequestMapping("list")
+    String list(Model model) {
+        // 要查询用户的所有购物车
+        model.addAttribute("cars",shopCarService.getUserAllCars(getUserId()));
+        return "pages/back/car/shopCar-list";
     }
 
 

@@ -1,6 +1,7 @@
 package com.lh.shangou.dao;
 
 import com.lh.shangou.pojo.entity.SgOrder;
+import com.lh.shangou.pojo.query.OrderQuery;
 import com.lh.shangou.pojo.vo.OrderVO;
 
 import java.util.List;
@@ -26,4 +27,9 @@ public interface SgOrderDao {
 
     int updateOrderStatus(SgOrder updateOrder);
 
+    OrderVO selectByPrimaryKeyVO(String orderId);
+
+    List<OrderVO> ajaxListOrderBack(OrderQuery query);
+
+    Integer ajaxListOrderBackCount(OrderQuery query);
 }

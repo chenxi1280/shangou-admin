@@ -40,7 +40,7 @@ public class PayController {
     String payPre(@PathVariable Long orderId, Model model) {
         OrderVO vo = orderService.getOrderVOById(orderId);
         model.addAttribute("order", vo);
-        return "/pages/back/pay/payPre";
+        return "pages/back/pay/payPre";
     }
 
     @RequestMapping("/unifiedPay")
@@ -65,13 +65,13 @@ public class PayController {
                 return "redirect:" + responseDTO.getObject(String.class);
             } else {
                 model.addAllAttributes((Map<String, ?>) responseDTO.getData());
-                return "/pages/back/pay/wx-saomaPay";
+                return "pages/back/pay/wx-saomaPay";
             }
             // 如果是电脑,那么就跳转到微信扫码付款页面去
         } else {// 闪购支付
 
         }
-        return "/pages/back/pay/payPre";
+        return "pages/back/pay/payPre";
     }
 
 

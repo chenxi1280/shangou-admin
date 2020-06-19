@@ -95,5 +95,12 @@ public class LoginController extends BaseController {
 
     }
 
+    @RequestMapping("clientLogout")
+// 自定义shiro注销后去访问的页面
+    String clientLogout(Model model) {
+        SecurityUtils.getSubject().logout();// 注销,并且调转到用户信息
+        return "pages/front/user/user-info";
+    }
+
 
 }

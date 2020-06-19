@@ -578,5 +578,65 @@
         <include refid="Base_Column_List"/>
         from sg_order where user_id=#{userId}
     </select>
+    <select id="selectByPrimaryKeyVO" resultType="com.lh.shangou.pojo.vo.OrderVO">
+        select
+        <include refid="Base_Column_List"/>
+        from sg_order
+        where order_id = #{orderId,jdbcType=CHAR}
+    </select>
+    <select id="ajaxListOrderBack" resultType="com.lh.shangou.pojo.vo.OrderVO">
+        select
+        <include refid="Base_Column_List"/>
+        from sg_order
+        <where>
+            <if test="orderId!=null and orderId!=''">
+                and order_id like CONCAT('%',#{orderId})
+            </if>
+            <if test="receiverName!=null and receiverName!=''">
+                and receiver_name like CONCAT('%',#{receiverName},'%')
+            </if>
+            <if test="receiverPhone!=null and receiverPhone!=''">
+                and receiver_phone like CONCAT('%',#{receiverPhone})
+            </if>
+
+            <if test="startDate!=null  ">
+                and create_time &gt;=#{startDate}
+            </if>
+            <if test="endDate!=null ">
+                and create_time &lt;=#{endDate}
+            </if>
+            <if test="payStatus!=null and payStatus!=''">
+                and pay_status=#{payStatus}
+            </if>
+        </where>
+        order by create_time DESC
+        limit #{start},#{limit}
+    </select>
+    <select id="ajaxListOrderBackCount" resultType="java.lang.Integer">
+        select
+       count(*)
+        from sg_order
+        <where>
+            <if test="orderId!=null and orderId!=''">
+                and order_id like CONCAT('%',#{orderId})
+            </if>
+            <if test="receiverName!=null and receiverName!=''">
+                and receiver_name like CONCAT('%',#{receiverName},'%')
+            </if>
+            <if test="receiverPhone!=null and receiverPhone!=''">
+                and receiver_phone like CONCAT('%',#{receiverPhone})
+            </if>
+
+            <if test="startDate!=null  ">
+                and create_time &gt;=#{startDate}
+            </if>
+            <if test="endDate!=null ">
+                and create_time &lt;=#{endDate}
+            </if>
+            <if test="payStatus!=null and payStatus!=''">
+                and pay_status=#{payStatus}
+            </if>
+        </where>
+    </select>
 
 </mapper>

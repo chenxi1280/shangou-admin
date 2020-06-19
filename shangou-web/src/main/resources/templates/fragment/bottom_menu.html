@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="bottom_menu" id="bottom_menu"
-     style="position: absolute;bottom: 0;left:0;right:0;display: flex;justify-content: space-between;align-items: center;height: 50px">
+     style="position: absolute;bottom: 0;left:0;right:0;display: flex;justify-content: space-between;align-items: center;height: 50px;z-index: 100">
     <style>
         #bottom_menu img {
             width: 25px;
@@ -20,7 +20,7 @@
     </style>
     <div th:url="@{/}">
         <div>
-            <img th:src="@{/images/menu/home.png}"/>
+            <img th:src="@{/images/menu/home_gray.png}"/>
         </div>
         <div>
             首页
@@ -55,11 +55,12 @@
     <script th:inline="javascript" type="text/javascript">
         $(function () {
             let pathName = window.location.pathname;
+            console.log(pathName)
             $("#bottom_menu>div").each(function () {
                 let jthis=$(this);
                 let url = jthis.attr("url");
-                if(pathName.startsWith(url)){
-                    let jImg= jthis.find("img");
+                let jImg= jthis.find("img");
+                if(url.split('?')[0]==pathName){
                     let imgUrl=jImg.attr("src");
                     let  newImg=imgUrl.replace('_gray','');
                     jImg.attr("src",newImg);

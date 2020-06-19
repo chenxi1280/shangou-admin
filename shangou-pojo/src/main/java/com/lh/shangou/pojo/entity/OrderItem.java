@@ -24,7 +24,7 @@ public class OrderItem implements Serializable {
     private String goodsImg;// pic
 
     /**
-     * 下单时候的商品数量
+     * 下单时候的商品数量()
      */
     private String goodsCount; // count
 

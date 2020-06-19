@@ -26,4 +26,6 @@ public interface ShopCarDao {
     int updateByCar(ShopCar car);
 
     void deleteAllCars(ShopCar car);
+
+    List<ShopCarVO> selectByUserId(Long userId);
 }

@@ -8,7 +8,7 @@ spring:
   messages:
     basename: i18n/validate  #   验证文件的路径
   profiles:
-    active: pro1
+    active: pro
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss  #统一进行日期格式的数据返回
     time-zone: Asia/Shanghai   # 默认时区
@@ -19,15 +19,15 @@ mybatis:
   mapper-locations: classpath*:mybatis/mapper/**/*.xml  # mapper.xml文件的路径配置
 server:
   servlet:
-    context-path: /api  # 这个是配置项目上下文路径
+    context-path: /  # 这个是配置项目上下文路径
 ---
 logging:
   level:
     com.lh.shangou.dao: info  #  线上环境是info
 spring:
-  profiles: pro1
+  profiles: pro
 server:
-  port: 8081
+  port: 80
 ---
 logging:
   level:

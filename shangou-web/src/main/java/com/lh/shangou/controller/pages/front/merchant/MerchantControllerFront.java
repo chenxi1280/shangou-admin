@@ -45,7 +45,7 @@ public class MerchantControllerFront extends BaseController {
     String merchantShop(@PathVariable Long merchantId, Model model) {
         MerchantVO m = merchantService.selectMerchantById(merchantId);
         model.addAttribute("m", m);
-        return "/pages/front/merchant/merchantShop";
+        return "pages/front/merchant/merchantShop";
     }
 
 }

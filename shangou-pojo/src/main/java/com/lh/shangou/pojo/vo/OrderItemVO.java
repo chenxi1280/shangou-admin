@@ -1,12 +1,7 @@
 package com.lh.shangou.pojo.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lh.shangou.pojo.entity.OrderItem;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * creator：杜夫人
@@ -14,5 +9,15 @@ import java.util.Date;
  */
 @Data
 public class OrderItemVO extends OrderItem {
-
+    private Integer count;
+    public Integer getCount() {
+        try {
+            return    Integer.valueOf(getGoodsCount());
+        } catch (Exception e) {
+        }
+        return 0;
+    }
+    public void setCount(Integer count) {
+        this.count = count;
+    }
 }
