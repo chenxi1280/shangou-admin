@@ -84,7 +84,9 @@ public class LoginController extends BaseController {
                 // "/pages/back/merchant/addPre"
                 return "redirect:" + savedRequest.getRequestURI() + "?" + queryString;
             }
-            return "pages/front/user/user-info";// 应该跳转到客户端我的界面
+
+
+            return "forward:/pages/front/user/userInfo";// 应该跳转到客户端我的界面
         }
     }
 
@@ -99,7 +101,7 @@ public class LoginController extends BaseController {
 // 自定义shiro注销后去访问的页面
     String clientLogout(Model model) {
         SecurityUtils.getSubject().logout();// 注销,并且调转到用户信息
-        return "pages/front/user/user-info";
+        return "forward:/pages/front/user/userInfo";
     }
 
 

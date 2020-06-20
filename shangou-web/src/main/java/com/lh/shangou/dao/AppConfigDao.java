@@ -26,4 +26,5 @@ public interface AppConfigDao {
 
     List<AppConfigVO> getAllConfig();
 
+    int updateByKeySelective(AppConfig appConfig);
 }

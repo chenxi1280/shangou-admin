@@ -14,7 +14,6 @@ import com.lh.shangou.pojo.vo.RoleVO;
 import com.lh.shangou.pojo.vo.UserVO;
 import com.lh.shangou.service.UserService;
 import com.lh.shangou.util.password.PasswordUtil;
-import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;

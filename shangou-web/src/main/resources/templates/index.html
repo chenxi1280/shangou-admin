@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <title>闪购</title>
+<link rel="icon" th:href="@{/images/logo/logo.png}" type="image/x-icon"/><!--公司网址图标-->
+
 <div th:replace="fragment/js::js"></div>
 <div th:replace="fragment/map::map"></div>
 <style>
@@ -16,7 +18,7 @@
             <!--             最上面的背景图片的-->
             <div style="position: absolute;top: 0;left: 0;right: 0;height: 40px;z-index: 1">
                 <div class="headImg"
-                     th:style="'display: flex;height: 100%;justify-content: space-between;align-items: center;background:'+${headerImg}+';color: white;background-size:cover; '">
+                     th:style="'display: flex;height: 100%;justify-content: space-between;align-items: center;background-image:url('+${headerImg}+');color: white;background-size:cover; '">
                     <div id="provinceDiv"
                          style="flex-grow: 1;padding: 10px 15px;font-size: 1rem;font-weight: bold;font-family: '等线';cursor: pointer;">
                         <div style="display: flex;align-items: center;white-space: nowrap">
@@ -36,15 +38,18 @@
                  style="position: absolute;top: 40px;left: 0;right: 0;bottom: 50px;overflow-y: auto">
                 <div>
                     <div style="position: relative">
-                        <img style="width: 100%"
-                             th:src="${bannerImg}"/>
+                        <img style="width: 100%;-webkit-clip-path: inset(0%  round 0 0 100% 100% );"
+                             th:src="${headerImg}"/>
                         <div style="position: absolute;left: 0;right: 0;top: 0;bottom: 0;">
                             <div style="padding: 10px">
-                                <button th:each="x:${hostWords}" th:text="${x}" class="layui-btn-xs layui-btn"
-                                        style="background: rgba(255,255,255,0.2);color: white;border-radius: 10px;padding: 0 10px">
-                                    鲜花
-                                </button>
-                                <div style="padding: 10px 0">
+                                <div style="display: flex;overflow-x: auto">
+                                    <button th:each="x:${hostWords}" th:text="${x}" class="layui-btn-xs layui-btn"
+                                            style="background: rgba(255,255,255,0.2);color: white;border-radius: 10px;padding: 0 10px">
+                                        关键词
+                                    </button>
+                                </div>
+
+                                <div style="padding:  10px 0">
                                     <div class="layui-carousel" id="advertisement" style="border-radius: 10px;">
                                         <div carousel-item style="border-radius: 10px;">
                                             <img th:each="x:${indexImgs}" style="width:100%;border-radius: 10px"
@@ -58,10 +63,7 @@
                     </div>
                 </div>
                 <div>
-                    <div style="margin-top: 40px">
-                        <img style="width: 100%" th:src="${indexGifImg}">
-                    </div>
-                    <div id="businessTypeDiv" style="padding: 10px">
+                    <div id="businessTypeDiv" style="padding: 25px 10px 5px 10px">
                         <div style="display: flex;justify-content: space-between;flex-wrap: wrap;">
                             <div style="width: 19%;cursor: pointer" th:each="b:${indexMenu}">
                                 <div style="text-align: center;padding:8px">
@@ -70,6 +72,13 @@
                                     </div>
                                     <div style="padding: 6px 0 0 0;font-size: 12px" th:text="${b.text}"> 超市</div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="vipImgsDiv" style="padding: 5px 0px;background: rgb(245,245,245)">
+                        <div style="background: white;border-radius: 10px;display: flex">
+                            <div th:each="i:${vipImgs}" style="flex: 1">
+                                <img th:src="${i}" style="width: 100%;">
                             </div>
                         </div>
                     </div>

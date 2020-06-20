@@ -4,18 +4,11 @@ import com.lh.shangou.controller.BaseController;
 import com.lh.shangou.pojo.dto.PageDTO;
 import com.lh.shangou.pojo.dto.ResponseDTO;
 import com.lh.shangou.pojo.entity.ApprovalLog;
-import com.lh.shangou.pojo.entity.Merchant;
 import com.lh.shangou.pojo.query.ApprovalLogQuery;
-import com.lh.shangou.pojo.query.MerchantQuery;
 import com.lh.shangou.service.ApprovalService;
-import com.lh.shangou.service.BusinessTypeService;
-import com.lh.shangou.service.MerchantService;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import sun.security.provider.certpath.ResponderId;
 
 import javax.annotation.Resource;
 

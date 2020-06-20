@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <div th:fragment="js">
     <meta charset="UTF-8">
     <!--    收集屏幕适配-->
@@ -9,6 +8,7 @@
     <!--  layui自带jquery-->
     <script type="text/javascript" th:src="@{/layui/layui.js}"></script>
     <script type="text/javascript" th:src="@{/jquery/jquery-3.5.1.js}"></script>
+
     <link th:href="@{/layui/css/layui.css}" type="text/css" rel="stylesheet">
     <link th:href="@{/css/sg.css}" type="text/css" rel="stylesheet">
     <script type="text/html" id="showBigImgDiv">
@@ -23,12 +23,10 @@
         // 有一个thymeleaf转义 字符串
         $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
             // Modify options, control originalOptions, store jqXHR, etc
-
             let oldUrl = options.url;
             if (oldUrl.startsWith("/pages/")) {
                 options.url = imgPrefix+ oldUrl;
             }
-            console.log(options)
         });
         function showBigImg() {// 渲染大图查看
             $("img[showBig]").unbind("click").click(function () {// 先解除绑定，再绑定，绑定图片点击事件，否则会出现绑定两次点击事件
@@ -43,7 +41,16 @@
                 $("#showBigImg")[0].src = this.src;
             });
         }
+        function isImg(url) {// 判断地址是不是图片
+            if(url.startsWith("data:image/")){
+                return true;
+            }
 
+           let x= url.substring(url.lastIndexOf(".")+1)
+            return [
+                'png', 'jpg', 'jpeg', 'bmp', 'gif', 'webp', 'psd', 'svg', 'tiff'].
+            indexOf(x.toLowerCase()) !== -1;
+        }
         // 按下回车键,传入输入框，和回调事件
         function keypress(obj, f) {
             obj.keypress(function (e) {

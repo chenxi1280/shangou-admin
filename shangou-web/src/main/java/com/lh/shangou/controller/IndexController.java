@@ -1,18 +1,15 @@
 package com.lh.shangou.controller;
 
-import com.lh.shangou.pojo.entity.AppConfig;
-import com.lh.shangou.pojo.vo.AppConfigVO;
+import com.lh.shangou.consts.consts.ConfigConsts;
+import com.lh.shangou.pojo.dto.ResponseDTO;
 import com.lh.shangou.pojo.vo.ButtonGroupVO;
-import com.lh.shangou.service.AppConfigService;
+import com.lh.shangou.pojo.vo.UserVO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * creator：杜夫人
@@ -27,16 +24,24 @@ public class IndexController extends BaseController {
 
     @RequestMapping("/")
     String index(Model model) {
-        String headerImg = getSingleValueByKey("headerImg");
-        model.addAttribute("headerImg", headerImg);// 设置首页头部背景图片
-        model.addAttribute("bannerImg", getSingleValueByKey("bannerImg"));// 设置首页头部背景图片
-        model.addAttribute("indexImgs", getListByKey("indexImgs", String.class));// 设置首页banner背景图片
+        model.addAttribute(ConfigConsts.headerImg, getSingleValueByKey(ConfigConsts.headerImg));// 设置首页头部背景图片
+        model.addAttribute(ConfigConsts.bannerImg, getSingleValueByKey(ConfigConsts.bannerImg));// 设置首页头部背景图片
+        model.addAttribute(ConfigConsts.indexImgs, getListByKey(ConfigConsts.indexImgs, String.class));// 设置首页轮播图
+        model.addAttribute(ConfigConsts.vipImgs, getListByKey(ConfigConsts.vipImgs, String.class));// 设置首页轮播图
         //    model.addAttribute("indexGifImg", getSingleValueByKey("indexGifImg"));// 设置首页动图
-        model.addAttribute("newPerson", getSingleValueByKey("newPerson"));// 设置首页新用户
-        model.addAttribute("newPersonDown", getSingleValueByKey("newPersonDown"));// 设置首页新用户下面的图片
-        model.addAttribute("hostWords", getListByKey("hostWords", String.class));// 设置热点词
-        model.addAttribute("indexMenu", getListByKey("indexMenu", ButtonGroupVO.class));// 设置热点词
+        model.addAttribute(ConfigConsts.newPerson, getSingleValueByKey(ConfigConsts.newPerson));// 设置首页新用户
+        model.addAttribute(ConfigConsts.newPersonDown, getSingleValueByKey(ConfigConsts.newPersonDown));// 设置首页新用户下面的图片
+        model.addAttribute(ConfigConsts.hostWords, getListByKey(ConfigConsts.hostWords, String.class));// 设置热点词
+        model.addAttribute(ConfigConsts.indexMenu, getListByKey(ConfigConsts.indexMenu, ButtonGroupVO.class));// 设置热点词
 
         return "index";
     }
+
+
+    @RequestMapping("/test")
+    ResponseDTO test(UserVO user) {
+        System.err.println(user);
+        return ResponseDTO.ok("");
+    }
+
 }

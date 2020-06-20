@@ -1,19 +1,26 @@
 package com.lh.shangou.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.lh.shangou.consts.consts.ConfigConsts;
 import com.lh.shangou.dao.AppConfigDao;
+import com.lh.shangou.pojo.dto.JDRes;
+import com.lh.shangou.pojo.dto.JDUserRes;
 import com.lh.shangou.pojo.dto.PageDTO;
 import com.lh.shangou.pojo.dto.ResponseDTO;
 import com.lh.shangou.pojo.entity.AppConfig;
 import com.lh.shangou.pojo.query.AppConfigQuery;
-import com.lh.shangou.pojo.query.PageQuery;
 import com.lh.shangou.pojo.vo.AppConfigVO;
+import com.lh.shangou.pojo.vo.ButtonGroupVO;
 import com.lh.shangou.service.AppConfigService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.function.Function;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * creator：杜夫人
@@ -21,6 +28,8 @@ import java.util.function.Function;
  */
 @Service
 public class AppConfigServiceImpl implements AppConfigService {
+
+    Logger log = LoggerFactory.getLogger(AppConfigServiceImpl.class);
 
     @Resource
     RestTemplate restTemplate;
@@ -58,16 +67,102 @@ public class AppConfigServiceImpl implements AppConfigService {
     }
 
     @Override
-    public ResponseDTO getNewData(AppConfig a) {
-//        class="swiper-wrapper"
-        String forObject = restTemplate.getForObject("https://daojia.jd.com/html/index.html",String.class);
-        List<String> imgStrToList = getImgStrToList(forObject);
+    public ResponseDTO getLatestData(AppConfig a) {
+
+        String url = "https://daojia.jd.com/client?_jdrandom=1592651512464&platCode=h5&appName=paidaojia&channel=&appVersion=7.8.0&jdDevice=&functionId=indexh5%2FgetIndex&body=%7B%22address%22:%22%E6%B8%9D%E6%B1%87%E6%BA%90%E5%B0%8F%E5%8C%BA%22,%22city%22:%22%E9%87%8D%E5%BA%86%E5%B8%82%22,%22longitude%22:106.63056,%22latitude%22:29.717783,%22coordType%22:%222%22,%22currentPage%22:%22%22,%22storeId%22:%22%22,%22activityId%22:%22%22,%22h5From%22:%22%22,%22isglb%22:%22%22,%22previewDate%22:null,%22isIndex%22:false,%22pageSource%22:%22home%22,%22ref%22:%22%22,%22ctp%22:%22home%22%7D&lng=106.63056&lat=29.717783&city_id=4&poi=%E6%B8%9D%E6%B1%87%E6%BA%90%E5%B0%8F%E5%8C%BA&jda=76161171.945875466.1586587548.1591625165.1592651493.5&traceId=H5_DEV_DA47D8A0-52D2-4347-9CB6-9FEAD4EBAFF11592651512464&deviceId=H5_DEV_DA47D8A0-52D2-4347-9CB6-9FEAD4EBAFF1&signKeyV1=d2bdfc08aad625103125ee95eecaa1bddb8a9b1721929ec1b53e6baa30a401af";
+        JDRes result = restTemplate.getForObject(url, JDRes.class);
+        AppConfig appConfig = new AppConfig();
+        appConfig.setKey(ConfigConsts.headerImg);
+        JDRes.ResultBean res = result.getResult();
+
+        if (res != null) {
+            JDRes.ResultBean.ConfigBean config = res.getConfig();
+            appConfig.setValue(config.getSearchConfig().getBorderImg());
+            appConfigDao.updateByKeySelective(appConfig);// 修改头部图片
+            Set<String> words = config.getSearchConfig().getRecommendKeyList().stream().map(JDRes.ResultBean.ConfigBean.SearchConfigBean.RecommendKeyListBean::getTitle).collect(Collectors.toSet());
+
+            appConfig.setKey(ConfigConsts.hostWords);
+            appConfig.setValue(JSON.toJSONString(words));
+            appConfigDao.updateByKeySelective(appConfig);// 修改关键字
+
+            Set<String> imgs = res.getData().get(0).getData().get(0).getData().stream().map(e -> e.getFloorCellData().getImgUrl()).collect(Collectors.toSet());
+
+            appConfig.setKey(ConfigConsts.indexImgs);
+            appConfig.setValue(JSON.toJSONString(imgs));
+            appConfigDao.updateByKeySelective(appConfig);// 修改轮播图
 
 
-        System.err.println(imgStrToList);
+            Set<ButtonGroupVO> buttonGroupVOSet = res.getData().get(0).getData().get(1).getData().stream().map(e -> {
+                ButtonGroupVO b = new ButtonGroupVO();
+                b.setImg(e.getFloorCellData().getImgUrl());
+                b.setText(e.getFloorCellData().getTitle());
+                b.setUrl("没得地址");
+                return b;
+            }).collect(Collectors.toSet());
+
+            appConfig.setKey(ConfigConsts.indexMenu);
+            appConfig.setValue(JSON.toJSONString(buttonGroupVOSet));
+            appConfigDao.updateByKeySelective(appConfig);// 修改菜单按钮
 
 
-        return null;
+            Set<String> vipImgs = res.getData().get(0).getData().get(2).getData().stream().map(e -> e.getFloorCellData().getImgUrl()).collect(Collectors.toSet());
+
+            appConfig.setKey(ConfigConsts.vipImgs);
+            appConfig.setValue(JSON.toJSONString(vipImgs));
+            appConfigDao.updateByKeySelective(appConfig);// 修改会员三张图
+
+
+            appConfig.setKey(ConfigConsts.newPerson);
+            appConfig.setValue(res.getData().get(0).getData().get(3).getData().get(0).getFloorCellData().getImgUrl());
+            appConfigDao.updateByKeySelective(appConfig);// 修改 新用户注册图
+
+            appConfig.setKey(ConfigConsts.newPersonDown);
+            try {
+                appConfig.setValue(res.getData().get(0).getData().get(4).getData().get(0).getFloorCellData().getImgUrl());
+                appConfigDao.updateByKeySelective(appConfig);// 修改 新用户注册下面的动图
+            } catch (Exception e) {
+                log.warn("可能数组下标越界！可能新用户下面没有动图~");
+            }
+        }
+        return ResponseDTO.ok("操作成功！");
+    }
+
+    @Override
+    public ResponseDTO getUserInfoLatestData(AppConfig a) {
+        a = new AppConfig();// 初始化
+
+        String url = "https://daojia.jd.com/client?_jdrandom=1592668544393&platCode=H5&appName=paidaojia&channel=&appVersion=7.8.0&jdDevice=&functionId=mine%2FgetClassifyModuleInfo&body=%7B%22fromSource%22:2,%22channelType%22:8,%22cityId%22:4,%22platform%22:3,%22longtitude%22:106.63056,%22latitude%22:29.717783,%22pageSource%22:%22myinfo%22,%22ref%22:%22myinfo%22,%22ctp%22:%22myinfo%22%7D&lng=106.63056&lat=29.717783&city_id=4&poi=%E6%B8%9D%E6%B1%87%E6%BA%90%E5%B0%8F%E5%8C%BA&jda=76161171.945875466.1586587548.1591625165.1592651493.5&traceId=H5_DEV_DA47D8A0-52D2-4347-9CB6-9FEAD4EBAFF11592668544392&deviceId=H5_DEV_DA47D8A0-52D2-4347-9CB6-9FEAD4EBAFF1&signKeyV1=21acfb7cec4248f3440b24bc39fd4bcdf9e0091d467cd8ad51908c04c8697af1";
+        JDUserRes result = restTemplate.getForObject(url, JDUserRes.class);
+
+        JDUserRes.ResultBean res = result.getResult();
+        if (res != null) {
+            Set<String> collect = res.getChannelFloorList().get(0).getBannerFloorItemList().stream().map(e -> e.getImgUrl()).collect(Collectors.toSet());
+            a.setKey(ConfigConsts.userPageImgs);
+            a.setValue(JSON.toJSONString(collect));
+            appConfigDao.updateByKeySelective(a);// 更新轮播图
+
+            Set<ButtonGroupVO> collect1 = res.getClassifyModuleVOList().get(0).getUserModuleVOList().stream().map(e -> {
+                ButtonGroupVO b = new ButtonGroupVO();
+                b.setText(e.getName());
+                b.setImg(e.getImg());
+                return b;
+            }).collect(Collectors.toSet());// 功能
+
+            Set<ButtonGroupVO> collect2 = res.getClassifyModuleVOList().get(1).getUserModuleVOList().stream().map(e -> {
+                ButtonGroupVO b = new ButtonGroupVO();
+                b.setText(e.getName());
+                b.setImg(e.getImg());
+                return b;
+            }).collect(Collectors.toSet());//更多推荐
+            collect1.addAll(collect2);
+            a.setKey(ConfigConsts.userMenus);
+            a.setValue(JSON.toJSONString(collect1));
+            appConfigDao.updateByKeySelective(a);// 更新用户页面的图标组
+
+        }
+
+        return ResponseDTO.ok("操作成功！");
+
     }
 
 

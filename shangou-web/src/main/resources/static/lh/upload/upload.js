@@ -14,8 +14,8 @@ function setImgInput(divImg) {
 
 function appendImg(url, divImg) {
     let deleteBtn = $("<span style='color: orange;display: none;position: absolute;z-index: 1;left: 50%;top:50%;cursor: pointer;transform: translate(-50%,-50%)'>删除</span>")
-    let img = $("<div style=\"width: 80px;height: 80px;padding: 5px 0;position: relative;margin-right: 5px;\">\n" +
-        "                                                <img src='" + url + "' style=\"width: 100%;height: 100%;border-radius: 5px;border: solid  1px lightgrey;\"/>\n" +
+    let img = $("<div style=\"width: 81px;height: 81px;position: relative;margin-right: 5px;border: solid  1px lightgrey;border-radius: 5px;\">\n" +
+        "                                                <img src='" + url + "' style=\"width: 100%;height: 100%;border-radius: 5px;\"/>\n" +
         "                                            </div>");
     img.prepend(deleteBtn);
     img.hover(function () {
@@ -54,10 +54,15 @@ function uploadFile(options) {
         let initValue = $(this).attr("value");// 这一句话是或div标签的属性的值
 
         if (initValue != undefined) {// 有值
-            let arr = initValue.split(',');
-            arr.forEach(url => {
-                appendImg(url, divImg);
-            })
+            if(initValue.startsWith("data:image/")){
+                appendImg(initValue, divImg);
+            }else {
+                let arr = initValue.split(',');
+                arr.forEach(url => {
+                    appendImg(url, divImg);
+                })
+            }
+
         }
         fileInput.change(function () {// 直接开始上传文件
             let files = this.files;
@@ -88,14 +93,19 @@ function uploadFile(options) {
                     if (res.res) {
                         let urls = res.data;
                         if (urls != '' && urls != null) {
-                            if (urls.indexOf(",") > -1) {// 有逗号，表示多个图片
-                                let arr = urls.split(',');
-                                arr.forEach((url) => {
-                                    appendImg(url, divImg);
-                                })
-                            } else {
+                            if(urls.startsWith("data:image/")){//base64位
                                 appendImg(urls, divImg);
+                            }else {
+                                if (urls.indexOf(",") > -1) {// 有逗号，表示多个图片
+                                    let arr = urls.split(',');
+                                    arr.forEach((url) => {
+                                        appendImg(url, divImg);
+                                    })
+                                } else {
+                                    appendImg(urls, divImg);
+                                }
                             }
+
                         }
                     } else {
                         alert(res.msg)

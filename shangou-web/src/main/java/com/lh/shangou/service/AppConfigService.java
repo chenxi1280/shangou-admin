@@ -27,8 +27,17 @@ public interface AppConfigService extends BaseService {
 
     /**
      * 设置新的数据（图片文字等）
+     *
      * @param a
      * @return
      */
-    ResponseDTO getNewData(AppConfig a);
+    ResponseDTO getLatestData(AppConfig a);
+
+    /**
+     * 设置我的页面最新的数据
+     *
+     * @param a
+     * @return
+     */
+    ResponseDTO getUserInfoLatestData(AppConfig a);
 }

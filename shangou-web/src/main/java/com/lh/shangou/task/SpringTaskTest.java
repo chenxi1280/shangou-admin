@@ -2,7 +2,10 @@ package com.lh.shangou.task;
 
 import com.lh.shangou.config.webmvc.WebMvcConfig;
 import com.lh.shangou.dao.ImgCacheDao;
+import com.lh.shangou.pojo.dto.ResponseDTO;
+import com.lh.shangou.pojo.entity.AppConfig;
 import com.lh.shangou.pojo.entity.ImgCache;
+import com.lh.shangou.service.AppConfigService;
 import com.lh.shangou.service.ImgCacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +32,9 @@ public class SpringTaskTest {
     @Resource
     ImgCacheDao imgCacheDao;
 
+    @Resource
+    AppConfigService appConfigService;
+
     // 每一个小时就定时清空图片的缓存
     @Scheduled(fixedDelay = 60 * 60 * 1000)
     public void clearImgCache() {// 定时清空图片缓存
@@ -42,5 +48,16 @@ public class SpringTaskTest {
             // 删除之后，不管成功与否，都要把数据库里边的图片删除，避免下次再查询出来再删除
             imgCacheDao.deleteByPrimaryKey(imgCache.getImgUrl());
         }
+    }
+
+    // 每一天定时去获取最新配置
+    @Scheduled(fixedDelay = 24 * 60 * 1000)
+    public void setAppConfig() {// 每天都去设置一次最新的配置
+        AppConfig a = new AppConfig();
+        ResponseDTO latestData = appConfigService.getLatestData(a);
+        logger.info("获取首页数据："+latestData.getRes());
+        ResponseDTO userInfoLatestData = appConfigService.getUserInfoLatestData(a);
+        logger.info("获取用户页面数据："+userInfoLatestData.getRes());
+
     }
 }

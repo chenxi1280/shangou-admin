@@ -64,16 +64,19 @@ public class ConfigController extends BaseController {
     }
 
 
-    @RequestMapping("getNewData")
+    @RequestMapping("getLatestData")
     @ResponseBody
     ResponseDTO getNewData(AppConfig a) {
-        System.err.println(a);
-
-
-
-        return appConfigService.getNewData(a);
+        return appConfigService.getLatestData(a);
     }
 
+    @RequestMapping("getUserInfoLatestData")
+    @ResponseBody
+    ResponseDTO getUserInfoLatestData(AppConfig a) {
+        System.err.println(a);
+
+        return appConfigService.getUserInfoLatestData(a);
+    }
 
 
 
