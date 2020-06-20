@@ -1,5 +1,7 @@
 package com.lh.shangou.service;
 
+import com.lh.shangou.pojo.dto.PageDTO;
+import com.lh.shangou.pojo.query.PageQuery;
 import com.lh.shangou.pojo.vo.PermissionVO;
 import com.lh.shangou.pojo.vo.RoleVO;
 import com.lh.shangou.util.spring.SpringUtil;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -19,6 +22,18 @@ import java.util.stream.Collectors;
  * date: 2020/6/1
  */
 public interface BaseService {
+
+    /**
+     * 封装分页函数。第一个传递查询分页参数，第二个传应用型函数式接口，的分页，第三个传应用型函数式接口的分页总数查询。
+     *
+     * @param query
+     * @param ajaxList
+     * @param ajaxListCount
+     * @return
+     */
+    default PageDTO splitPage(PageQuery query, Function<PageQuery, Object> ajaxList, Function<PageQuery, Integer> ajaxListCount) {
+        return PageDTO.setPageData(ajaxListCount.apply(query), ajaxList.apply(query));
+    }
 
 
     /**

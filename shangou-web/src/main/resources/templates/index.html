@@ -16,8 +16,7 @@
             <!--             最上面的背景图片的-->
             <div style="position: absolute;top: 0;left: 0;right: 0;height: 40px;z-index: 1">
                 <div class="headImg"
-                     th:style="'display: flex;height: 100%;justify-content: space-between;align-items: center;background-image: url(https://img30.360buyimg.com/mobilecms/jfs/t1/149845/16/306/3141/5edfd8d5E6aaa0f45/210d35ef98807409.jpg);color: white;background-size:cover; '"
-                     onerror="this.backgroundImage.url='/images/home/headerImg.jpg'">
+                     th:style="'display: flex;height: 100%;justify-content: space-between;align-items: center;background:'+${headerImg}+';color: white;background-size:cover; '">
                     <div id="provinceDiv"
                          style="flex-grow: 1;padding: 10px 15px;font-size: 1rem;font-weight: bold;font-family: '等线';cursor: pointer;">
                         <div style="display: flex;align-items: center;white-space: nowrap">
@@ -38,22 +37,18 @@
                 <div>
                     <div style="position: relative">
                         <img style="width: 100%"
-                             src="https://img30.360buyimg.com/mobilecms/jfs/t1/129660/40/1865/8516/5edfd8c6E9e06b0b7/31f30a9e672a6d14.jpg"/>
+                             th:src="${bannerImg}"/>
                         <div style="position: absolute;left: 0;right: 0;top: 0;bottom: 0;">
                             <div style="padding: 10px">
-                                <button th:each="x:${#numbers.sequence(1,5)}" class="layui-btn-xs layui-btn"
+                                <button th:each="x:${hostWords}" th:text="${x}" class="layui-btn-xs layui-btn"
                                         style="background: rgba(255,255,255,0.2);color: white;border-radius: 10px;padding: 0 10px">
                                     鲜花
                                 </button>
                                 <div style="padding: 10px 0">
                                     <div class="layui-carousel" id="advertisement" style="border-radius: 10px;">
                                         <div carousel-item style="border-radius: 10px;">
-                                            <img style="width:100%;border-radius: 10px"
-                                                 src="https://img30.360buyimg.com/mobilecms/jfs/t1/149193/22/193/273257/5ede0714E239b9241/11053dbd7dc07a32.png">
-                                            <img style="width:100%;border-radius: 10px "
-                                                 src="https://img30.360buyimg.com/mobilecms/jfs/t1/128253/3/4225/280110/5eda7012E5a05d3a1/477463351000f992.png">
-                                            <img style="width:100%; border-radius: 10px"
-                                                 src="https://img30.360buyimg.com/mobilecms/jfs/t1/149193/22/193/273257/5ede0714E239b9241/11053dbd7dc07a32.png">
+                                            <img th:each="x:${indexImgs}" style="width:100%;border-radius: 10px"
+                                                 th:src="${x}">
                                         </div>
                                     </div>
 
@@ -64,27 +59,25 @@
                 </div>
                 <div>
                     <div style="margin-top: 40px">
-                        <img style="width: 100%"
-                             src="https://img30.360buyimg.com/mobilecms/jfs/t1/128181/20/4556/104191/5edf3627E894cf760/64c303325c501616.gif">
+                        <img style="width: 100%" th:src="${indexGifImg}">
                     </div>
                     <div id="businessTypeDiv" style="padding: 10px">
                         <div style="display: flex;justify-content: space-between;flex-wrap: wrap;">
-                            <div style="width: 19%;cursor: pointer" th:each="s:${#numbers.sequence(1,10)}">
+                            <div style="width: 19%;cursor: pointer" th:each="b:${indexMenu}">
                                 <div style="text-align: center;padding:8px">
                                     <div><img style="width: 100%"
-                                              src="https://img30.360buyimg.com/mobilecms/jfs/t1/110355/36/3573/7822/5e12fdadEddc69a75/709e7b81b039de24.png">
+                                              th:src="${b.img}">
                                     </div>
-                                    <div style="padding: 6px 0 0 0;font-size: 12px"> 超市</div>
+                                    <div style="padding: 6px 0 0 0;font-size: 12px" th:text="${b.text}"> 超市</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div id="newPersonDiv">
                         <div style="padding: 10px">
-                            <img style="width: 100%"
-                                 src="https://imgcps.jd.com/djmarketing14/img_466294/img_465784/img_465778/wqUxNQ/5paw5Lq65LiT5Lqr5ruh5YeP5Yi4/wqUyMA/5rKD5bCU546b5paw5Lq65LiT5Lqr/56eS5p2ANeaKmA/54Ot6ZSA/54Ot6ZSA/wqUyLjk/wqUxLjU/wqUxLjU/5Y6f5Lu3NS44/IA/IA/5paw5Lq66aKGODjlhYPnpLzljIU/t-5e9e8c2ac941a59653aa0e8c/246b15aa.png">
+                            <img style="width: 100%" th:src="${newPerson}">
                         </div>
-                        <img src="https://img30.360buyimg.com/mobilecms/jfs/t1/127240/9/4454/12084/5edfd922Eed41abbd/2b34cbc3250f81d6.jpg"
+                        <img th:src="${newPersonDown}"
                              style="width: 100%"/>
                     </div>
                     <div id="nearbyMerchantsDiv" style="padding: 10px">

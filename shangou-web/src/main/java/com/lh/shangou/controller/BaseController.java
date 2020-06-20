@@ -1,14 +1,15 @@
 package com.lh.shangou.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.lh.shangou.config.webmvc.WebMvcConfig;
+import com.lh.shangou.pojo.entity.AppConfig;
+import com.lh.shangou.pojo.vo.AppConfigVO;
+import com.lh.shangou.service.AppConfigService;
 import com.lh.shangou.service.MerchantService;
-import com.lh.shangou.util.spring.SpringUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,14 +20,18 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * creator：杜夫人
  * date: 2020/5/20
  */
 public class BaseController {
-
+    @Resource
+    AppConfigService appConfigService;
 
     @Resource
     MerchantService merchantService;
@@ -64,7 +69,7 @@ public class BaseController {
         return null;
     }
 
-    protected HttpServletRequest getRequest() {
+    public HttpServletRequest getRequest() {
         return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
     }
 
@@ -95,8 +100,72 @@ public class BaseController {
     @PostConstruct
     public void setInfo() {
         String property = environment.getProperty("server.port");
-        servletContext.setAttribute("serverPort",property );
+        servletContext.setAttribute("serverPort", property);
+    }
+
+    /**
+     * 索取所有系统的配置
+     *
+     * @return 返回key的map集合
+     */
+    protected Map<String, List<AppConfigVO>> getConfig() {
+        List<AppConfigVO> allConfig = appConfigService.getAllConfig();
+        return allConfig.stream().collect(Collectors.groupingBy(AppConfig::getKey));
     }
 
 
+    /**
+     * 按照key查找值，得到泛型类
+     *
+     * @return 返回key的map集合
+     */
+    protected <T> T getSingleValueByKey(String key, Class<T> tClass) {
+        List<AppConfigVO> allConfig = appConfigService.getAllConfig();
+        Map<String, List<AppConfigVO>> collect = allConfig.stream().collect(Collectors.groupingBy(AppConfig::getKey));
+        List<AppConfigVO> appConfigVOS = collect.get(key);
+        if (!CollectionUtils.isEmpty(appConfigVOS)) {
+            AppConfigVO appConfigVO = appConfigVOS.get(0);
+            String value = appConfigVO.getValue();
+            if (appConfigVO.getIsJson()) {
+                return JSON.parseObject(value, tClass);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 按照key查找值，得到字符串
+     *
+     * @return 返回key的map集合
+     */
+    protected String getSingleValueByKey(String key) {
+        List<AppConfigVO> allConfig = appConfigService.getAllConfig();
+        Map<String, List<AppConfigVO>> collect = allConfig.stream().collect(Collectors.groupingBy(AppConfig::getKey));
+        List<AppConfigVO> appConfigVOS = collect.get(key);
+        if (!CollectionUtils.isEmpty(appConfigVOS)) {
+            AppConfigVO appConfigVO = appConfigVOS.get(0);
+            return appConfigVO.getValue();
+
+        }
+        return null;
+    }
+
+    /**
+     * 按照key查找值,获取集合
+     *
+     * @return 返回key的map集合
+     */
+    protected <T> List<T> getListByKey(String key, Class<T> tClass) {
+        List<AppConfigVO> allConfig = appConfigService.getAllConfig();
+        Map<String, List<AppConfigVO>> collect = allConfig.stream().collect(Collectors.groupingBy(AppConfig::getKey));
+        List<AppConfigVO> appConfigVOS = collect.get(key);
+        if (!CollectionUtils.isEmpty(appConfigVOS)) {
+            AppConfigVO appConfigVO = appConfigVOS.get(0);
+            String value = appConfigVO.getValue();
+            if (appConfigVO.getIsJson()) {
+                return JSON.parseArray(value, tClass);
+            }
+        }
+        return null;
+    }
 }

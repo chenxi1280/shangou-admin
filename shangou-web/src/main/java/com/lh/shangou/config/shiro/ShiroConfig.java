@@ -1,6 +1,7 @@
 package com.lh.shangou.config.shiro;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
+import com.lh.shangou.config.shiro.filter.ShiroAuthFilter;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.RememberMeManager;
 import org.apache.shiro.realm.Realm;
@@ -13,6 +14,7 @@ import org.apache.shiro.session.mgt.eis.SessionIdGenerator;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.apache.shiro.web.filter.authc.LogoutFilter;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -24,6 +26,7 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.Filter;
 import java.util.HashMap;
@@ -35,6 +38,9 @@ import java.util.Map;
  */
 @Configuration
 public class ShiroConfig {
+
+
+
     @Bean
     public UserRealm userRealm() {// 自定义认证和授权的（领域类）
         return new UserRealm();
@@ -178,17 +184,11 @@ public class ShiroConfig {
     }
 
 
-//        //    自定义登陆过滤器
-//    public FormAuthenticationFilter getLoginFilter() { // 在ShiroFilterFactoryBean中使用
-//        FormAuthenticationFilter filter = new FormAuthenticationFilter();// 这种方式 是使用shiro自带的过滤器，如果说要达到自己想要的效果
-//
-//        filter.setUsernameParam("phone");
-//        filter.setPasswordParam("password");
-//        filter.setRememberMeParam("rememberMe");
-//        filter.setLoginUrl("/login");    // 设置登录的接口
-//        filter.setFailureKeyAttribute("error"); // 配置错误消息
-//        return filter;
-//    }
+    //    自定义登陆过滤器
+    public ShiroAuthFilter getLoginFilter() { // 在ShiroFilterFactoryBean中使用
+        ShiroAuthFilter filter = new ShiroAuthFilter();// 这种方式 是使用shiro自带的过滤器，如果说要达到自己想要的效果
+        return filter;
+    }
 
     //    自定义注销登录之后做的事情
     public LogoutFilter getLogoutFilter() { // 在ShiroFilterFactoryBean中使用
@@ -217,7 +217,7 @@ public class ShiroConfig {
 
         Map<String, Filter> filters = new HashMap<>();// map的key就是过滤器的名字
         // 增加自定义过滤器
-//        filters.put("authc", this.getLoginFilter());
+      //  filters.put("authc", this.getLoginFilter());// 过滤链中就要加上自己定义的登录过滤器，代替shiro自带的登录过滤器
         filters.put("logout", this.getLogoutFilter());
         // 把这些过滤器交给Shiro控制，就会覆盖它自带的过滤器， 采用你配置的过滤器
         shiroFilterFactoryBean.setFilters(filters);

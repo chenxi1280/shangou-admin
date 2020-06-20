@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<div th:replace="fragment/js::js"></div>
+<script type="text/javascript" th:src="@{/lh/upload/upload.js}"></script>
+<style>
+    /*修改layui表格的高度*/
+    .layui-table-cell {
+        height: auto;
+    }
+</style>
+<body class="layui-card-body layui-card">
+<form class="layui-form" style="padding:5px 0;display: flex;align-items: center;"
+      id="queryForm">
+    <div class="layui-form-item" style="margin: 0">
+        <label class="layui-form-label" style="width: fit-content;">键名</label>
+        <input type="text" name="key" id="key"
+               style="width: 120px" class="layui-input">
+    </div>
+    <div class="layui-form-item" style="margin: 0">
+        <label class="layui-form-label" style="width: fit-content">备注</label>
+        <input type="text" name="note" id="note"
+               style="width: 120px" class="layui-input">
+    </div>
+    <div class="layui-form-item" style="margin: 0">
+        <button class="layui-btn" style="margin-left: 10px" id="queryBtn" lay-submit lay-filter="queryForm">查询</button>
+    </div>
+</form>
+<!--分页组件-->
+<table id="configTable" lay-filter="configTable"></table>
+<script type="text/html" id="addForm">
+    <form class="layui-form" style="padding: 20px">
+        <div class="layui-form-item">
+            <label class="layui-form-label">配置备注</label>
+            <div class="layui-input-block">
+                <input type="text" name="note" placeholder="配置备注"
+                       style="width: 200px" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">键名</label>
+            <div class="layui-input-block">
+                <input type="text" name="key" placeholder="请输入键名"
+                       style="width: 200px" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">键值</label>
+            <div class="layui-input-block">
+                     <textarea type="text" name="value" placeholder="普通字符串或者这里写json字符串,如果有图片上传，这里填了无效"
+                               style="width: 200px" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">键值图片</label>
+            <div class="layui-input-block">
+                <div lh-upload id="valueImg"></div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">json字符串</label>
+            <div class="layui-input-block">
+                <input type="checkbox" name="isJson" value="1" lay-skin="switch">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">className</label>
+            <div class="layui-input-block">
+                <input type="text" name="className" placeholder="如果是Class,其全路径类名称"
+                       style="width: 200px" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="commit">立即提交</button>
+            </div>
+        </div>
+    </form>
+</script>
+<script type="text/html" id="showPermissionTable">
+    <table id="permissionTable" class="layui-table">
+        <thead>
+        <tr>
+            <th>权限ID</th>
+            <th>权限名称</th>
+            <th>图标</th>
+            <th>排序</th>
+            <th>标记flag</th>
+            <th>备注</th>
+            <th>是否展示</th>
+            <th>url</th>
+        </tr>
+        </thead>
+        <tbody id="tbody">
+
+        </tbody>
+
+    </table>
+</script>
+
+<script th:inline="javascript" type="text/javascript">
+
+    layui.use(['layer', 'table', 'form'], function () {
+
+        // 我再js代码里边如何获取控制器传递过来的参数呢？
+        let layer = layui.layer;// 弹出层
+        let table = layui.table;// 分页组件
+        let form = layui.form;// 分页组件
+        // layer.msg('弹出一个消息', {icon: 1});
+
+        //第一个实例
+        let tb = table.render({// 渲染表格
+            elem: '#configTable'
+            , url: '/pages/back/config/ajaxList' //服务后台的数据接口
+            , page: true //开启分页
+            , cols: [[ //表头，这里是两个[[开头，两个]]结尾
+                {field: '', type: 'checkbox', title: '多选'}
+                , {field: 'configId', title: 'Id', width: 100}
+                , {field: 'note', title: '说明', width: 220, edit: 'text'}
+                , {field: 'key', title: '键名', width: 200, edit: 'text'}
+                , {field: 'value', title: '值', width: 300, edit: 'text'}
+                , {field: 'isJson', title: '是否JSON', width: 100, edit: 'text'}
+                , {field: 'className', title: 'className', width: 260, edit: 'text'}
+                , {
+                    field: '', title: '操作', templet: function (d) {// 这个d指的是本行的数据 js对象
+                        // console.log(d)
+                        return '<div>\n' +
+                            '            <button class="layui-btn layui-btn-xs " lay-event="getNewData">设置新数据</button>\n' +
+                            '            <button class="layui-btn layui-btn-xs layui-btn-danger" lay-event="deleteData">删除</button>\n' +
+                            ' </div>'
+
+                    }
+                }
+            ]]
+            , toolbar: 'default'
+        });
+        let addOpen;
+        let showPermissionOpen;
+
+        form.on('submit(queryForm)', function (data) {
+            tb.reload({
+                where: data.field
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+        form.on('submit(commit)', function (d) {
+            $.post('/pages/back/config/add', d.field, function (res) {
+                layer.msg(res.msg);
+                if (res.res) {
+                    tb.reload();
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+        form.on('submit(sureEdit)', function (data) {
+            let formData = new FormData(data.form);
+            formData.append("goodsId", $("#sureEdit")[0].goodsId);
+            // 添加一个文件呢？
+            // 添加文件的步骤：首先，第一步：获取file的jsDom对象
+            $.ajax({
+                url: "/pages/back/goods/edit",// 请求数据服务器地址，只能是当前项目，JSONP才能访问外网（需要服务器配合才能用）
+                contentType: false,// 默认就是表单数据(不写)，如果此时要传递的是json字符串，
+                // 那么此时就用application/json,如果此时要传递图片"multipart/form-data，还有数组，集合，还有对象，那么contentType必须指定为false
+                data: formData,// 要上传的参数
+                dataType: 'json',// 服务器响应数据：json,text,html,xml
+                error: function () {//请求错误的时候，会触发此函数
+
+                },
+                processData: false,//布尔值,一般都不用设置，规定通过请求发送的数据是否转换为查询字符串。默认是 true。如果此时上传的时候，有图片，这里必须设置false,
+                success: function (res) {// 请求成功，回调函数,data，指的就是服务器返回的数据
+                    if (res.res) {
+                        layer.msg(res.msg);
+                        tb.reload();// 添加成功数据之后要重载表格
+                        if (showPermissionOpen != undefined) {
+                            layer.close(showPermissionOpen);
+                        }
+                    }
+                },
+                type: 'post',// ajax请求的方式，post或get
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+        form.on('radio(systemFilter)', function (data) {
+            $("#queryBtn").click();
+        });
+        //监听行中工具条
+        table.on('tool(configTable)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var d = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            switch (layEvent) {
+                case 'getNewData':
+
+                    layer.confirm('您确定设置新数据吗?', function (index) {
+                        //do something
+                        $.post('/pages/back/config/getNewData', {
+                            configId: d.configId,
+                            key: d.key
+                        }, function (res) {
+
+                        });
+
+
+                        layer.close(index);
+                    });
+
+                    break;
+                case 'deleteData':
+                    layer.confirm('您确定操作吗?', function (index) {
+                        // 第一步，拿到所有选中的行的角色id
+                        $.post('/pages/back/config/delete/' + d.configId, {}, function (res) {
+                            layer.msg(res.msg);
+                            if (res.res) {
+                                tb.reload();
+                            }
+                        });
+                        layer.close(index);
+                    });
+                    break;
+            }
+        });
+        table.on('edit(configTable)', function (obj) { //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+            let p = {};
+            p.configId = obj.data.configId;
+            p[obj.field] = obj.value;
+            $.post('/pages/back/config/edit', p, function (res) {
+                    layer.msg(res.msg);
+                }
+            );
+        });
+        // 工具栏监听事件监听事件
+        table.on('toolbar(configTable)', function (obj) {
+            console.log(obj);
+            // var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'add':
+                    addOpen = layer.open({// 弹框之后，如遇到select标签，radio,checkbox之类，需要使用表单渲染
+                        type: 1,
+                        title: "添加配置",
+                        offset: '20px',
+                        content: $("#addForm").html()
+                    });
+                    form.render();
+                    uploadFile({
+                        dir: 'config'
+                    });// 一定要
+                    break;
+                case 'update':
+                    layer.msg('编辑');
+                    break;
+            }
+        });
+        onInput($("#note"));
+        onInput($("#key"));
+    });
+
+    function onInput(jObj) {
+        jObj.on({
+            'input': function () {
+                $("#queryBtn").click();// 这里直接换成查询按钮点击事件
+            }
+        })
+    }
+</script>
+</body>
+
+</html>

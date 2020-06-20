@@ -84,7 +84,7 @@ public class LoginController extends BaseController {
                 // "/pages/back/merchant/addPre"
                 return "redirect:" + savedRequest.getRequestURI() + "?" + queryString;
             }
-            return "pages/front/client/my-info";// 应该跳转到客户端我的界面
+            return "pages/front/user/user-info";// 应该跳转到客户端我的界面
         }
     }
 

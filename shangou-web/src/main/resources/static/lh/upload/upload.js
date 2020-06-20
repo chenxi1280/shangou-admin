@@ -32,7 +32,7 @@ function appendImg(url, divImg) {
     divImg.siblings("input[type=file]")[0].value = '';
 }
 
-// 可以配置url（自定义上传文件路径）和dir（保存文件路径）
+// 可以配置url（自定义上传文件路径）和dir（保存文件路径,不用以/开头和结尾）
 function uploadFile(options) {
     let url = "/pages/back/upload/uploadFiles";
     $("div[lh-upload]").each(function () {
@@ -43,7 +43,7 @@ function uploadFile(options) {
         let id = divId + '-File';
         let divImgId = divId + '-img';
         let fileInput = $("<input type='file' style='display: none' id='" + id + "'  multiple/>");
-        let divImg = $("<div id='" + divImgId + "' style=\"width: 80px;height: 80px;border-radius: 5px;border: dashed 1px gray;cursor: pointer;display: flex;align-items: center;justify-content: center\">\n" +
+        let divImg = $("<div id='" + divImgId + "' style=\"width: 80px;height: 80px;border-radius: 5px;border: dashed 1px gray;cursor: pointer;display: flex;align-items: center;justify-content: center;\">\n" +
             "                                                <span style=\"font-size: 35px;color: gray;user-select: none;\">+</span>\n" +
             "                                            </div>");
         uploadDiv.append(fileInput);
