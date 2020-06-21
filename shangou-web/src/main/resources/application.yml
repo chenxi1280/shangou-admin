@@ -3,7 +3,7 @@ spring:
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/shangou_db?serverTimezone=Asia/Shanghai  # 数据库的时区地址
+    url: jdbc:mysql://120.25.223.121:3306/shangou_db?serverTimezone=Asia/Shanghai  # 数据库的时区地址
     type: com.alibaba.druid.pool.DruidDataSource
   messages:
     basename: i18n/validate  #   验证文件的路径
@@ -28,6 +28,8 @@ server:
 
 spring:
   profiles: pro
+  datasource:
+    url: jdbc:mysql://localhost:3306/shangou_db?serverTimezone=Asia/Shanghai  # 数据库的时区地址
 server:
   port: 80
 ---
