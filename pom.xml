@@ -9,6 +9,7 @@
         <module>shangou-web</module>
         <module>shangou-dada</module>
         <module>shangou-pay</module>
+        <module>redis-config</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -23,13 +24,21 @@
     </properties>
     <dependencyManagement>
         <dependencies>
-<!--            达达配送费-->
+            <!--            redis配置-->
+            <dependency>
+                <groupId>com.lh.shangou</groupId>
+                <artifactId>redis-config</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+
+
+            <!--            达达配送费-->
             <dependency>
                 <groupId>com.lh.shangou</groupId>
                 <artifactId>shangou-dada</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
-<!--            微信支付、支付宝支付-->
+            <!--            微信支付、支付宝支付-->
             <dependency>
                 <groupId>com.lh.shangou</groupId>
                 <artifactId>shangou-pay</artifactId>

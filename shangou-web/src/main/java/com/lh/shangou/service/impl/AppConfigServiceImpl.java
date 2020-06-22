@@ -130,7 +130,7 @@ public class AppConfigServiceImpl implements AppConfigService {
     @Override
     public ResponseDTO getUserInfoLatestData(AppConfig a) {
         a = new AppConfig();// 初始化
-
+        // 请求接口：怎么拿？
         String url = "https://daojia.jd.com/client?_jdrandom=1592668544393&platCode=H5&appName=paidaojia&channel=&appVersion=7.8.0&jdDevice=&functionId=mine%2FgetClassifyModuleInfo&body=%7B%22fromSource%22:2,%22channelType%22:8,%22cityId%22:4,%22platform%22:3,%22longtitude%22:106.63056,%22latitude%22:29.717783,%22pageSource%22:%22myinfo%22,%22ref%22:%22myinfo%22,%22ctp%22:%22myinfo%22%7D&lng=106.63056&lat=29.717783&city_id=4&poi=%E6%B8%9D%E6%B1%87%E6%BA%90%E5%B0%8F%E5%8C%BA&jda=76161171.945875466.1586587548.1591625165.1592651493.5&traceId=H5_DEV_DA47D8A0-52D2-4347-9CB6-9FEAD4EBAFF11592668544392&deviceId=H5_DEV_DA47D8A0-52D2-4347-9CB6-9FEAD4EBAFF1&signKeyV1=21acfb7cec4248f3440b24bc39fd4bcdf9e0091d467cd8ad51908c04c8697af1";
         JDUserRes result = restTemplate.getForObject(url, JDUserRes.class);
 

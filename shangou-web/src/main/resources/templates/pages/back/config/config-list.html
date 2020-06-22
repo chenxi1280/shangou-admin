@@ -103,6 +103,7 @@
 
     function creatEditForm(i, id, formDiv) {
         if (i instanceof Object) {// 是json对象
+            // 循环对象键值：在value中全局组件注册的时候，批量注册组件。
             Object.keys(i).forEach((field, index) => {
                 if (isImg(i[field])) {// 如果是图片
                     let imgItem = $(" <div class=\"layui-form-item\">\n" +
@@ -261,16 +262,15 @@
                         shadeClose: true,
                         content: $("#editForm").html()
                     });
-                    let str = d.value;
+                    let str = d.value;// 取出字符串（value）
                     $("#sureEdit")[0].d = d;
                     let formDiv = $("#formDiv");
                     if (d.isJson) {// 如果是json字符串
-                        let obj = JSON.parse(str)
+                        let obj = JSON.parse(str);// 解析成json对象
                         console.log(obj)
-
-                        if (obj instanceof Array) {
+                        if (obj instanceof Array) {// 是数组吗？
                             obj.forEach((i, id) => {
-                                creatEditForm(i, id, formDiv);
+                                creatEditForm(i, id, formDiv);// 创建表单元素
                             });
 
                         } else {// 单个对象Object

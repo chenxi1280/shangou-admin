@@ -54,10 +54,10 @@ public class SpringTaskTest {
     @Scheduled(fixedDelay = 24 * 60 * 1000)
     public void setAppConfig() {// 每天都去设置一次最新的配置
         AppConfig a = new AppConfig();
-        ResponseDTO latestData = appConfigService.getLatestData(a);
-        logger.info("获取首页数据："+latestData.getRes());
-        ResponseDTO userInfoLatestData = appConfigService.getUserInfoLatestData(a);
-        logger.info("获取用户页面数据："+userInfoLatestData.getRes());
+        ResponseDTO latestData = appConfigService.getLatestData(a);// 这个是获取首页配置
+        logger.info("获取首页数据：" + latestData.getRes());
+        ResponseDTO userInfoLatestData = appConfigService.getUserInfoLatestData(a);// 这个获取我的界面的配置
+        logger.info("获取用户页面数据：" + userInfoLatestData.getRes());
 
     }
 }
