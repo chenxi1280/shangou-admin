@@ -48,7 +48,7 @@
                                         关键词
                                     </button>
                                 </div>
-
+                                <!--                                轮播图-->
                                 <div style="padding:  10px 0">
                                     <div class="layui-carousel" id="advertisement" style="border-radius: 10px;">
                                         <div carousel-item style="border-radius: 10px;">
@@ -56,17 +56,20 @@
                                                  th:src="${x}">
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <div>
-                    <div id="businessTypeDiv" style="padding: 25px 10px 5px 10px">
+                    <div style="padding: 20px 0 0 0 ">
+                        <img th:src="${floorBanner}" style="width: 100%"/>
+                    </div>
+                    <div id="businessTypeDiv" style="padding: 15px 10px 5px 10px">
                         <div style="display: flex;justify-content: space-between;flex-wrap: wrap;">
                             <div style="width: 19%;cursor: pointer" th:each="b:${indexMenu}">
-                                <div style="text-align: center;padding:8px">
+                                <div style="text-align: center;padding:8px;">
                                     <div><img style="width: 100%"
                                               th:src="${b.img}">
                                     </div>
@@ -83,10 +86,7 @@
                         </div>
                     </div>
                     <div id="newPersonDiv">
-                        <div style="padding: 10px">
-                            <img style="width: 100%" th:src="${newPerson}">
-                        </div>
-                        <img th:src="${newPersonDown}"
+                        <img th:src="${newPerson}"
                              style="width: 100%"/>
                     </div>
                     <div id="nearbyMerchantsDiv" style="padding: 10px">

@@ -85,43 +85,48 @@ public class AppConfigServiceImpl implements AppConfigService {
             appConfig.setValue(JSON.toJSONString(words));
             appConfigDao.updateByKeySelective(appConfig);// 修改关键字
 
-            Set<String> imgs = res.getData().get(0).getData().get(0).getData().stream().map(e -> e.getFloorCellData().getImgUrl()).collect(Collectors.toSet());
+            List<JDRes.ResultBean.DataBeanXX.DataBeanX> list = res.getData().get(0).getData();
 
-            appConfig.setKey(ConfigConsts.indexImgs);
-            appConfig.setValue(JSON.toJSONString(imgs));
-            appConfigDao.updateByKeySelective(appConfig);// 修改轮播图
+            for (JDRes.ResultBean.DataBeanXX.DataBeanX d : list) {
+                int index = d.getIndex();
+                switch (index) {
+                    case 10:// 轮播图
+                        // 0:轮播图index是0
+                        Set<String> imgs = d.getData().stream().map(e -> e.getFloorCellData().getImgUrl()).collect(Collectors.toSet());
+                        appConfig.setKey(ConfigConsts.indexImgs);
+                        appConfig.setValue(JSON.toJSONString(imgs));
 
-
-            Set<ButtonGroupVO> buttonGroupVOSet = res.getData().get(0).getData().get(1).getData().stream().map(e -> {
-                ButtonGroupVO b = new ButtonGroupVO();
-                b.setImg(e.getFloorCellData().getImgUrl());
-                b.setText(e.getFloorCellData().getTitle());
-                b.setUrl("没得地址");
-                return b;
-            }).collect(Collectors.toSet());
-
-            appConfig.setKey(ConfigConsts.indexMenu);
-            appConfig.setValue(JSON.toJSONString(buttonGroupVOSet));
-            appConfigDao.updateByKeySelective(appConfig);// 修改菜单按钮
-
-
-            Set<String> vipImgs = res.getData().get(0).getData().get(2).getData().stream().map(e -> e.getFloorCellData().getImgUrl()).collect(Collectors.toSet());
-
-            appConfig.setKey(ConfigConsts.vipImgs);
-            appConfig.setValue(JSON.toJSONString(vipImgs));
-            appConfigDao.updateByKeySelective(appConfig);// 修改会员三张图
-
-
-            appConfig.setKey(ConfigConsts.newPerson);
-            appConfig.setValue(res.getData().get(0).getData().get(3).getData().get(0).getFloorCellData().getImgUrl());
-            appConfigDao.updateByKeySelective(appConfig);// 修改 新用户注册图
-
-            appConfig.setKey(ConfigConsts.newPersonDown);
-            try {
-                appConfig.setValue(res.getData().get(0).getData().get(4).getData().get(0).getFloorCellData().getImgUrl());
-                appConfigDao.updateByKeySelective(appConfig);// 修改 新用户注册下面的动图
-            } catch (Exception e) {
-                log.warn("可能数组下标越界！可能新用户下面没有动图~");
+                        break;
+                    case 20: //  活动动图
+                        // 1 floorBanner那个活动的动图
+                        String imgUrl = d.getData().get(0).getFloorCellData().getImgUrl();
+                        appConfig.setKey(ConfigConsts.floorBanner);
+                        appConfig.setValue(imgUrl);
+                        break;
+                    case 30: //  活动动图
+                        // 2 indexMenu是图标按钮组
+                        appConfigDao.updateByKeySelective(appConfig);// 修改菜单按钮
+                        Set<ButtonGroupVO> buttonGroupVOSet = d.getData().stream().map(e -> {
+                            ButtonGroupVO b = new ButtonGroupVO();
+                            b.setImg(e.getFloorCellData().getImgUrl());
+                            b.setText(e.getFloorCellData().getTitle());
+                            b.setUrl("没得地址");
+                            return b;
+                        }).collect(Collectors.toSet());
+                        appConfig.setKey(ConfigConsts.indexMenu);
+                        appConfig.setValue(JSON.toJSONString(buttonGroupVOSet));
+                        break;
+                    case 40: //  会员图片
+                        Set<String> vipImgs = d.getData().stream().map(e -> e.getFloorCellData().getImgUrl()).collect(Collectors.toSet());
+                        appConfig.setKey(ConfigConsts.vipImgs);
+                        appConfig.setValue(JSON.toJSONString(vipImgs));
+                        break;
+                    case 41: //  会员图片
+                        appConfig.setKey(ConfigConsts.newPerson);
+                        appConfig.setValue(d.getData().get(0).getFloorCellData().getImgUrl());
+                        break;
+                }
+                appConfigDao.updateByKeySelective(appConfig);// 修改轮播图
             }
         }
         return ResponseDTO.ok("操作成功！");

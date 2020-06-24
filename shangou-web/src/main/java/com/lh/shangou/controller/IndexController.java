@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+
 /**
  * creator：杜夫人
  * date: 2020/5/29
@@ -35,7 +36,7 @@ public class IndexController extends BaseController {
         model.addAttribute(ConfigConsts.bannerImg, getSingleValueByKey(ConfigConsts.bannerImg));// 设置首页头部背景图片
         model.addAttribute(ConfigConsts.indexImgs, getListByKey(ConfigConsts.indexImgs, String.class));// 设置首页轮播图
         model.addAttribute(ConfigConsts.vipImgs, getListByKey(ConfigConsts.vipImgs, String.class));// 设置首页轮播图
-        //    model.addAttribute("indexGifImg", getSingleValueByKey("indexGifImg"));// 设置首页动图
+        model.addAttribute(ConfigConsts.floorBanner, getSingleValueByKey(ConfigConsts.floorBanner));// 设置首页动图
         model.addAttribute(ConfigConsts.newPerson, getSingleValueByKey(ConfigConsts.newPerson));// 设置首页新用户
         model.addAttribute(ConfigConsts.newPersonDown, getSingleValueByKey(ConfigConsts.newPersonDown));// 设置首页新用户下面的图片
         model.addAttribute(ConfigConsts.hostWords, getListByKey(ConfigConsts.hostWords, String.class));// 设置热点词
@@ -67,7 +68,6 @@ public class IndexController extends BaseController {
 
     @RequestMapping("/testGet")
     ResponseDTO test() {
-
         Integer userId = (Integer) redisTemplate.opsForValue().get("userId");// 设置int类型(字符串)
         UserVO user = (UserVO) redisTemplate.opsForValue().get("user");// 设置int类型(字符串)
         Object list = redisTemplate.opsForValue().get("list");// 设置int类型(字符串)
@@ -76,12 +76,9 @@ public class IndexController extends BaseController {
         return ResponseDTO.ok();
     }
 
-
     @RequestMapping("/testSetex")
     ResponseDTO testSetex() {
-
         redisTemplate.opsForValue().set("code", "520520", 60, TimeUnit.SECONDS);// 设置 验证码过期时间为60秒
-
         return ResponseDTO.ok();
     }
 
