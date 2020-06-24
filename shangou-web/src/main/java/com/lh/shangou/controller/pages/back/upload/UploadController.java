@@ -25,7 +25,6 @@ import java.util.Map;
 public class UploadController extends BaseController {
     @Resource
     ImgCacheService imgCacheService;
-
     //    img1
     //    img1,img2
     @RequestMapping("uploadFiles")

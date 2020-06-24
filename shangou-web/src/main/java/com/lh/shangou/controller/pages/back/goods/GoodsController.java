@@ -102,9 +102,6 @@ public class GoodsController extends BaseController {
     @RequestMapping("edit")
     @ResponseBody
     // 需要商户管理角色才能访问这个接口
-
-    @RequiresRoles("merchant")
-    @RequiresPermissions("goods:edit")
 // 可以用拥有这个角色，但是不具备修改商品的功能
     ResponseDTO edit(Goods goods) {
         goods.setUpdateUser(getUserId());// 设置最后一次的修改人

@@ -31,8 +31,6 @@ public class PermissionServiceImpl implements PermissionService {
     @Resource
     RoleDao roleDao;
 
-    @Resource
-    UserService userService;
 
 
     @Override
