@@ -34,7 +34,6 @@ public class ShangouInterceptor implements HandlerInterceptor {
     // 请求之后进行拦截：中
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        System.err.println("请求正在执行");
 
         // Access-Control-Allow-Origin, 这是拦截器实现跨域请求的配置方式
 //        String origin = request.getHeader("Origin");
@@ -61,7 +60,6 @@ public class ShangouInterceptor implements HandlerInterceptor {
     // 控制器执行完成之后，再次拦截。后
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        System.err.println("请求执行完毕");
     }
 
 }

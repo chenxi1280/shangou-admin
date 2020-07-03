@@ -73,17 +73,14 @@ public class GoodsController extends BaseController {
     String list(Model model) {
         return "pages/back/goods/goods-list";
     }
-
     // 商户对自己的商品进行列表查看
     @RequestMapping("merchantList")
     String merchantList(Model model) {
         // 查询当前商户的商品类型
         List<GoodsTypeVO> goodsTypeVOS = goodsTypeService.getMerchantGoodsTypes(getMerchantId());
         model.addAttribute("goodsTypes", goodsTypeVOS);
-
         return "pages/back/goods/merchant-goods-list";
     }
-
     // 平台对商品进行列表查看
     @RequestMapping("ajaxList")
     @ResponseBody
@@ -98,24 +95,17 @@ public class GoodsController extends BaseController {
         query.setMerchantId(getMerchantId());
         return goodsService.ajaxList(query);
     }
-
+    // 可以用拥有这个角色，但是不具备修改商品的功能
     @RequestMapping("edit")
     @ResponseBody
-    // 需要商户管理角色才能访问这个接口
-
-    @RequiresRoles("merchant")
-    @RequiresPermissions("goods:edit")
-// 可以用拥有这个角色，但是不具备修改商品的功能
     ResponseDTO edit(Goods goods) {
         goods.setUpdateUser(getUserId());// 设置最后一次的修改人
 //        goods.setMerchantId(getMerchantId());// 设置商品的商户id是当前用户的商户id
         return goodsService.edit(goods);
     }
-
     @RequestMapping("delete/{goodsId}")
     @ResponseBody
     ResponseDTO delete(Goods goods) {
         return goodsService.delete(goods);
     }
-
 }

@@ -29,28 +29,28 @@ public class ShiroAuthFilter extends FormAuthenticationFilter {
     @Override
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;// 向下转型为HttpServletRequest
-        HttpServletResponse httpServletResponse = (HttpServletResponse) response;// 向下转型HttpServletResponse
+        HttpServletResponse httpServletsResponse = (HttpServletResponse) response;// 向下转型HttpServletResponse
         boolean authenticated = SecurityUtils.getSubject().isAuthenticated();// 是认证过了
-        if (!authenticated) {// 没有登录
-            if ("OPTIONS".equals(((HttpServletRequest) request).getMethod())) {// 浏览器的跨域请求，预检请求，直接通过
-                return true;// 如果是预检请求，直接应该放行
-            }
-            String token = httpServletRequest.getHeader("authToken");// 头信息出去来
-//            if (StringUtils.isEmpty(token)) {// 这里需要相应一下这个请求头
-//                token = httpServletRequest.getHeader("sec-websocket-protocol");
-//                httpServletResponse.setHeader("sec-websocket-protocol", token);// 设置允许的所有域名来访
+//        if (!authenticated) {// 没有登录
+//            if ("OPTIONS".equals(((HttpServletRequest) request).getMethod())) {// 浏览器的跨域请求，预检请求，直接通过
+//                return true;// 如果是预检请求，直接应该放行
 //            }
-            if (StringUtils.isEmpty(token)) {// 如果头信息是空，就表示没有登录过
-                httpServletResponse.setCharacterEncoding("UTF-8");// 回传数据编码
-                httpServletResponse.setContentType("application/json");// 设置回传为json格式
-                httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");// 设置允许的所有域名来访
-                // 这个时候我们不需要执行页面跳转，而是需要给前端回传一个json对象，所以需要以上操作,相应ajax请求。
-                // 这个字符串就应该是json字符串。
-                httpServletResponse.getWriter().write(JSONObject.toJSONString(ResponseDTO.fail("您还没有登录!", null, 401, 401)));
-                return false;
-            }
-
-        }
+//            String token = httpServletRequest.getHeader("authToken");// 头信息出去来
+////            if (StringUtils.isEmpty(token)) {// 这里需要相应一下这个请求头
+////                token = httpServletRequest.getHeader("sec-websocket-protocol");
+////                httpServletResponse.setHeader("sec-websocket-protocol", token);// 设置允许的所有域名来访
+////            }
+//            if (StringUtils.isEmpty(token)) {// 如果头信息是空，就表示没有登录过
+//                httpServletResponse.setCharacterEncoding("UTF-8");// 回传数据编码
+//                httpServletResponse.setContentType("application/json");// 设置回传为json格式
+//                httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");// 设置允许的所有域名来访
+//                // 这个时候我们不需要执行页面跳转，而是需要给前端回传一个json对象，所以需要以上操作,相应ajax请求。
+//                // 这个字符串就应该是json字符串。
+//                httpServletResponse.getWriter().write(JSONObject.toJSONString(ResponseDTO.fail("您还没有登录!", null, 401, 401)));
+//                return false;
+//            }
+//
+//        }
         return true;
     }
 
