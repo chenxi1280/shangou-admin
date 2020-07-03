@@ -1,16 +1,13 @@
 /*
  Navicat Premium Data Transfer
-
  Source Server         : 闪购
  Source Server Type    : MySQL
  Source Server Version : 80020
  Source Host           : 120.25.223.121:3306
  Source Schema         : shangou_db
-
  Target Server Type    : MySQL
  Target Server Version : 80020
  File Encoding         : 65001
-
  Date: 21/06/2020 21:13:01
 */
 

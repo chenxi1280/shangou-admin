@@ -33,7 +33,9 @@ public interface UserService extends BaseService {
 
     // 根据角色直接就能查询这些角色的权限
     List<PermissionVO> selectHisPermissionByRoles(List<RoleVO> roles);
-
+    // 事务控制
+    @Transactional
+    ResponseDTO dispatchUserPermission(Long userId, List<Role> roles);
 
     UserVO selectDbUserByPhone(UserQuery query);
 
@@ -44,9 +46,7 @@ public interface UserService extends BaseService {
 
     void updateUser(User u);
 
-    // 事务控制
-    @Transactional
-    ResponseDTO dispatchUserPermission(Long userId, List<Role> roles);
+
 
     ResponseDTO edit(User user);
 
