@@ -25,6 +25,7 @@ import java.util.Map;
 public class UploadController extends BaseController {
     @Resource
     ImgCacheService imgCacheService;
+
     //    img1
     //    img1,img2
     @RequestMapping("uploadFiles")
@@ -57,15 +58,15 @@ public class UploadController extends BaseController {
     //   单独给wangeditor写个方法
     @RequestMapping("wangEditorUploadFiles")
     @ResponseBody
-    Map<String,Object> wangEditorUploadFiles(MultipartHttpServletRequest request) {
+    Map<String, Object> wangEditorUploadFiles(MultipartHttpServletRequest request) {
         ResponseDTO res = this.uploadFiles(request);
 
         if (res.getRes()) {// 成功
             String object = res.getObject(String.class);
             if (!StringUtils.isEmpty(object)) {
-                Map<String,Object> map=new HashMap<>();
-                map.put("errno",0);
-                map.put("data",object.split(","));
+                Map<String, Object> map = new HashMap<>();
+                map.put("errno", 0);
+                map.put("data", object.split(","));
                 return map;
             }
         }

@@ -57,14 +57,12 @@ public class RedisConfig {
         redisClusterConfiguration.clusterNode(HOST, 6375);
         redisClusterConfiguration.clusterNode(HOST, 6376);
 
-
         //redis连接池配置
         GenericObjectPoolConfig genericObjectPoolConfig = new GenericObjectPoolConfig();
 
         genericObjectPoolConfig.setMaxIdle(8);// 最大空闲连接数量
 
         genericObjectPoolConfig.setMaxTotal(100);// 连接总数 100个
-
 
         genericObjectPoolConfig.setMinIdle(1);// 最小空闲连接数
 

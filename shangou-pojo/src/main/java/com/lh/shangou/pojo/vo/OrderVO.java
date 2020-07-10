@@ -21,6 +21,7 @@ public class OrderVO extends SgOrder {
     private String orderItemsStr;// 订单详情的JSON字符串
 
     private Merchant merchant;
+
     private List<OrderItemVO> orderItemVOs;
 
     public void setOrderItemVOs(List<OrderItemVO> orderItemVOs) {

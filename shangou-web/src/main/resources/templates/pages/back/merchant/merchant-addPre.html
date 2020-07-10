@@ -190,9 +190,7 @@
             });
 
             form.on('select(patentType)', function (data) {// 监听顶级的选择事件
-
                 // data.value 就是获取父集合中的点击的那个下标
-
                 let types = [[${types}]];// 在js中取thymeleaf传递过来的值
                 let children = types[data.value].children;// 取出孩子们
 
@@ -209,7 +207,6 @@
             form.on('submit(addForm)', function (data) {
                 console.log(data);
                 let flag = true;// 默认是通过
-
                 for (let x = 0; x < validateArr.length; x++) {
                     let i = validateArr[x];
                     if (data.field[i] == undefined || data.field[i] == '') {
@@ -218,21 +215,17 @@
                         break;
                     }
                 }
-
                 if (!flag) {// 如果上传文件没用通过，那么久直接返回false,就不要继续后面的操作了
                     return false;
                 }
                 // 验证通过，开始执行入驻申请，因为图片全部都已经转换成了地址的字符串，所以实际上这里已经不涉及图片上传了，那么可以使用简单的post请求即可
                 console.log(data.field);
-
                 $.post('/pages/back/merchant/add', data.field, function (res) {
                     layer.msg(res);
                     if (res.res) {// 这里如果申请成功了，那么应该跳转到提示商户审核中的页面去，静态界面
                         window.location = '/pages/back/merchant/approvalStatus'
                     }
                 });
-
-
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });
             uploadFile();// 一定要

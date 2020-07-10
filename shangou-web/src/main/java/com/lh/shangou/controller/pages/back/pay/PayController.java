@@ -52,7 +52,7 @@ public class PayController {
         od.setCreateTime(orderVO.getCreateTime());
         od.setSubject("闪购-收银台");// 设置一个描述
         od.setOrderId(orderVO.getOrderId());
-        od.setActuallyPaid(new BigDecimal("0.01"));
+        od.setActuallyPaid(orderVO.getActuallyPaid());
         if ("支付宝".equals(od.getPayType())) {
             ResponseDTO responseDTO = aliPayService.unifiedPay(od);
             // 由于微信付款是返回微信的二维码地址,所以这里为了照顾微信,我们不能用@ResponseBody
