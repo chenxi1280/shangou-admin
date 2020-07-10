@@ -16,6 +16,7 @@ import java.util.TimeZone;
 @EnableScheduling  // 开启定时任务
 @EnableTransactionManagement  // 开启事务控制
 public class ShangouWebApplication {
+
     Logger logger = LoggerFactory.getLogger(ShangouWebApplication.class);
 
     /**
