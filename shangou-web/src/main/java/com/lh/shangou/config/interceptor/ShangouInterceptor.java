@@ -1,6 +1,7 @@
 package com.lh.shangou.config.interceptor;
 
 import com.lh.shangou.util.param.ValidateParamUtil;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;

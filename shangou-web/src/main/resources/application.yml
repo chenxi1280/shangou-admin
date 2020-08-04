@@ -1,9 +1,9 @@
 spring:
   datasource:
     username: root
-    password: root
+    password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://120.25.223.121:3306/shangou_db_test?serverTimezone=Asia/Shanghai  # 数据库的时区地址
+    url: jdbc:mysql://47.112.217.144:3306/shangou_db?serverTimezone=Asia/Shanghai  # 数据库的时区地址
     type: com.alibaba.druid.pool.DruidDataSource
   messages:
     basename: i18n/validate  #   验证文件的路径

@@ -9,6 +9,7 @@ import com.lh.shangou.service.MerchantService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
  * creator：杜夫人
  * date: 2020/5/20
  */
+
 public class BaseController {
     @Resource
     AppConfigService appConfigService;
@@ -138,7 +140,7 @@ public class BaseController {
      *
      * @return 返回key的map集合
      */
-    protected String getSingleValueByKey(String key) {
+    public String getSingleValueByKey(String key) {
         List<AppConfigVO> allConfig = appConfigService.getAllConfig();
         Map<String, List<AppConfigVO>> collect = allConfig.stream().collect(Collectors.groupingBy(AppConfig::getKey));
         List<AppConfigVO> appConfigVOS = collect.get(key);

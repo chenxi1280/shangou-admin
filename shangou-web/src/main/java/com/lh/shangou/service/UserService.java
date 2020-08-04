@@ -5,10 +5,12 @@ import com.lh.shangou.pojo.dto.PageDTO;
 import com.lh.shangou.pojo.dto.ResponseDTO;
 import com.lh.shangou.pojo.entity.Role;
 import com.lh.shangou.pojo.entity.User;
+import com.lh.shangou.pojo.entity.WeChatLoginModel;
 import com.lh.shangou.pojo.query.UserQuery;
 import com.lh.shangou.pojo.vo.PermissionVO;
 import com.lh.shangou.pojo.vo.RoleVO;
 import com.lh.shangou.pojo.vo.UserVO;
+import com.lh.shangou.pojo.vo.WxUserVO;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -51,4 +53,6 @@ public interface UserService extends BaseService {
     ResponseDTO edit(User user);
 
     Long selectUserIdByMerchantId(Long merchantId);
+
+    WxUserVO weChatLogin(WeChatLoginModel weChatLoginModel);
 }

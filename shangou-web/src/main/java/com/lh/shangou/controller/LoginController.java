@@ -1,21 +1,32 @@
 package com.lh.shangou.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.lh.shangou.pojo.dto.ResponseDTO;
+import com.lh.shangou.pojo.entity.User;
+import com.lh.shangou.pojo.entity.WeChatLoginModel;
 import com.lh.shangou.pojo.vo.UserVO;
+import com.lh.shangou.pojo.vo.WxUserVO;
+import com.lh.shangou.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.util.SavedRequest;
 import org.apache.shiro.web.util.WebUtils;
+import org.springframework.jdbc.support.CustomSQLErrorCodesTranslation;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Base64;
+import java.util.HashMap;
 
 /**
  * creator：杜夫人
@@ -23,6 +34,89 @@ import java.util.Base64;
  */
 @Controller
 public class LoginController extends BaseController {
+
+    @Resource
+    UserService userService;
+
+
+
+    @ResponseBody
+    @PostMapping("/weChatLogin")
+    public ResponseDTO weChatLogin(@RequestParam HashMap<String, Object> params){
+
+
+        /**
+         * 登录日志：
+         * id\ userid\ date\ wx_code\ createTime
+         * create table loginLog (
+         id varchar(50) primary key,
+         userId varchar(50),
+         logindate date,
+         wxcode varchar(100),
+         createtime datetime
+         );
+         */
+
+
+        //第三步：调用service.weChatLogin(model):后台检查openid是否存在，返回openid对应的用户
+
+        InputStream inputStream = null;
+        try {
+            URL url = new URL("https://api.weixin.qq.com/sns/jscode2session?appid=" + params.get("appid") + "&secret=" + params.get("secret") + "&js_code=" + params.get("code") + "&grant_type=authorization_code");
+            URLConnection open = url.openConnection();
+            inputStream = open.getInputStream();
+            String result = org.apache.commons.io.IOUtils.toString(inputStream, "utf-8");
+            JSONObject jsonObject = JSONObject.parseObject(result);
+            //拿到openid
+            String openid = jsonObject.getString("openid");
+
+            if(!StringUtils.isEmpty(openid)){
+
+//                User user = new User();
+//
+//                userService.addUser(user);
+
+                return ResponseDTO.ok("success",openid);
+            }
+
+
+
+        } catch (Exception e) {
+
+
+            return ResponseDTO.fail("error");
+
+
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+//
+//        //第四步：
+//        UserAccount user = loginResult.getUser();
+//        if(user == null ){
+//            result.setCode(0);
+//            result.setMessage("登录失败");
+//        }
+//        else {
+//            User u = new User();
+////            u.setId(user.getId());
+////            u.setPassword(user.getPassword() == null ? user.getWxopenid() : user.getPassword());
+////            u.setSessionKey(loginResult.getSession_key());
+////            String token = getToken(u);
+////            result.setToken(token);
+////            result.setCode(1);
+////            result.setMessage("登陆成功");
+//        }
+
+        return ResponseDTO.fail("error");
+    }
 
 
     @RequestMapping("/login")

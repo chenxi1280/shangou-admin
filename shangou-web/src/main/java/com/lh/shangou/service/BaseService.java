@@ -1,7 +1,9 @@
 package com.lh.shangou.service;
 
 import com.lh.shangou.pojo.dto.PageDTO;
+import com.lh.shangou.pojo.entity.AppConfig;
 import com.lh.shangou.pojo.query.PageQuery;
+import com.lh.shangou.pojo.vo.AppConfigVO;
 import com.lh.shangou.pojo.vo.PermissionVO;
 import com.lh.shangou.pojo.vo.RoleVO;
 import com.lh.shangou.util.spring.SpringUtil;
@@ -126,4 +128,8 @@ public interface BaseService {
         }
         return list;
     }
+
+
+
+
 }

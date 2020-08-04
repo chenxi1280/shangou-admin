@@ -2,12 +2,15 @@ package com.lh.shangou.controller;
 
 import com.lh.shangou.consts.consts.ConfigConsts;
 import com.lh.shangou.pojo.dto.ResponseDTO;
+import com.lh.shangou.pojo.entity.Swiper;
 import com.lh.shangou.pojo.vo.ButtonGroupVO;
 import com.lh.shangou.pojo.vo.UserVO;
+import com.lh.shangou.service.SwiperdataService;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
@@ -25,7 +28,8 @@ public class IndexController extends BaseController {
 
     @Resource
     RedisTemplate<String, Object> redisTemplate;
-
+    @Resource
+    SwiperdataService swiperdataService;
 
     @Resource
     RestTemplate restTemplate;// restTemplate需要注入到容器里边
@@ -43,6 +47,34 @@ public class IndexController extends BaseController {
         model.addAttribute(ConfigConsts.indexMenu, getListByKey(ConfigConsts.indexMenu, ButtonGroupVO.class));// 设置热点词
 
         return "index";
+    }
+
+    //test wx 测试环境需要修改的
+    @RequestMapping("/index/getswiperdata")
+    @ResponseBody
+    ResponseDTO swiperdata(){
+
+
+
+        Swiper swiper = new Swiper();
+        swiper.setImage_src("https://api-hmugo-web.itheima.net/pyg/banner1.png");
+
+        Swiper swiper2 = new Swiper();
+        swiper2.setImage_src("https://api-hmugo-web.itheima.net/pyg/banner2.png");
+
+        Swiper swiper3 = new Swiper();
+        swiper3.setImage_src("https://img30.360buyimg.com/mobilecms/jfs/t1/129299/9/7548/377632/5f155929E1fe29af9/d3bf6166a0dc2931.png");
+
+        List<Swiper> swipers = new ArrayList<>();
+
+        swipers.add(swiper);
+
+        swipers.add(swiper2);
+
+        swipers.add(swiper3);
+
+
+        return ResponseDTO.ok("success",swipers );
     }
 
     @RequestMapping("/test")

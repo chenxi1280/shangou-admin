@@ -1,17 +1,21 @@
 package com.lh.shangou.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.lh.shangou.config.webmvc.WebMvcConfig;
 import com.lh.shangou.dao.PermissionDao;
 import com.lh.shangou.dao.RoleDao;
 import com.lh.shangou.dao.UserDao;
+import com.lh.shangou.dao.WxUserDao;
 import com.lh.shangou.pojo.dto.PageDTO;
 import com.lh.shangou.pojo.dto.ResponseDTO;
 import com.lh.shangou.pojo.entity.Role;
 import com.lh.shangou.pojo.entity.User;
+import com.lh.shangou.pojo.entity.WeChatLoginModel;
 import com.lh.shangou.pojo.query.UserQuery;
 import com.lh.shangou.pojo.vo.PermissionVO;
 import com.lh.shangou.pojo.vo.RoleVO;
 import com.lh.shangou.pojo.vo.UserVO;
+import com.lh.shangou.pojo.vo.WxUserVO;
 import com.lh.shangou.service.UserService;
 import com.lh.shangou.util.password.PasswordUtil;
 import org.springframework.stereotype.Service;
@@ -19,7 +23,12 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -38,6 +47,9 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     PermissionDao permissionDao;
+
+    @Resource
+    WxUserDao wxUserDao;
 
 
     @Override
@@ -203,7 +215,16 @@ public class UserServiceImpl implements UserService {
         return userDao.selectUserIdByMerchantId(merchantId);
     }
 
-    // 第一个参数，就传父类，如果没有父类对象，就两个参数的 class都一样
+    @Override
+    public WxUserVO weChatLogin(WeChatLoginModel weChatLoginModel) {
+
+
+
+        return null;
+    }
+
+
+        // 第一个参数，就传父类，如果没有父类对象，就两个参数的 class都一样
     private void replaceOldFile(Object user, Object dbUser) {
         // 1、先把父类的class找到！
         Class cls = user.getClass();

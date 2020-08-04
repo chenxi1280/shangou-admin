@@ -108,4 +108,5 @@ public class GoodsController extends BaseController {
     ResponseDTO delete(Goods goods) {
         return goodsService.delete(goods);
     }
+
 }

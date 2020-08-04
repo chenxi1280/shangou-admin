@@ -16,6 +16,12 @@ public class GoodsQuery extends PageQuery {
      */
     private Long merchantId;
 
+
+    /**
+     * 商品id
+     */
+    private Long goodsId;
+
     /**
      * 商家的商品类型id
      */

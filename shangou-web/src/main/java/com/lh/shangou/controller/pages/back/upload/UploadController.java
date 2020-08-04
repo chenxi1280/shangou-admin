@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.annotation.Resource;
 import java.util.Collection;
@@ -22,11 +23,12 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/pages/back/upload")
-public class UploadController extends BaseController {
+public class UploadController extends BaseController  {
     @Resource
     ImgCacheService imgCacheService;
 
     //    img1
+
     //    img1,img2
     @RequestMapping("uploadFiles")
     ResponseDTO uploadFiles(MultipartHttpServletRequest request) {
