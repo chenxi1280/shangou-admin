@@ -55,4 +55,6 @@ public interface UserService extends BaseService {
     Long selectUserIdByMerchantId(Long merchantId);
 
     WxUserVO weChatLogin(WeChatLoginModel weChatLoginModel);
+
+    ResponseDTO wxLogin(WxUserVO wxUserVO);
 }

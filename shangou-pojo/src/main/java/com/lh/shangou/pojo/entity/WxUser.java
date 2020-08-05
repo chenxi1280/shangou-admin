@@ -1,9 +1,8 @@
 package com.lh.shangou.pojo.entity;
 
-import lombok.Data;
-
 import java.io.Serializable;
 import java.util.Date;
+import lombok.Data;
 
 /**
  * wx_user
@@ -72,6 +71,16 @@ public class WxUser implements Serializable {
      * 是否授权了
      */
     private Boolean authorized;
+
+    /**
+     * 微信sessionkey
+     */
+    private String sessionkey;
+
+    /**
+     * 微信unionid
+     */
+    private String unionid;
 
     private static final long serialVersionUID = 1L;
 }

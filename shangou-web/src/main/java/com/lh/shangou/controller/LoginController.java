@@ -39,9 +39,8 @@ public class LoginController extends BaseController {
     UserService userService;
 
 
-
     @ResponseBody
-    @PostMapping("/weChatLogin")
+    @RequestMapping("/getOpenid")
     public ResponseDTO weChatLogin(@RequestParam HashMap<String, Object> params){
 
 

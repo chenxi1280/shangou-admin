@@ -24,6 +24,9 @@ mybatis:
 server:
   servlet:
     context-path: /  # 这个是配置项目上下文路径
+logging:
+  level:
+    com.lh.shangou.dao: debug
 ---
 spring:
   profiles: pro
