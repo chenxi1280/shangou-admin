@@ -1,8 +1,10 @@
 package com.lh.shangou.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.support.spring.annotation.FastJsonView;
 import com.lh.shangou.pojo.dto.ResponseDTO;
 import com.lh.shangou.pojo.entity.WxUser;
+import com.lh.shangou.pojo.query.WxUserQuery;
 import com.lh.shangou.pojo.vo.WxUserVO;
 import com.lh.shangou.service.UserService;
 import org.springframework.stereotype.Controller;
@@ -35,7 +37,7 @@ public class WXLoginController {
 
     @ResponseBody
     @RequestMapping("/getOpenid")
-    public ResponseDTO weChatLogin(@RequestBody WxUserVO wxUserVO){
+    public ResponseDTO weChatLogin(@RequestParam HashMap<String, Object> params){
 
 
         /**
@@ -56,7 +58,7 @@ public class WXLoginController {
 
         InputStream inputStream = null;
         try {
-            URL url = new URL("https://api.weixin.qq.com/sns/jscode2session?appid=wxea78c8167e518dc4&secret=639ca02a61270690fd0a12ab4a29dd61" + "&js_code=" + wxUserVO.getCode() + "&grant_type=authorization_code");
+            URL url = new URL("https://api.weixin.qq.com/sns/jscode2session?appid=wxea78c8167e518dc4&secret=639ca02a61270690fd0a12ab4a29dd61" + "&js_code="  + "&grant_type=authorization_code");
             URLConnection open = url.openConnection();
             inputStream = open.getInputStream();
             String result = org.apache.commons.io.IOUtils.toString(inputStream, "utf-8");
@@ -65,17 +67,16 @@ public class WXLoginController {
             String openid = jsonObject.getString("openid");
             String sessionKey = jsonObject.getString("session_key");
             String unionid = jsonObject.getString("unionid");
-
-            wxUserVO.setOpenid(openid);
-            wxUserVO.setSessionkey(sessionKey);
-            wxUserVO.setUnionid(unionid);
-//            wxUserVO.
-
+//            WxUser wxUser = wxUserQuery.getRawData();
+//            wxUser.setOpenid(openid);
+//            wxUser.setSessionkey(sessionKey);
+//            wxUser.setUnionid(unionid);
 
 
 
 
-            return  userService.wxLogin(wxUserVO);
+
+//            return  userService.wxLogin(wxUser);
 
 //            if(!StringUtils.isEmpty(openid)){
 //
@@ -121,6 +122,6 @@ public class WXLoginController {
 ////            result.setCode(1);
 ////            result.setMessage("登陆成功");
 //        }
-
+        return ResponseDTO.fail("error");
     }
 }

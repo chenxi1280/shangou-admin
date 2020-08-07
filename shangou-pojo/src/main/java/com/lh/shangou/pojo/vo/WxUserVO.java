@@ -17,4 +17,5 @@ public class WxUserVO  extends WxUser {
 
 
 
+
 }

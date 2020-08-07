@@ -1,5 +1,6 @@
 package com.lh.shangou.pojo.query;
 
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -7,6 +8,7 @@ import lombok.Data;
  * date: 2020/5/25
  */
 @Data
+
 public class PageQuery {
     private Integer page = 1;
     private Integer limit = 10;

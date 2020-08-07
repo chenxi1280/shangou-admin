@@ -6,6 +6,7 @@ import com.lh.shangou.pojo.dto.ResponseDTO;
 import com.lh.shangou.pojo.entity.Role;
 import com.lh.shangou.pojo.entity.User;
 import com.lh.shangou.pojo.entity.WeChatLoginModel;
+import com.lh.shangou.pojo.entity.WxUser;
 import com.lh.shangou.pojo.query.UserQuery;
 import com.lh.shangou.pojo.vo.PermissionVO;
 import com.lh.shangou.pojo.vo.RoleVO;
@@ -56,5 +57,5 @@ public interface UserService extends BaseService {
 
     WxUserVO weChatLogin(WeChatLoginModel weChatLoginModel);
 
-    ResponseDTO wxLogin(WxUserVO wxUserVO);
+    ResponseDTO wxLogin(WxUser wxUserVO);
 }

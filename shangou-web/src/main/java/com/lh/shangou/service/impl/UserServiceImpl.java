@@ -220,14 +220,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseDTO wxLogin(WxUserVO wxUserVO) {
+    public ResponseDTO wxLogin(WxUser wxUserVO) {
 
         WxUserVO wxUser = wxUserDao.selectByOpenId(wxUserVO.getOpenid());
 
 
         if (wxUser == null ){
             wxUserVO.setCtime(new Date());
-
             int i = wxUserDao.insertSelective(wxUserVO);
 
         }
