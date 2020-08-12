@@ -227,11 +227,16 @@ public class UserServiceImpl implements UserService {
 
         if (wxUser == null ){
             wxUserVO.setCtime(new Date());
-            int i = wxUserDao.insertSelective(wxUserVO);
+            User user = new User();
+            user.setLastLoginTime(new Date());
+            userDao.insert(user);
+            wxUserVO.setFkUserId(Integer.valueOf(String.valueOf(user.getUserId())));
+//            wxUserVO.setPkId(Integer.valueOf(String.valueOf(user.getUserId())));
+            return ResponseDTO.fail("",wxUserVO,200,400);
 
         }
 
-        return null;
+        return ResponseDTO.ok(wxUserVO);
     }
 
 

@@ -37,7 +37,7 @@ public class WXLoginController {
 
     @ResponseBody
     @RequestMapping("/getOpenid")
-    public ResponseDTO weChatLogin(@RequestParam HashMap<String, Object> params){
+    public ResponseDTO weChatLogin(@RequestBody WxUserQuery wxUserQuery ){
 
 
         /**
@@ -67,16 +67,11 @@ public class WXLoginController {
             String openid = jsonObject.getString("openid");
             String sessionKey = jsonObject.getString("session_key");
             String unionid = jsonObject.getString("unionid");
-//            WxUser wxUser = wxUserQuery.getRawData();
-//            wxUser.setOpenid(openid);
-//            wxUser.setSessionkey(sessionKey);
-//            wxUser.setUnionid(unionid);
+            WxUser wxUser = new WxUser();
+            wxUser.setOpenid(openid);
 
 
-
-
-
-//            return  userService.wxLogin(wxUser);
+            return  userService.wxLogin(wxUser);
 
 //            if(!StringUtils.isEmpty(openid)){
 //
@@ -122,6 +117,6 @@ public class WXLoginController {
 ////            result.setCode(1);
 ////            result.setMessage("登陆成功");
 //        }
-        return ResponseDTO.fail("error");
+//        return ResponseDTO.fail("error");
     }
 }

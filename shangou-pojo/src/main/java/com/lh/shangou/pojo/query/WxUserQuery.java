@@ -17,11 +17,10 @@ import java.io.Serializable;
 @Data
 
 
-public class WxUserQuery   implements Serializable  {
+public class WxUserQuery   {
 
     private String code;
 
-   private WxUserAdd rawData;
 
 }
 

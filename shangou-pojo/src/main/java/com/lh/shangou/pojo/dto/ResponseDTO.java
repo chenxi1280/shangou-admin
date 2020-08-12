@@ -110,6 +110,10 @@ public class ResponseDTO implements Serializable {
         return new ResponseDTO(msg, null);
     }
 
+
+    public static ResponseDTO ok(Object data) {
+        return new ResponseDTO(successMsg, data);
+    }
     public static ResponseDTO ok() {
         return new ResponseDTO("操作成功", null);
     }
