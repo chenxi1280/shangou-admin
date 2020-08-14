@@ -4,21 +4,25 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.support.spring.annotation.FastJsonView;
 import com.lh.shangou.pojo.dto.ResponseDTO;
 import com.lh.shangou.pojo.entity.WxUser;
+import com.lh.shangou.pojo.query.AccountDto;
 import com.lh.shangou.pojo.query.WxUserQuery;
 import com.lh.shangou.pojo.vo.WxUserVO;
 import com.lh.shangou.service.UserService;
+import org.apache.http.HttpRequest;
+import org.apache.http.auth.AuthenticationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Enumeration;
 import java.util.HashMap;
 
 /**
@@ -58,7 +62,7 @@ public class WXLoginController {
 
         InputStream inputStream = null;
         try {
-            URL url = new URL("https://api.weixin.qq.com/sns/jscode2session?appid=wxea78c8167e518dc4&secret=639ca02a61270690fd0a12ab4a29dd61" + "&js_code="  + "&grant_type=authorization_code");
+            URL url = new URL("https://api.weixin.qq.com/sns/jscode2session?appid=wxea78c8167e518dc4&secret=639ca02a61270690fd0a12ab4a29dd61" + "&js_code="+wxUserQuery.getCode()  + "&grant_type=authorization_code");
             URLConnection open = url.openConnection();
             inputStream = open.getInputStream();
             String result = org.apache.commons.io.IOUtils.toString(inputStream, "utf-8");
@@ -73,23 +77,9 @@ public class WXLoginController {
 
             return  userService.wxLogin(wxUser);
 
-//            if(!StringUtils.isEmpty(openid)){
-//
-////                User user = new User();
-////
-////                userService.addUser(user);
-//
-//                return ResponseDTO.ok("success",openid);
-//            }
-
-
 
         } catch (Exception e) {
-
-
             return ResponseDTO.fail("error");
-
-
         } finally {
             if (inputStream != null) {
                 try {
@@ -100,23 +90,24 @@ public class WXLoginController {
             }
         }
 
-//
-//        //第四步：
-//        UserAccount user = loginResult.getUser();
-//        if(user == null ){
-//            result.setCode(0);
-//            result.setMessage("登录失败");
-//        }
-//        else {
-//            User u = new User();
-////            u.setId(user.getId());
-////            u.setPassword(user.getPassword() == null ? user.getWxopenid() : user.getPassword());
-////            u.setSessionKey(loginResult.getSession_key());
-////            String token = getToken(u);
-////            result.setToken(token);
-////            result.setCode(1);
-////            result.setMessage("登陆成功");
-//        }
-//        return ResponseDTO.fail("error");
+
     }
+
+    @PostMapping("/updateConsumerInfo")
+    @ResponseBody
+    public void updateConsumerInfo(@RequestBody WxUser wxUser, HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        Enumeration headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            HashMap<String, String> objectObjectHashMap = new HashMap<>();
+            String key = (String) headerNames.nextElement();
+            String value = request.getHeader(key);
+            objectObjectHashMap.put(key, value);
+        }
+        wxUser.setOpenid(token);
+        userService.updateConsumerInfo(wxUser);
+    }
+
+
+
 }

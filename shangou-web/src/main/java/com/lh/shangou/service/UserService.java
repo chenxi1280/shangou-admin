@@ -58,4 +58,8 @@ public interface UserService extends BaseService {
     WxUserVO weChatLogin(WeChatLoginModel weChatLoginModel);
 
     ResponseDTO wxLogin(WxUser wxUserVO);
+
+    ResponseDTO wechatLogin(String code);
+
+    void updateConsumerInfo(WxUser wxUser);
 }

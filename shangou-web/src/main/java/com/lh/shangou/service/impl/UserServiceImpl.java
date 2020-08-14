@@ -17,7 +17,11 @@ import com.lh.shangou.pojo.vo.RoleVO;
 import com.lh.shangou.pojo.vo.UserVO;
 import com.lh.shangou.pojo.vo.WxUserVO;
 import com.lh.shangou.service.UserService;
+import com.lh.shangou.util.AppContext;
 import com.lh.shangou.util.password.PasswordUtil;
+import com.lh.shangou.util.redis.RedisUtil;
+import org.apache.commons.lang.RandomStringUtils;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -25,6 +29,7 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -46,6 +51,8 @@ public class UserServiceImpl implements UserService {
     @Resource
     WxUserDao wxUserDao;
 
+    @Resource
+    StringRedisTemplate stringRedisTemplate;
 
 
     @Override
@@ -226,20 +233,68 @@ public class UserServiceImpl implements UserService {
 
 
         if (wxUser == null ){
+
             wxUserVO.setCtime(new Date());
             User user = new User();
             user.setLastLoginTime(new Date());
             userDao.insert(user);
             wxUserVO.setFkUserId(Integer.valueOf(String.valueOf(user.getUserId())));
-//            wxUserVO.setPkId(Integer.valueOf(String.valueOf(user.getUserId())));
-            return ResponseDTO.fail("",wxUserVO,200,400);
+            wxUserVO.setPkId(Integer.valueOf(String.valueOf(user.getUserId())));
+            wxUserVO.setAuthorized(true);
+            wxUserDao.insertSelective(wxUserVO);
+
 
         }
+        String rdSession = create3rdSession(wxUserVO.getOpenid(), wxUserVO.getSessionkey(), 500L);
+        return ResponseDTO.ok(rdSession);
+    }
 
-        return ResponseDTO.ok(wxUserVO);
+    @Override
+    public ResponseDTO wechatLogin(String code) {
+        WxUserVO wxUser = wxUserDao.selectByOpenId(code);
+        if (wxUser == null) {
+            wxUser.setCtime(new Date());
+            User user = new User();
+            user.setLastLoginTime(new Date());
+            userDao.insert(user);
+            wxUser.setFkUserId(Integer.valueOf(String.valueOf(user.getUserId())));
+//            wxUserVO.setPkId(Integer.valueOf(String.valueOf(user.getUserId())));
+            return ResponseDTO.fail("", wxUser, 200, 400);
+        }
+        return ResponseDTO.ok(wxUser);
+
     }
 
 
+    @Override
+    public void updateConsumerInfo(WxUser wxUser) {
+
+        String currentUserWechatOpenId = AppContext.getCurrentUserWechatOpenId();
+        String s = stringRedisTemplate.opsForValue().get(wxUser.getOpenid());
+        String[] split = s.split("#");
+
+        wxUserDao.selectByOpenId(wxUser.getOpenid());
+        wxUserDao.updateByPrimaryKeySelective(wxUser);
+
+
+    }
+
+
+
+
+
+
+
+
+    public String create3rdSession(String wxOpenId, String wxSessionKey, Long expires) {
+        String thirdSessionKey = RandomStringUtils.randomAlphanumeric(64);
+        StringBuffer sb = new StringBuffer();
+        sb.append(wxSessionKey).append("#").append(wxOpenId);
+
+        stringRedisTemplate.opsForValue().set(thirdSessionKey, sb.toString(), expires, TimeUnit.SECONDS);
+
+        return thirdSessionKey;
+    }
     // 第一个参数，就传父类，如果没有父类对象，就两个参数的 class都一样
     private void replaceOldFile(Object user, Object dbUser) {
         // 1、先把父类的class找到！
@@ -247,4 +302,5 @@ public class UserServiceImpl implements UserService {
         Field[] declaredFields = dbUser.getClass().getDeclaredFields();// 只能得到一个
         User.class.getDeclaredFields();// 也能得到全部
     }
+
 }

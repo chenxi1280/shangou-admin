@@ -16,7 +16,7 @@ import java.sql.SQLException;
  */
 //@Configuration
 public class DataSourceConfig {
-    Logger logger = LoggerFactory.getLogger(RedisConfig.class);
+    Logger logger = LoggerFactory.getLogger(DataSourceConfig.class);
 //    @Bean
     DataSource dataSource() throws SQLException {
         DruidDataSource druidDataSource = new DruidDataSource();

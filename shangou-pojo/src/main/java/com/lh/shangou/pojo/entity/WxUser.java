@@ -26,6 +26,12 @@ public class WxUser implements Serializable {
      * 用户头像
      */
     private String nickname;
+    private String nickName;
+
+    private String username;
+    private String wechatOpenid;
+    private String avatarUrl;
+    private Long phone;
 
     /**
      * 用户头像
